@@ -50,6 +50,14 @@ To elevate BaGS Ecosystem into an autonomous, next-generation enterprise ERP, we
   - Implemented **Contract Renewal SLA Radar & Alert Ticker**: Real-time early warning system detecting industrial clients expiring in < 30 to < 60 days (e.g. PT Unilever, PT Gajah Tunggal) with fast-action AE SLA dispatch triggers.
   - Implemented **Interactive Time-Range Analytics**: Multi-layer Recharts area/line chart comparing **Actual Revenue vs KPI Target vs YoY Performance** across flexible timeframes (`1M`, `Q3`, `YTD`, `1Y`), alongside an Industrial Sector & Zone distribution chart (Surabaya, Gresik, Pasuruan, Karawang).
   - Built **Master B2B Database & Advanced CRUD**: Enhanced client management table with Sector and Status SLA filtering, monthly MMBTU quota utilization progress bars, AE assignments, and automated expiry status calculation in the modal.
+- [x] **Executive Portal Slug Simplification & Standardization**:
+  - Renamed `/portal/direksi-b2b` ➔ **`/portal/industrial`** to match the dashboard title ("Industrial Portal").
+  - Renamed `/portal/direksi-b2c` ➔ **`/portal/horeca`** (replacing the unused duplicate mobile app copy; Customer App remains at `/portal/pelanggan`).
+  - Updated all navigation links and descriptions in `PrimaryPortalsSection.tsx` to align with CNG business terminology.
+- [x] **Modul Horeca & Commercial Gas — Luxury CNG Benchmark Upgrade (`/portal/horeca`)**:
+  - Built the **Luxury CNG Horeca Executive Console** with warm amber/gold Frosted Glassmorphism, real-time telemetry indicators, and executive hero metrics.
+  - Implemented **CNG Safety & Pressure Anomaly Radar**: Early warning system monitoring Cradle Cascades and Micro-bulk VGLs for pressure drops (e.g., JW Marriott drop to 185 Bar) and NFC manifold SLA inspections (Layar Resto).
+  - Built **Master Commercial CNG Database & Advanced CRUD**: Tracked 450 active Cradle Racks with monthly Sm³ quota utilization progress bars, route zone mapping (Surabaya, Sidoarjo, Malang, Gresik), operating pressure (Bar), and automated safety status calculation.
 - [x] Committed and pushed all updates to GitHub repository branch `main`.
 
 ## Next Steps
