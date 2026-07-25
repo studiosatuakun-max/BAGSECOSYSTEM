@@ -25,7 +25,7 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="flex flex-col min-h-screen px-6 py-8">
+    <div className="flex flex-col min-h-screen md:min-h-full md:h-full px-6 py-8 overflow-y-auto">
       <div className="flex-1 flex flex-col justify-center w-full mx-auto max-w-sm">
         
         {/* Header */}
@@ -33,10 +33,8 @@ export default function LoginPage() {
           <Link href="/dashboard" className="inline-block mb-6 text-xs font-bold text-muted-foreground hover:text-foreground bg-muted px-3 py-1.5 rounded-xl transition-colors">
             ← Back to Hub
           </Link>
-          <div className="w-16 h-16 bg-primary rounded-2xl flex items-center justify-center mx-auto mb-5 shadow-sm text-white">
-            <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M12 21a9 9 0 0 1-9-9c0-5 5.5-9.5 8.3-11.5a1.1 1.1 0 0 1 1.4 0C15.5 2.5 21 7 21 12a9 9 0 0 1-9 9z"/>
-            </svg>
+          <div className="w-16 h-16 bg-white border border-slate-200 rounded-2xl flex items-center justify-center mx-auto mb-5 shadow-sm overflow-hidden p-2.5">
+            <img src="/assets/images/icon.png" alt="BaGS Logo" className="w-full h-full object-contain" />
           </div>
           <h1 className="text-2xl font-bold text-foreground tracking-tight">HorecaGas</h1>
           <p className="text-sm text-muted-foreground mt-1">Sign in to manage your deliveries.</p>

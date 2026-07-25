@@ -61,8 +61,8 @@ export default function DriverDashboardPage() {
         style={{ paddingTop: 'max(env(safe-area-inset-top, 0px), 16px)' }}
       >
         <div className="flex items-center gap-3 min-w-0">
-          <div className="relative w-10 h-10 rounded-[12px] bg-[var(--sky-500)] flex items-center justify-center shadow-sm flex-shrink-0">
-            <FlameGlyph className="w-5 h-5 text-white" />
+          <div className="relative w-10 h-10 rounded-[12px] bg-white border border-slate-200 flex items-center justify-center shadow-sm flex-shrink-0 overflow-hidden p-1.5">
+            <img src="/assets/images/icon.png" alt="BaGS Logo" className="w-full h-full object-contain" />
           </div>
           <div className="min-w-0">
             <h1 className="text-[17px] font-bold text-gray-900 tracking-[-0.02em] leading-none">GasDrive</h1>

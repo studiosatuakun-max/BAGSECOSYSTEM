@@ -27,7 +27,7 @@ export default function LoginPage() {
   if (!mounted) return null;
 
   return (
-    <div className="flex flex-col min-h-screen bg-[#FAFAFA] px-6 py-8">
+    <div className="flex flex-col min-h-screen md:min-h-full md:h-full bg-[#FAFAFA] px-6 py-8 overflow-y-auto">
       <div className="flex-1 flex flex-col justify-center max-w-sm w-full mx-auto">
 
         {/* Header */}
@@ -35,10 +35,8 @@ export default function LoginPage() {
           <Link href="/dashboard" className="inline-block mb-6 text-xs font-bold text-gray-500 hover:text-gray-900 bg-gray-100 hover:bg-gray-200 px-3 py-1.5 rounded-xl transition-colors">
             ← Back to Hub
           </Link>
-          <div className="w-16 h-16 bg-sky-500 hover:bg-sky-600 rounded-2xl flex items-center justify-center mx-auto mb-5 shadow-sm text-white">
-            <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M12 2c1.6 4 3.6 4.4 4.8 6A6 6 0 0 1 18 12a6 6 0 0 1-12 0c0-.4 0-.8.1-1.2a2.5 2.5 0 1 0 4-2.4C11.4 7.5 12 2 12 2z"/>
-            </svg>
+          <div className="w-16 h-16 bg-white border border-slate-200 rounded-2xl flex items-center justify-center mx-auto mb-5 shadow-sm overflow-hidden p-2.5">
+            <img src="/assets/images/icon.png" alt="BaGS Logo" className="w-full h-full object-contain" />
           </div>
           <h1 className="text-2xl font-bold text-gray-900 tracking-tight">Driver Portal</h1>
           <p className="text-sm text-gray-500 mt-2">Sign in to start your route.</p>
