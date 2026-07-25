@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
+import { createPortal } from 'react-dom';
 import Icon from '@/components/ui/AppIcon';
 import { DispatchItem } from '@/app/api/inbox/dispatches/route';
 
@@ -38,6 +39,11 @@ export default function InboxDrawer({ onClose, onUnreadChange }: InboxDrawerProp
   const [priority, setPriority] = useState<'Normal' | 'High' | 'Urgent'>('Normal');
   const [attachedFile, setAttachedFile] = useState<{ file_name: string; file_url: string; file_size: string } | null>(null);
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+  const [mounted, setMounted] = useState<boolean>(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   // Fetch Dispatches
   const loadDispatches = async () => {
@@ -158,8 +164,10 @@ export default function InboxDrawer({ onClose, onUnreadChange }: InboxDrawerProp
     }
   };
 
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/70 backdrop-blur-md animate-in fade-in duration-200">
+  if (!mounted) return null;
+
+  return createPortal(
+    <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-slate-950/75 backdrop-blur-md animate-in fade-in duration-200">
       
       {/* Drawer / Modal Container */}
       <div className="w-full max-w-5xl h-[85vh] bg-slate-900/85 dark:bg-slate-950/85 backdrop-blur-2xl border border-white/20 rounded-[2.5rem] shadow-[0_25px_80px_-15px_rgba(0,0,0,0.8)] flex flex-col md:flex-row overflow-hidden relative">
@@ -528,6 +536,7 @@ export default function InboxDrawer({ onClose, onUnreadChange }: InboxDrawerProp
 
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }
