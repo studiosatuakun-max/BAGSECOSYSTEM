@@ -18,13 +18,15 @@ export default function HeroSection() {
     if (!hero) return;
 
     const handleMouseMove = (e: MouseEvent) => {
-      const rect = hero.getBoundingClientRect();
-      const x = (e.clientX - rect.left) / rect.width;
-      const y = (e.clientY - rect.top) / rect.height;
-      const bgEl = hero.querySelector('.hero-parallax') as HTMLElement;
-      if (bgEl) {
-        bgEl.style.transform = `scale(1.06) translate(${(x - 0.5) * -12}px, ${(y - 0.5) * -8}px)`;
-      }
+      requestAnimationFrame(() => {
+        const rect = hero.getBoundingClientRect();
+        const x = (e.clientX - rect.left) / rect.width;
+        const y = (e.clientY - rect.top) / rect.height;
+        const bgEl = hero.querySelector('.hero-parallax') as HTMLElement;
+        if (bgEl) {
+          bgEl.style.transform = `scale(1.06) translate(${(x - 0.5) * -12}px, ${(y - 0.5) * -8}px)`;
+        }
+      });
     };
 
     hero.addEventListener('mousemove', handleMouseMove);
@@ -39,7 +41,7 @@ export default function HeroSection() {
       aria-label="BaGS Ecosystem Hero">
       
       {/* Background Image */}
-      <div className="absolute inset-0 hero-parallax" style={{ transition: 'transform 0.6s cubic-bezier(0.23, 1, 0.32, 1)' }}>
+      <div className="absolute inset-0 hero-parallax" style={{ transition: 'transform 0.15s ease-out', willChange: 'transform' }}>
         <AppImage
           src="/assets/images/background.png"
           alt="BaGS CNG facility"
@@ -63,7 +65,7 @@ export default function HeroSection() {
             {/* Logo */}
             <div className="mb-6">
               <AppImage 
-                src="/assets/images/logo.png" 
+                src="/assets/images/logo2.png" 
                 alt="BaGS Logo" 
                 width={200} 
                 height={80} 
