@@ -1,5 +1,6 @@
 'use client';
 
+import InboxWidget from '@/app/components/InboxWidget';
 import React, { useState } from 'react';
 import Link from 'next/link';
 import Icon from '@/components/ui/AppIcon';
@@ -308,6 +309,8 @@ export default function LegalDashboardPage() {
           </div>
         </div>
       )}
-    </div>
+  {/* Enterprise Dispatch Inbox Widget */}
+  <InboxWidget />
+</div>
   );
 }

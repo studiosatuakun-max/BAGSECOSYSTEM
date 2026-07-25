@@ -1,5 +1,6 @@
 'use client';
 
+import InboxWidget from '@/app/components/InboxWidget';
 import React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -90,6 +91,8 @@ export default function PusatLayout({ children }: { children: React.ReactNode })
           </div>
         </main>
       </div>
-    </div>
+  {/* Enterprise Dispatch Inbox Widget */}
+  <InboxWidget />
+</div>
   );
 }

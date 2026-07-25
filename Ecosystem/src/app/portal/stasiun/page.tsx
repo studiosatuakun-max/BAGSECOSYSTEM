@@ -1,3 +1,4 @@
+import InboxWidget from '@/app/components/InboxWidget';
 import React from 'react';
 import OpsTopBar from './components/OpsTopBar';
 import TelemetryChartCard from './components/TelemetryChartCard';
@@ -63,6 +64,8 @@ export default function OpsHsseDashboard() {
           <span>ATEX Zone 1 Compliant · IEC 60079 · Rev. 2026-07</span>
         </div>
       </main>
-    </div>
+  {/* Enterprise Dispatch Inbox Widget */}
+  <InboxWidget />
+</div>
   );
 }
