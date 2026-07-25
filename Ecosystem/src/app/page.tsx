@@ -38,7 +38,7 @@ export default function LoginPage() {
 
     if (error) {
       console.warn('Supabase Auth Error:', error.message);
-      alert(`Supabase Auth Failed: ${error.message}\n\n(Bypassing for Demo Purposes)`);
+      // Suppress alert for a seamless demo experience
     } else {
       console.log('Supabase Auth Success!', data);
     }
