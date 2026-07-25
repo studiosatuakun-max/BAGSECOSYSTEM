@@ -6,7 +6,6 @@ import HeroSection from '../components/HeroSection';
 import PrimaryPortalsSection from '../components/PrimaryPortalsSection';
 import InternalPortalsSection from '../components/InternalPortalsSection';
 import SystemIntegrityStrip from '../components/SystemIntegrityStrip';
-import InboxWidget from '../components/InboxWidget';
 
 export const metadata: Metadata = {
   title: 'BaGS Ecosystem — Integrated ERP & Gas Logistics',
@@ -53,8 +52,6 @@ export default function HomePage() {
       {/* Footer */}
       <Footer />
 
-      {/* Inter-Division Inbox Widget */}
-      <InboxWidget />
     </div>
   );
 }
