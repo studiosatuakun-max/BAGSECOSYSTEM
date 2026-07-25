@@ -1,0 +1,60 @@
+@import "tailwindcss";
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+:root {
+  /* Brand Colors - BaGS Corporate */
+  --sky-50:  #F0F9FF;
+  --sky-100: #E0F2FE;
+  --sky-200: #BAE6FD;
+  --sky-500: #0EA5E9;
+  --sky-600: #0284C7;
+  --sky-700: #0369A1;
+
+  --lime-50:  #F7FEE7;
+  --lime-100: #ECFCCB;
+  --lime-200: #D9F99D;
+  --lime-500: #84CC16;
+  --lime-600: #65A30D;
+  --lime-700: #4D7C0F;
+}
+
+html, body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  background-color: #FAFAFA;
+  color: #111827;
+  height: 100%;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  letter-spacing: -0.01em;
+}
+
+/* Desktop Wrapper for PWA Shell — light */
+@media (min-width: 768px) {
+  body {
+    display: flex; justify-content: center; align-items: center;
+    background-color: #F3F4F6;
+  }
+  #app-shell {
+    max-width: 414px; width: 100%; height: 100vh; max-height: 896px;
+    border-radius: 40px; overflow: hidden;
+    background-color: #FAFAFA;
+    border: 1px solid #E5E7EB;
+    box-shadow:
+      0 0 0 1px rgba(0,0,0,0.04),
+      0 25px 50px -12px rgba(0,0,0,0.18),
+      0 0 0 8px rgba(255,255,255,0.5);
+    position: relative;
+  }
+}
+
+/* === ANIMATIONS === */
+@keyframes slideUpFade {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.animate-in {
+  animation: slideUpFade 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+::-webkit-scrollbar { display: none; }

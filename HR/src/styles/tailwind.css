@@ -1,0 +1,117 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+
+:root {
+  --background: #F8FAFC;
+  --foreground: #0F172A;
+  --primary: #4F46E5;
+  --primary-foreground: #FFFFFF;
+  --secondary: #EEF2FF;
+  --secondary-foreground: #4338CA;
+  --accent: #818CF8;
+  --accent-foreground: #3730A3;
+  --muted: #F1F5F9;
+  --muted-foreground: #64748B;
+  --card: #FFFFFF;
+  --card-foreground: #0F172A;
+  --border: #E2E8F0;
+  --input: #E2E8F0;
+  --ring: #4F46E5;
+  --radius: 1rem;
+  --font-sans: 'Plus Jakarta Sans', sans-serif;
+
+  --status-active-bg: #DCFCE7;
+  --status-active-text: #15803D;
+  --status-leave-bg: #FEF9C3;
+  --status-leave-text: #A16207;
+  --status-onboarding-bg: #EEF2FF;
+  --status-onboarding-text: #4338CA;
+  --status-inactive-bg: #F1F5F9;
+  --status-inactive-text: #64748B;
+  --status-pending-bg: #FFF7ED;
+  --status-pending-text: #C2410C;
+  --status-approved-bg: #DCFCE7;
+  --status-approved-text: #15803D;
+  --status-rejected-bg: #FEE2E2;
+  --status-rejected-text: #B91C1C;
+}
+
+@layer base {
+  * {
+    box-sizing: border-box;
+    border-color: var(--border);
+  }
+  body {
+    background-color: var(--background);
+    color: var(--foreground);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+  }
+  html {
+    scroll-behavior: smooth;
+  }
+  h1, h2, h3, h4, h5, h6, p {
+    margin: 0;
+  }
+}
+
+@layer utilities {
+  .tabular-nums {
+    font-variant-numeric: tabular-nums;
+  }
+  .status-active {
+    background-color: var(--status-active-bg);
+    color: var(--status-active-text);
+  }
+  .status-leave {
+    background-color: var(--status-leave-bg);
+    color: var(--status-leave-text);
+  }
+  .status-onboarding {
+    background-color: var(--status-onboarding-bg);
+    color: var(--status-onboarding-text);
+  }
+  .status-inactive {
+    background-color: var(--status-inactive-bg);
+    color: var(--status-inactive-text);
+  }
+  .status-pending {
+    background-color: var(--status-pending-bg);
+    color: var(--status-pending-text);
+  }
+  .status-approved {
+    background-color: var(--status-approved-bg);
+    color: var(--status-approved-text);
+  }
+  .status-rejected {
+    background-color: var(--status-rejected-bg);
+    color: var(--status-rejected-text);
+  }
+  .card-elevated {
+    background-color: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: 0 1px 3px 0 rgba(0,0,0,0.06), 0 1px 2px -1px rgba(0,0,0,0.04);
+  }
+  .sidebar-transition {
+    transition: width 300ms ease;
+  }
+  .fade-in {
+    animation: fadeIn 200ms ease forwards;
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(4px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .pulse-highlight {
+    animation: pulseHighlight 600ms ease;
+  }
+  @keyframes pulseHighlight {
+    0% { background-color: transparent; }
+    40% { background-color: #EEF2FF; }
+    100% { background-color: transparent; }
+  }
+}
