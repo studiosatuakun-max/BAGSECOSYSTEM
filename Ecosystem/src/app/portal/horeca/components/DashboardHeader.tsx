@@ -1,16 +1,22 @@
 import React from 'react';
 import { Bell, Flame } from 'lucide-react';
 import AppLogo from '@/components/ui/AppLogo';
+import Link from 'next/link';
 
 export default function DashboardHeader() {
   return (
     <header className="pt-6 pb-2">
       <div className="flex items-center justify-between mb-4">
-        <div className="flex items-center gap-2">
-          <AppLogo size={36} />
-          <span className="font-extrabold text-lg text-foreground tracking-tight">
-            HorecaGas
-          </span>
+        <div className="flex items-center gap-3">
+          <Link href="/dashboard" className="flex items-center gap-1 text-xs font-bold text-muted-foreground hover:text-foreground bg-muted hover:bg-muted/80 px-2.5 py-1.5 rounded-xl transition-colors">
+            ← Back
+          </Link>
+          <div className="flex items-center gap-2">
+            <AppLogo size={36} />
+            <span className="font-extrabold text-lg text-foreground tracking-tight">
+              HorecaGas
+            </span>
+          </div>
         </div>
         <div className="flex items-center gap-2">
           {/* Backend: fetch unread notification count */}

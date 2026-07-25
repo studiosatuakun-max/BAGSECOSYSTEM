@@ -66,7 +66,7 @@ export default function SkidPortalDashboardPage() {
       {/* Top Header */}
       <header className="h-14 border-b border-slate-200 bg-white flex items-center justify-between px-6 sticky top-0 z-10 shadow-sm">
         <div className="flex items-center gap-4">
-          <Link href="/" className="flex items-center gap-2 text-slate-500 hover:text-slate-900 transition-colors">
+          <Link href="/dashboard" className="flex items-center gap-2 text-slate-500 hover:text-slate-900 transition-colors">
             <Icon name="ArrowLeftIcon" size={18} variant="outline" />
             <span className="font-semibold text-sm">Back</span>
           </Link>

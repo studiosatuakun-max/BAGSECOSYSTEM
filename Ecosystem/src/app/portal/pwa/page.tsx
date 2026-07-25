@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
@@ -31,6 +32,9 @@ export default function LoginPage() {
 
         {/* Header */}
         <div className="text-center mb-10">
+          <Link href="/dashboard" className="inline-block mb-6 text-xs font-bold text-gray-500 hover:text-gray-900 bg-gray-100 hover:bg-gray-200 px-3 py-1.5 rounded-xl transition-colors">
+            ← Back to Hub
+          </Link>
           <div className="w-16 h-16 bg-[var(--sky-500)] rounded-2xl flex items-center justify-center mx-auto mb-5 shadow-sm text-white">
             <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor">
               <path d="M12 2c1.6 4 3.6 4.4 4.8 6A6 6 0 0 1 18 12a6 6 0 0 1-12 0c0-.4 0-.8.1-1.2a2.5 2.5 0 1 0 4-2.4C11.4 7.5 12 2 12 2z"/>

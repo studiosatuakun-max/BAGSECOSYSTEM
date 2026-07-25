@@ -21,7 +21,7 @@ export default function PusatLayout({ children }: { children: React.ReactNode })
       {/* Sidebar Navigation */}
       <div className="w-64 flex-shrink-0 border-r border-border bg-card flex flex-col z-10">
         <div className="h-16 flex items-center px-6 border-b border-border">
-          <Link href="/" className="flex items-center gap-2 group">
+          <Link href="/dashboard" className="flex items-center gap-2 group">
             <Image src="/assets/images/icon.png" alt="BaGS Logo" width={28} height={28} className="object-contain" />
             <span className="font-extrabold text-foreground group-hover:text-primary transition-colors text-sm tracking-tight">
               Modul Pusat
@@ -77,7 +77,7 @@ export default function PusatLayout({ children }: { children: React.ReactNode })
             <span className="font-bold uppercase tracking-wider" style={{ fontSize: '10px' }}>Single Source of Truth Active</span>
           </div>
 
-          <Link href="/" className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors font-medium text-sm px-3 py-1.5 rounded-lg hover:bg-muted">
+          <Link href="/dashboard" className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors font-medium text-sm px-3 py-1.5 rounded-lg hover:bg-muted">
             <Icon name="ArrowLeftOnRectangleIcon" size={16} variant="outline" />
             Exit Portal
           </Link>
