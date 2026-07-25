@@ -65,7 +65,7 @@ export default function LoginPage() {
         {/* Left Side - Branding / Welcome */}
         <div className="hidden md:flex md:col-span-6 lg:col-span-7 flex-col justify-center space-y-6 pr-4 lg:pr-8">
           <div className="flex items-center gap-3">
-            <img src="/assets/images/logo2.png" alt="BaGS Logo" className="w-16 object-contain drop-shadow-md" />
+            <img src="/assets/images/logo2.png" alt="BaGS Logo" className="h-24 w-auto object-contain drop-shadow-md" />
             <h1 className="text-3xl lg:text-4xl font-extrabold text-white tracking-tight drop-shadow-sm">BaGS <span className="text-indigo-400">Ecosystem</span></h1>
           </div>
           <p className="text-slate-200 text-base lg:text-lg font-normal leading-relaxed text-balance opacity-90">
@@ -104,7 +104,7 @@ export default function LoginPage() {
 
           {/* Mobile Branding (Only visible on small screens) */}
           <div className="md:hidden flex items-center gap-3 mb-8 justify-center">
-            <img src="/assets/images/logo2.png" alt="BaGS Logo" className="w-12 object-contain" />
+            <img src="/assets/images/logo2.png" alt="BaGS Logo" className="h-24 w-auto object-contain" />
             <h1 className="text-2xl font-extrabold text-slate-900 dark:text-white tracking-tight">BaGS <span className="text-indigo-600 dark:text-indigo-400">Ecosystem</span></h1>
           </div>
 
