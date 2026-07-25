@@ -48,30 +48,30 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col justify-center items-center p-4 relative overflow-hidden">
+    <div 
+      className="min-h-screen flex flex-col justify-center items-center p-4 relative overflow-hidden bg-cover bg-center bg-no-repeat"
+      style={{ backgroundImage: "url('/assets/images/background.png')" }}
+    >
       
-      {/* Decorative Background Elements */}
-      <div className="absolute top-[-10%] left-[-10%] w-96 h-96 bg-indigo-500/10 rounded-full blur-3xl" />
-      <div className="absolute bottom-[-10%] right-[-10%] w-96 h-96 bg-emerald-500/10 rounded-full blur-3xl" />
+      {/* Overlay to ensure text readability if background is busy */}
+      <div className="absolute inset-0 bg-slate-900/60 z-0" />
 
       <div className="w-full max-w-5xl grid grid-cols-1 md:grid-cols-2 gap-8 items-center z-10">
         
         {/* Left Side - Branding / Welcome */}
         <div className="hidden md:flex flex-col justify-center space-y-6 pr-8">
           <div className="flex items-center gap-3">
-            <div className="w-12 h-12 bg-slate-900 rounded-xl flex items-center justify-center shadow-lg">
-              <Icon name="CubeTransparentIcon" className="text-white" size={28} />
-            </div>
-            <h1 className="text-3xl font-extrabold text-slate-900 tracking-tight">BaGS <span className="text-indigo-600">Ecosystem</span></h1>
+            <img src="/assets/images/logo2.png" alt="BaGS Logo" className="w-16 object-contain" />
+            <h1 className="text-3xl font-extrabold text-white tracking-tight">BaGS <span className="text-indigo-400">Ecosystem</span></h1>
           </div>
-          <p className="text-slate-600 text-lg font-medium leading-relaxed">
+          <p className="text-slate-200 text-lg font-medium leading-relaxed">
             Welcome to the centralized management portal for PT Baskara Asri Ghas. 
             Access all enterprise modules, from Fleet Tracking to Financial Analytics, in one secure platform.
           </p>
           
-          <div className="pt-8 mt-8 border-t border-slate-200">
-            <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wider mb-4">Quick Demo Access</h3>
-            <p className="text-xs text-slate-500 mb-4">Select a role below to auto-fill the login credentials.</p>
+          <div className="pt-8 mt-8 border-t border-slate-700">
+            <h3 className="text-sm font-bold text-white uppercase tracking-wider mb-4">Quick Demo Access</h3>
+            <p className="text-xs text-slate-300 mb-4">Select a role below to auto-fill the login credentials.</p>
             <div className="grid grid-cols-2 gap-3">
               {demoAccounts.map((acc, idx) => (
                 <button
@@ -93,9 +93,7 @@ export default function LoginPage() {
           
           {/* Mobile Branding (Only visible on small screens) */}
           <div className="md:hidden flex items-center gap-3 mb-8 justify-center">
-            <div className="w-10 h-10 bg-slate-900 rounded-lg flex items-center justify-center">
-              <Icon name="CubeTransparentIcon" className="text-white" size={24} />
-            </div>
+            <img src="/assets/images/logo2.png" alt="BaGS Logo" className="w-12 object-contain" />
             <h1 className="text-2xl font-extrabold text-slate-900 tracking-tight">BaGS <span className="text-indigo-600">Ecosystem</span></h1>
           </div>
 

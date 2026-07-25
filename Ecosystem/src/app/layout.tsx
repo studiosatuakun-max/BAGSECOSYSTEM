@@ -20,7 +20,7 @@ export const metadata: Metadata = {
   title: 'BaGS Ecosystem — Integrated ERP & Gas Logistics',
   description: 'Unified access dashboard for PT Baskara Asri Ghas — manage ERP, fleet, finance, and gas logistics operations from one secure platform.',
   icons: {
-    icon: [{ url: '/favicon.ico', type: 'image/x-icon' }],
+    icon: [{ url: '/assets/images/icon.png', type: 'image/png' }],
   },
 };
 
