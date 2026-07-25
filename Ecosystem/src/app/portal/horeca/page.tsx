@@ -316,12 +316,12 @@ export default function HorecaCommercialPage() {
           <div className="bg-gradient-to-br from-amber-900 via-amber-950 to-slate-950 text-white p-6 rounded-3xl border border-amber-800/60 shadow-xl relative overflow-hidden flex flex-col justify-between group hover:border-amber-500 hover:-translate-y-1.5 hover:shadow-2xl hover:shadow-amber-950/50 transition-all duration-300 animate-in fade-in slide-in-from-bottom-6 duration-700" style={{ animationDelay: '0ms', animationFillMode: 'both' }}>
             <div className="absolute -right-8 -top-8 w-32 h-32 bg-amber-500/20 rounded-full blur-2xl group-hover:bg-amber-500/30 transition-all duration-500 pointer-events-none" />
             <div>
-              <div className="flex items-center justify-between text-amber-300 mb-2">
-                <span className="text-xs font-extrabold uppercase tracking-wider flex items-center gap-2">
-                  <Icon name="BanknotesIcon" size={16} className="text-amber-400" />
-                  Commercial Revenue (MTD)
+              <div className="flex items-start justify-between text-amber-300 mb-2 gap-2">
+                <span className="text-xs font-extrabold uppercase tracking-wider flex items-center gap-1.5 mr-1 leading-tight">
+                  <Icon name="BanknotesIcon" size={16} className="text-amber-400 shrink-0" />
+                  <span>Commercial Revenue (MTD)</span>
                 </span>
-                <span className="text-[10px] bg-amber-500/20 text-amber-300 border border-amber-400/30 px-2 py-0.5 rounded-full font-bold">
+                <span className="text-[10px] bg-amber-500/20 text-amber-300 border border-amber-400/30 px-2.5 py-0.5 rounded-full font-bold whitespace-nowrap shrink-0">
                   Q3 FY26
                 </span>
               </div>
@@ -351,13 +351,13 @@ export default function HorecaCommercialPage() {
           <div className="bg-white dark:bg-slate-900 p-6 rounded-3xl border border-slate-200/80 dark:border-slate-800 shadow-lg shadow-slate-100/50 dark:shadow-none flex flex-col justify-between group hover:border-amber-400 dark:hover:border-amber-600 hover:-translate-y-1.5 hover:shadow-2xl hover:shadow-amber-500/10 transition-all duration-300 relative overflow-hidden animate-in fade-in slide-in-from-bottom-6 duration-700" style={{ animationDelay: '150ms', animationFillMode: 'both' }}>
             <div className="absolute -right-6 -bottom-6 w-28 h-28 bg-amber-500/5 rounded-full blur-xl pointer-events-none" />
             <div>
-              <div className="flex items-center justify-between text-slate-500 dark:text-slate-400 mb-2">
-                <span className="text-xs font-extrabold uppercase tracking-wider flex items-center gap-2 text-slate-700 dark:text-slate-300">
-                  <Icon name="CubeIcon" size={16} className="text-amber-600 dark:text-amber-400" />
-                  CNG Cradle Racks Deployed
+              <div className="flex items-start justify-between text-slate-500 dark:text-slate-400 mb-2 gap-2">
+                <span className="text-xs font-extrabold uppercase tracking-wider flex items-center gap-1.5 text-slate-700 dark:text-slate-300 mr-1 leading-tight">
+                  <Icon name="CubeIcon" size={16} className="text-amber-600 dark:text-amber-400 shrink-0" />
+                  <span>CNG Cradle Racks Deployed</span>
                 </span>
-                <span className="text-[10px] bg-amber-50 dark:bg-amber-950/50 text-amber-700 dark:text-amber-300 border border-amber-200 dark:border-amber-800 px-2 py-0.5 rounded-full font-bold">
-                  450 Units Active
+                <span className="text-[10px] bg-amber-50 dark:bg-amber-950/50 text-amber-700 dark:text-amber-300 border border-amber-200 dark:border-amber-800 px-2.5 py-0.5 rounded-full font-bold whitespace-nowrap shrink-0">
+                  450 Units
                 </span>
               </div>
               <div className="text-3xl sm:text-4xl font-black text-slate-900 dark:text-white mt-1">
@@ -380,12 +380,12 @@ export default function HorecaCommercialPage() {
           <div className="bg-gradient-to-br from-rose-50 to-amber-50/50 dark:from-rose-950/30 dark:to-amber-950/20 p-6 rounded-3xl border border-rose-200/80 dark:border-rose-900/50 shadow-lg shadow-rose-100/30 flex flex-col justify-between group hover:border-rose-400 dark:hover:border-rose-500 hover:-translate-y-1.5 hover:shadow-2xl hover:shadow-rose-500/15 transition-all duration-300 relative overflow-hidden animate-in fade-in slide-in-from-bottom-6 duration-700" style={{ animationDelay: '300ms', animationFillMode: 'both' }}>
             <div className="absolute top-0 right-0 w-24 h-24 bg-rose-500/10 rounded-full blur-xl pointer-events-none" />
             <div>
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-xs font-extrabold uppercase tracking-wider flex items-center gap-2 text-rose-800 dark:text-rose-300">
-                  <Icon name="ShieldExclamationIcon" size={16} className="text-rose-600 animate-bounce" />
-                  CNG Safety Anomaly Radar
+              <div className="flex items-start justify-between mb-2 gap-2">
+                <span className="text-xs font-extrabold uppercase tracking-wider flex items-center gap-1.5 text-rose-800 dark:text-rose-300 mr-1 leading-tight">
+                  <Icon name="ShieldExclamationIcon" size={16} className="text-rose-600 animate-bounce shrink-0" />
+                  <span>CNG Safety Anomaly Radar</span>
                 </span>
-                <span className="text-[10px] bg-rose-600 text-white px-2.5 py-0.5 rounded-full font-extrabold shadow-sm animate-pulse">
+                <span className="text-[10px] bg-rose-600 text-white px-2.5 py-0.5 rounded-full font-extrabold shadow-sm animate-pulse whitespace-nowrap shrink-0">
                   2 ACTION REQ
                 </span>
               </div>
@@ -411,12 +411,12 @@ export default function HorecaCommercialPage() {
           {/* Card 4: Price Spread & CNG Margin Index */}
           <div className="bg-white dark:bg-slate-900 p-6 rounded-3xl border border-slate-200/80 dark:border-slate-800 shadow-lg shadow-slate-100/50 dark:shadow-none flex flex-col justify-between group hover:border-emerald-400 dark:hover:border-emerald-600 hover:-translate-y-1.5 hover:shadow-2xl hover:shadow-emerald-500/10 transition-all duration-300 relative overflow-hidden animate-in fade-in slide-in-from-bottom-6 duration-700" style={{ animationDelay: '450ms', animationFillMode: 'both' }}>
             <div>
-              <div className="flex items-center justify-between text-slate-500 dark:text-slate-400 mb-2">
-                <span className="text-xs font-extrabold uppercase tracking-wider flex items-center gap-2 text-slate-700 dark:text-slate-300">
-                  <Icon name="ScaleIcon" size={16} className="text-emerald-600 dark:text-emerald-400" />
-                  CNG Commercial Spread
+              <div className="flex items-start justify-between text-slate-500 dark:text-slate-400 mb-2 gap-2">
+                <span className="text-xs font-extrabold uppercase tracking-wider flex items-center gap-1.5 text-slate-700 dark:text-slate-300 mr-1 leading-tight">
+                  <Icon name="ScaleIcon" size={16} className="text-emerald-600 dark:text-emerald-400 shrink-0" />
+                  <span>CNG Commercial Spread</span>
                 </span>
-                <span className="text-[10px] bg-emerald-50 dark:bg-emerald-950/50 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800 px-2 py-0.5 rounded-full font-bold">
+                <span className="text-[10px] bg-emerald-50 dark:bg-emerald-950/50 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800 px-2.5 py-0.5 rounded-full font-bold whitespace-nowrap shrink-0">
                   +Rp 2,750 / Sm³
                 </span>
               </div>
@@ -475,9 +475,9 @@ export default function HorecaCommercialPage() {
           <div className="col-span-1 lg:col-span-2 bg-white dark:bg-slate-900 p-6 rounded-3xl border border-slate-200/80 dark:border-slate-800 shadow-lg shadow-slate-100/50 dark:shadow-none flex flex-col justify-between">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-100 dark:border-slate-800 pb-4 mb-4">
               <div>
-                <h3 className="text-base font-extrabold text-slate-900 dark:text-white tracking-tight flex items-center gap-2">
+                <h3 className="text-base font-extrabold text-slate-900 dark:text-white tracking-tight flex flex-wrap items-center gap-2">
                   <span>Analisa Komparasi Revenue CNG Komersial vs Target</span>
-                  <span className="bg-amber-50 dark:bg-amber-950/60 text-amber-700 dark:text-amber-300 text-[10px] font-bold px-2.5 py-0.5 rounded-full border border-amber-200 dark:border-amber-800">
+                  <span className="bg-amber-50 dark:bg-amber-950/60 text-amber-700 dark:text-amber-300 text-[10px] font-bold px-2.5 py-0.5 rounded-full border border-amber-200 dark:border-amber-800 whitespace-nowrap shrink-0">
                     Juta Rupiah (IDR)
                   </span>
                 </h3>

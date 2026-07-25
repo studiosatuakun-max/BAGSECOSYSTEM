@@ -324,12 +324,12 @@ export default function DireksiB2BPage() {
           <div className="bg-gradient-to-br from-indigo-900 via-indigo-950 to-slate-950 text-white p-6 rounded-3xl border border-indigo-800/60 shadow-xl relative overflow-hidden flex flex-col justify-between group hover:border-indigo-500 hover:-translate-y-1.5 hover:shadow-2xl hover:shadow-indigo-950/50 transition-all duration-300 animate-in fade-in slide-in-from-bottom-6 duration-700" style={{ animationDelay: '0ms', animationFillMode: 'both' }}>
             <div className="absolute -right-8 -top-8 w-32 h-32 bg-indigo-500/20 rounded-full blur-2xl group-hover:bg-indigo-500/30 transition-all duration-500 pointer-events-none" />
             <div>
-              <div className="flex items-center justify-between text-indigo-300 mb-2">
-                <span className="text-xs font-extrabold uppercase tracking-wider flex items-center gap-2">
-                  <Icon name="BanknotesIcon" size={16} className="text-indigo-400" />
-                  Total Revenue (MTD)
+              <div className="flex items-start justify-between text-indigo-300 mb-2 gap-2">
+                <span className="text-xs font-extrabold uppercase tracking-wider flex items-center gap-1.5 mr-1 leading-tight">
+                  <Icon name="BanknotesIcon" size={16} className="text-indigo-400 shrink-0" />
+                  <span>Total Revenue (MTD)</span>
                 </span>
-                <span className="text-[10px] bg-indigo-500/20 text-indigo-300 border border-indigo-400/30 px-2 py-0.5 rounded-full font-bold">
+                <span className="text-[10px] bg-indigo-500/20 text-indigo-300 border border-indigo-400/30 px-2.5 py-0.5 rounded-full font-bold whitespace-nowrap shrink-0">
                   Q3 FY26
                 </span>
               </div>
@@ -359,12 +359,12 @@ export default function DireksiB2BPage() {
           <div className="bg-white dark:bg-slate-900 p-6 rounded-3xl border border-slate-200/80 dark:border-slate-800 shadow-lg shadow-slate-100/50 dark:shadow-none flex flex-col justify-between group hover:border-blue-400 dark:hover:border-blue-600 hover:-translate-y-1.5 hover:shadow-2xl hover:shadow-blue-500/10 transition-all duration-300 relative overflow-hidden animate-in fade-in slide-in-from-bottom-6 duration-700" style={{ animationDelay: '150ms', animationFillMode: 'both' }}>
             <div className="absolute -right-6 -bottom-6 w-28 h-28 bg-blue-500/5 rounded-full blur-xl pointer-events-none" />
             <div>
-              <div className="flex items-center justify-between text-slate-500 dark:text-slate-400 mb-2">
-                <span className="text-xs font-extrabold uppercase tracking-wider flex items-center gap-2 text-slate-700 dark:text-slate-300">
-                  <Icon name="DocumentTextIcon" size={16} className="text-blue-600 dark:text-blue-400" />
-                  Active B2B Contracts
+              <div className="flex items-start justify-between text-slate-500 dark:text-slate-400 mb-2 gap-2">
+                <span className="text-xs font-extrabold uppercase tracking-wider flex items-center gap-1.5 text-slate-700 dark:text-slate-300 mr-1 leading-tight">
+                  <Icon name="DocumentTextIcon" size={16} className="text-blue-600 dark:text-blue-400 shrink-0" />
+                  <span>Active B2B Contracts</span>
                 </span>
-                <span className="text-[10px] bg-blue-50 dark:bg-blue-950/50 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-800 px-2 py-0.5 rounded-full font-bold">
+                <span className="text-[10px] bg-blue-50 dark:bg-blue-950/50 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-800 px-2.5 py-0.5 rounded-full font-bold whitespace-nowrap shrink-0">
                   28 Clients
                 </span>
               </div>
@@ -388,12 +388,12 @@ export default function DireksiB2BPage() {
           <div className="bg-gradient-to-br from-rose-50 to-amber-50/50 dark:from-rose-950/30 dark:to-amber-950/20 p-6 rounded-3xl border border-rose-200/80 dark:border-rose-900/50 shadow-lg shadow-rose-100/30 flex flex-col justify-between group hover:border-rose-400 dark:hover:border-rose-500 hover:-translate-y-1.5 hover:shadow-2xl hover:shadow-rose-500/15 transition-all duration-300 relative overflow-hidden animate-in fade-in slide-in-from-bottom-6 duration-700" style={{ animationDelay: '300ms', animationFillMode: 'both' }}>
             <div className="absolute top-0 right-0 w-24 h-24 bg-rose-500/10 rounded-full blur-xl pointer-events-none" />
             <div>
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-xs font-extrabold uppercase tracking-wider flex items-center gap-2 text-rose-800 dark:text-rose-300">
-                  <Icon name="ExclamationTriangleIcon" size={16} className="text-rose-600 animate-bounce" />
-                  Renewal Risk Radar
+              <div className="flex items-start justify-between mb-2 gap-2">
+                <span className="text-xs font-extrabold uppercase tracking-wider flex items-center gap-1.5 text-rose-800 dark:text-rose-300 mr-1 leading-tight">
+                  <Icon name="ExclamationTriangleIcon" size={16} className="text-rose-600 animate-bounce shrink-0" />
+                  <span>Renewal Risk Radar</span>
                 </span>
-                <span className="text-[10px] bg-rose-600 text-white px-2.5 py-0.5 rounded-full font-extrabold shadow-sm animate-pulse">
+                <span className="text-[10px] bg-rose-600 text-white px-2.5 py-0.5 rounded-full font-extrabold shadow-sm animate-pulse whitespace-nowrap shrink-0">
                   3 ACTION REQ
                 </span>
               </div>
@@ -419,12 +419,12 @@ export default function DireksiB2BPage() {
           {/* Card 4: Price Spread & Margin Index */}
           <div className="bg-white dark:bg-slate-900 p-6 rounded-3xl border border-slate-200/80 dark:border-slate-800 shadow-lg shadow-slate-100/50 dark:shadow-none flex flex-col justify-between group hover:border-emerald-400 dark:hover:border-emerald-600 hover:-translate-y-1.5 hover:shadow-2xl hover:shadow-emerald-500/10 transition-all duration-300 relative overflow-hidden animate-in fade-in slide-in-from-bottom-6 duration-700" style={{ animationDelay: '450ms', animationFillMode: 'both' }}>
             <div>
-              <div className="flex items-center justify-between text-slate-500 dark:text-slate-400 mb-2">
-                <span className="text-xs font-extrabold uppercase tracking-wider flex items-center gap-2 text-slate-700 dark:text-slate-300">
-                  <Icon name="ScaleIcon" size={16} className="text-emerald-600 dark:text-emerald-400" />
-                  Net Spread Margin
+              <div className="flex items-start justify-between text-slate-500 dark:text-slate-400 mb-2 gap-2">
+                <span className="text-xs font-extrabold uppercase tracking-wider flex items-center gap-1.5 text-slate-700 dark:text-slate-300 mr-1 leading-tight">
+                  <Icon name="ScaleIcon" size={16} className="text-emerald-600 dark:text-emerald-400 shrink-0" />
+                  <span>Net Spread Margin</span>
                 </span>
-                <span className="text-[10px] bg-emerald-50 dark:bg-emerald-950/50 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800 px-2 py-0.5 rounded-full font-bold">
+                <span className="text-[10px] bg-emerald-50 dark:bg-emerald-950/50 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800 px-2.5 py-0.5 rounded-full font-bold whitespace-nowrap shrink-0">
                   +$4.20 Spread
                 </span>
               </div>
@@ -483,9 +483,9 @@ export default function DireksiB2BPage() {
           <div className="col-span-1 lg:col-span-2 bg-white dark:bg-slate-900 p-6 rounded-3xl border border-slate-200/80 dark:border-slate-800 shadow-lg shadow-slate-100/50 dark:shadow-none flex flex-col justify-between">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-100 dark:border-slate-800 pb-4 mb-4">
               <div>
-                <h3 className="text-base font-extrabold text-slate-900 dark:text-white tracking-tight flex items-center gap-2">
+                <h3 className="text-base font-extrabold text-slate-900 dark:text-white tracking-tight flex flex-wrap items-center gap-2">
                   <span>Analisa Komparasi Revenue vs Target KPI</span>
-                  <span className="bg-indigo-50 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300 text-[10px] font-bold px-2.5 py-0.5 rounded-full border border-indigo-200 dark:border-indigo-800">
+                  <span className="bg-indigo-50 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300 text-[10px] font-bold px-2.5 py-0.5 rounded-full border border-indigo-200 dark:border-indigo-800 whitespace-nowrap shrink-0">
                     Triliun Rupiah (IDR)
                   </span>
                 </h3>
