@@ -1,4 +1,5 @@
-// src/app/components/ChatPanel.tsx
+'use client';
+
 import React, { useEffect, useState, useRef } from 'react';
 import { supabase } from '@/lib/supabaseClient';
 import MessageBubble from './MessageBubble';

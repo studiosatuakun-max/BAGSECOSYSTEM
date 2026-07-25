@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import type { Metadata } from 'next';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
@@ -6,6 +6,7 @@ import HeroSection from '../components/HeroSection';
 import PrimaryPortalsSection from '../components/PrimaryPortalsSection';
 import InternalPortalsSection from '../components/InternalPortalsSection';
 import SystemIntegrityStrip from '../components/SystemIntegrityStrip';
+import ChatWidget from '../components/ChatWidget';
 
 export const metadata: Metadata = {
   title: 'BaGS Ecosystem — Integrated ERP & Gas Logistics',
@@ -29,12 +30,6 @@ export default function HomePage() {
       <div className="ambient-glow-1 bottom-40 left-1/3 z-0 opacity-35" />
 
       {/* Navigation */}
-      {/* Chat toggle button */}
-      <button onClick={() => setShowChat(true)} className="fixed bottom-4 right-4 bg-indigo-600 hover:bg-indigo-500 text-white rounded-full w-14 h-14 flex items-center justify-center shadow-lg z-40">
-        <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 10h.01M12 10h.01M16 10h.01M9 16h6" />
-        </svg>
-      </button>
       <Header />
 
       {/* Main Content */}
@@ -57,8 +52,9 @@ export default function HomePage() {
 
       {/* Footer */}
       <Footer />
+
+      {/* Chat Widget */}
+      <ChatWidget />
     </div>
-      {/* Chat Panel */}
-      {showChat && <ChatPanel onClose={() => setShowChat(false)} />}
   );
 }
