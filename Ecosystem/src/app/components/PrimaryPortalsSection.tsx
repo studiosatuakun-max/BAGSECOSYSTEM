@@ -102,7 +102,7 @@ export default function PrimaryPortalsSection() {
                 )}
               </div>
 
-              <Link href="/portal/direksi-b2b" className="magnetic-btn w-full flex items-center justify-center gap-2 bg-industrial text-primary-foreground rounded-2xl py-3.5 font-bold hover:bg-primary/90 transition-all shadow-md hover:shadow-lg" style={{ fontSize: '14px' }}>
+              <Link href="/portal/industrial" className="magnetic-btn w-full flex items-center justify-center gap-2 bg-industrial text-primary-foreground rounded-2xl py-3.5 font-bold hover:bg-primary/90 transition-all shadow-md hover:shadow-lg" style={{ fontSize: '14px' }}>
                 <Icon name="LogInIcon" size={16} variant="outline" className="text-primary-foreground" />
                 Access Industrial Portal
                 <Icon name="ArrowRightIcon" size={15} variant="outline" className="text-primary-foreground group-hover:translate-x-1 transition-transform" />
@@ -140,7 +140,7 @@ export default function PrimaryPortalsSection() {
                     Horeca Portal
                   </h3>
                   <p className="text-muted-foreground font-semibold" style={{ fontSize: '12px' }}>
-                    B2C Retail · 12Kg Cylinder Distribution
+                    B2C Commercial · CNG Cylinder Cascades &amp; Cradle Management
                   </p>
                 </div>
                 <div className="icon-container bg-amber-light flex-shrink-0 shadow-sm group-hover:scale-110 transition-transform duration-300">
@@ -149,20 +149,19 @@ export default function PrimaryPortalsSection() {
               </div>
 
               <p className="text-muted-foreground mb-6 leading-relaxed" style={{ fontSize: '13px' }}>
-                Retail-focused milk-run logistics for 12Kg cylinder distribution, cylinder
-                deposit tracking, mobile app integration, and Horeca customer management.
+                Commercial-focused milk-run logistics for CNG Cylinder Cradle Cascades, Micro-bulk CNG distribution, pressure anomaly telemetry, and Horeca customer SLA management.
               </p>
 
               {/* Feature pills */}
               <div className="flex flex-wrap gap-2 mb-7">
-                {['Milk-Run Logistics', 'Cylinder Deposits', 'Mobile App', 'Retail Orders']?.map((tag) =>
+                {['CNG Cradle Racks', 'Micro-bulk CNG', 'Pressure Telemetry', 'Milk-Run Fleet']?.map((tag) =>
                 <span key={tag} className="bg-white/60 dark:bg-slate-800/60 backdrop-blur-md border rounded-full px-3 py-1 font-semibold shadow-sm" style={{ fontSize: '11px', color: 'var(--amber-dark)', borderColor: 'rgba(245,158,11,0.3)' }}>
                     {tag}
                   </span>
                 )}
               </div>
 
-              <Link href="/portal/direksi-b2c" className="magnetic-btn w-full flex items-center justify-center gap-2 text-white rounded-2xl py-3.5 font-bold transition-all shadow-md hover:shadow-lg" style={{ fontSize: '14px', backgroundColor: 'var(--amber-dark)' }}>
+              <Link href="/portal/horeca" className="magnetic-btn w-full flex items-center justify-center gap-2 text-white rounded-2xl py-3.5 font-bold transition-all shadow-md hover:shadow-lg" style={{ fontSize: '14px', backgroundColor: 'var(--amber-dark)' }}>
                 <Icon name="LogInIcon" size={16} variant="outline" className="text-white" />
                 Access Horeca Portal
                 <Icon name="ArrowRightIcon" size={15} variant="outline" className="text-white group-hover:translate-x-1 transition-transform" />
