@@ -58,7 +58,11 @@
     "next": "15.5.18",
     "react": "19.0.3",
     "react-dom": "19.0.3",
-    "recharts": "^2.15.4"
+    "react-hook-form": "^7.82.0",
+    "recharts": "^2.15.4",
+    "sonner": "^1.7.4",
+    "@serwist/next": "^9.5.12",
+    "@serwist/precaching": "^9.5.12"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
