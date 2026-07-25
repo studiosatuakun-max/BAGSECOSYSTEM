@@ -24,6 +24,23 @@ const portalMap: Record<string, { port: number | null; name: string }> = {
   legal: { port: 3011, name: 'Baskara Legal' },
 };
 
+const envUrls: Record<string, string | undefined> = {
+  'direksi-b2b': process.env.NEXT_PUBLIC_PORTAL_DIREKSI_B2B_URL,
+  'direksi-b2c': process.env.NEXT_PUBLIC_PORTAL_DIREKSI_B2C_URL,
+  'skid': process.env.NEXT_PUBLIC_PORTAL_SKID_URL,
+  'horeca': process.env.NEXT_PUBLIC_PORTAL_HORECA_URL,
+  'pelanggan': process.env.NEXT_PUBLIC_PORTAL_PELANGGAN_URL,
+  'stasiun': process.env.NEXT_PUBLIC_PORTAL_STASIUN_URL,
+  'armada': process.env.NEXT_PUBLIC_PORTAL_ARMADA_URL,
+  'keuangan': process.env.NEXT_PUBLIC_PORTAL_KEUANGAN_URL,
+  'pemasaran': process.env.NEXT_PUBLIC_PORTAL_PEMASARAN_URL,
+  'hr': process.env.NEXT_PUBLIC_PORTAL_HR_URL,
+  'pwa': process.env.NEXT_PUBLIC_PORTAL_PWA_URL,
+  'cs': process.env.NEXT_PUBLIC_PORTAL_CS_URL,
+  'purchasing': process.env.NEXT_PUBLIC_PORTAL_PURCHASING_URL,
+  'legal': process.env.NEXT_PUBLIC_PORTAL_LEGAL_URL,
+};
+
 export default function PortalPreviewPage({ params }: { params: Promise<{ id: string }> }) {
   const resolvedParams = use(params);
   const portalId = resolvedParams.id;
@@ -71,7 +88,7 @@ export default function PortalPreviewPage({ params }: { params: Promise<{ id: st
       {/* Main Iframe Content */}
       <div className="flex-1 w-full relative bg-secondary">
         <iframe
-          src={`http://localhost:${config.port}`}
+          src={envUrls[portalId] || `http://localhost:${config.port}`}
           className="w-full h-full border-none"
           title={`${config?.name} Preview`}
           allow="fullscreen"
