@@ -1,4 +1,3 @@
-import InboxWidget from '@/app/components/InboxWidget';
 import React from 'react';
 import OpsTopBar from './components/OpsTopBar';
 import TelemetryChartCard from './components/TelemetryChartCard';
@@ -65,7 +64,6 @@ export default function OpsHsseDashboard() {
         </div>
       </main>
   {/* Enterprise Dispatch Inbox Widget */}
-  <InboxWidget />
 </div>
   );
 }

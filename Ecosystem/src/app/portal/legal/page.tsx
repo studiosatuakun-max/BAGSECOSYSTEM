@@ -77,6 +77,7 @@ export default function LegalDashboardPage() {
         </div>
         
         <div className="flex items-center gap-4">
+          <InboxWidget variant="header" />
           <div className="flex items-center gap-2 bg-indigo-50 text-indigo-700 px-3 py-1 rounded-full text-xs font-bold border border-indigo-200">
             <div className="w-2 h-2 rounded-full bg-indigo-600 animate-pulse" />
             Legal Director Access
@@ -310,7 +311,6 @@ export default function LegalDashboardPage() {
         </div>
       )}
   {/* Enterprise Dispatch Inbox Widget */}
-  <InboxWidget />
 </div>
   );
 }

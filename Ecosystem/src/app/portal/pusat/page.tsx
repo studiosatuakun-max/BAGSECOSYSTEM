@@ -54,26 +54,6 @@ export default function PusatDashboardOverview() {
 
   return (
     <div className="min-h-screen bg-slate-50 font-sans relative">
-      {/* Top Header */}
-      <header className="h-14 border-b border-slate-200 bg-white flex items-center justify-between px-6 sticky top-0 z-10 shadow-sm">
-        <div className="flex items-center gap-4">
-          <div className="flex flex-col">
-            <span className="font-extrabold text-sm text-slate-900 leading-tight">Super Admin Hub</span>
-            <span className="text-[10px] text-slate-500 font-medium">Global Master Data</span>
-          </div>
-        </div>
-        
-        <div className="flex items-center gap-4">
-          <div className="flex items-center gap-2 bg-slate-800 text-slate-100 px-3 py-1 rounded-full text-xs font-bold border border-slate-700">
-            <div className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
-            Root Access
-          </div>
-          <div className="text-right flex flex-col justify-center">
-            <span className="text-xs font-bold text-slate-900">09:03:16</span>
-            <span className="text-[10px] text-slate-500 font-medium">System Online</span>
-          </div>
-        </div>
-      </header>
 
       <main className="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 xl:px-10 2xl:px-12 py-5 pb-8">
         {/* Bento Grid */}

@@ -90,6 +90,7 @@ export default function DireksiB2CPage() {
         </div>
         
         <div className="flex items-center gap-4">
+          <InboxWidget variant="header" />
           <div className="flex items-center gap-2 bg-amber-50 text-amber-700 px-3 py-1 rounded-full text-xs font-bold border border-amber-200">
             <div className="w-2 h-2 rounded-full bg-amber-500 animate-pulse" />
             B2C Director Access
@@ -291,7 +292,6 @@ export default function DireksiB2CPage() {
         </div>
       )}
   {/* Enterprise Dispatch Inbox Widget */}
-  <InboxWidget />
 </div>
   );
 }

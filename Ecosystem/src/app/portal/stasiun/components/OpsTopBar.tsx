@@ -1,4 +1,6 @@
 'use client';
+
+import InboxWidget from '@/app/components/InboxWidget';
 import React, { useState, useEffect } from 'react';
 import { Activity, Shield, Wifi, AlertTriangle, Clock } from 'lucide-react';
 import AppLogo from '@/components/ui/AppLogo';
@@ -104,6 +106,7 @@ export default function OpsTopBar() {
 
           {/* Right: Live clock */}
           <div className="flex items-center gap-3 shrink-0">
+            <InboxWidget variant="header" />
             {/* Activity indicator */}
             <div className="hidden sm:flex items-center gap-1.5">
               <Activity size={14} className="text-primary" />

@@ -80,6 +80,7 @@ export default function HRDashboardPage() {
         </div>
         
         <div className="flex items-center gap-4">
+          <InboxWidget variant="header" />
           <div className="flex items-center gap-2 bg-fuchsia-50 text-fuchsia-700 px-3 py-1 rounded-full text-xs font-bold border border-fuchsia-200">
             <div className="w-2 h-2 rounded-full bg-fuchsia-600 animate-pulse" />
             HR Director
@@ -291,7 +292,6 @@ export default function HRDashboardPage() {
         </div>
       )}
   {/* Enterprise Dispatch Inbox Widget */}
-  <InboxWidget />
 </div>
   );
 }

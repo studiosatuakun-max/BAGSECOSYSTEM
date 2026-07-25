@@ -81,6 +81,7 @@ export default function FinanceDashboardPage() {
         </div>
         
         <div className="flex items-center gap-4">
+          <InboxWidget variant="header" />
           <div className="flex items-center gap-2 bg-emerald-50 text-emerald-700 px-3 py-1 rounded-full text-xs font-bold border border-emerald-200">
             <div className="w-2 h-2 rounded-full bg-emerald-600 animate-pulse" />
             Finance Manager
@@ -288,7 +289,6 @@ export default function FinanceDashboardPage() {
         </div>
       )}
   {/* Enterprise Dispatch Inbox Widget */}
-  <InboxWidget />
 </div>
   );
 }

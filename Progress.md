@@ -36,7 +36,10 @@ To elevate BaGS Ecosystem into an autonomous, next-generation enterprise ERP, we
   - Built dedicated API routes (`/api/inbox/dispatches` and `/api/inbox/files`) supporting priority tagging (`Normal`, `High`, `Urgent`), status workflows (`Unread`, `Read`, `In Review`, `Resolved`), and file attachments up to **25 MB**.
   - Integrated realistic PT Baskara Asri Ghas operational fallback dispatches (Skid Tank maintenance approvals, Ariell compressor sparepart notifications, safety memos) for instant presentation readiness.
   - Resolved Next.js 15 App Router Client/Server component boundary rules, achieving 100% clean production builds (`npm run build`).
-  - **Division Portal Integration**: Successfully injected `<InboxWidget />` across all 12 operational division portals (`armada`, `cs`, `direksi-b2b`, `direksi-b2c`, `hr`, `keuangan`, `legal`, `pemasaran`, `purchasing`, `pusat`, `stasiun`, `skid`), while explicitly excluding Web App client modules (`pelanggan`, `pwa`, `horeca`) as instructed.
+  - Removed Dispatch Inbox trigger from the main dashboard (`/dashboard`) overview page to keep it exclusive to division portals.
+- [x] **Top Navbar Redesign & Enterprise Header Migration (UI/UX Luxury Upgrade)**:
+  - **Modul Pusat Topbar Migration**: Redesigned **Modul Pusat** (`/portal/pusat`) layout from a vertical left sidebar to a luxury, frosted-glass horizontal **Top Navbar** with interactive navigation tab pills (`Dashboard Overview`, `Pelanggan & Klien`, `Master Harga Gas`, `User & Role`), eliminating generic AI template aesthetics in favor of a sleek corporate SaaS interface (similar to Linear/Vercel/Stripe).
+  - **Header Notification Center Migration**: Migrated the **Dispatch Inbox** trigger from a floating bottom-right pill button to an inline **Top Header Notification Bell** (`[✉️ Dispatch Inbox]`) embedded permanently in the top navigation bar across all 12 operational division portals (`armada`, `cs`, `direksi-b2b`, `direksi-b2c`, `hr`, `keuangan`, `legal`, `pemasaran`, `purchasing`, `pusat`, `stasiun`, `skid`), while preserving the luxurious slide-out Frosted Glass drawer when clicked.
 - [x] Committed and pushed all updates to GitHub repository branch `main`.
 
 ## Next Steps

@@ -79,6 +79,7 @@ export default function MarketingDashboardPage() {
         </div>
         
         <div className="flex items-center gap-4">
+          <InboxWidget variant="header" />
           <div className="flex items-center gap-2 bg-pink-50 text-pink-700 px-3 py-1 rounded-full text-xs font-bold border border-pink-200">
             <div className="w-2 h-2 rounded-full bg-pink-600 animate-pulse" />
             CMO Access
@@ -289,7 +290,6 @@ export default function MarketingDashboardPage() {
         </div>
       )}
   {/* Enterprise Dispatch Inbox Widget */}
-  <InboxWidget />
 </div>
   );
 }

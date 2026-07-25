@@ -79,6 +79,7 @@ export default function SkidPortalDashboardPage() {
         </div>
         
         <div className="flex items-center gap-4">
+          <InboxWidget variant="header" />
           <div className="flex items-center gap-2 bg-indigo-50 text-indigo-700 px-3 py-1 rounded-full text-xs font-bold border border-indigo-200">
             <div className="w-2 h-2 rounded-full bg-indigo-600 animate-pulse" />
             Client Access (PT Indofood)
@@ -281,7 +282,6 @@ export default function SkidPortalDashboardPage() {
         </div>
       )}
   {/* Enterprise Dispatch Inbox Widget */}
-  <InboxWidget />
 </div>
   );
 }
