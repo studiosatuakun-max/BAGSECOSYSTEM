@@ -687,13 +687,13 @@ export default function DireksiB2BPage() {
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse">
               <thead>
-                <tr className="bg-slate-100/70 dark:bg-slate-800/60 text-[11px] font-extrabold text-slate-500 dark:text-slate-400 uppercase tracking-wider border-b border-slate-200 dark:border-slate-800">
-                  <th className="py-4 px-6">Perusahaan &amp; Kawasan</th>
-                  <th className="py-4 px-6">Sektor &amp; Metode Suplai</th>
-                  <th className="py-4 px-6">Kuota vs Utilisasi Bulanan</th>
-                  <th className="py-4 px-6">Omzet MTD &amp; AE</th>
-                  <th className="py-4 px-6">Status SLA Kontrak</th>
-                  <th className="py-4 px-6 text-right">Aksi Strategis</th>
+                <tr className="bg-slate-100/70 dark:bg-slate-800/60 text-[11px] font-extrabold text-slate-500 dark:text-slate-400 uppercase tracking-wider border-b border-slate-200 dark:border-slate-800 whitespace-nowrap">
+                  <th className="py-4 px-6 whitespace-nowrap">Perusahaan &amp; Kawasan</th>
+                  <th className="py-4 px-6 whitespace-nowrap">Sektor &amp; Metode Suplai</th>
+                  <th className="py-4 px-6 whitespace-nowrap">Kuota vs Utilisasi Bulanan</th>
+                  <th className="py-4 px-6 whitespace-nowrap">Omzet MTD &amp; AE</th>
+                  <th className="py-4 px-6 whitespace-nowrap">Status SLA Kontrak</th>
+                  <th className="py-4 px-6 text-right whitespace-nowrap">Aksi Strategis</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100 dark:divide-slate-800/80 text-sm">
@@ -724,7 +724,7 @@ export default function DireksiB2BPage() {
                       </td>
 
                       {/* Col 2: Sector & Supply Method */}
-                      <td className="py-4 px-6">
+                      <td className="py-4 px-6 whitespace-nowrap">
                         <div className="space-y-1">
                           <span className="inline-block px-2.5 py-0.5 rounded-lg text-xs font-extrabold bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
                             {c.sector}
@@ -737,7 +737,7 @@ export default function DireksiB2BPage() {
                       </td>
 
                       {/* Col 3: Quota vs Utilization Progress */}
-                      <td className="py-4 px-6">
+                      <td className="py-4 px-6 whitespace-nowrap">
                         <div className="w-48">
                           <div className="flex justify-between text-xs font-bold mb-1">
                             <span className="text-slate-900 dark:text-white font-mono">{c.utilizedQuota.toLocaleString()} MMBTU</span>
@@ -760,7 +760,7 @@ export default function DireksiB2BPage() {
                       </td>
 
                       {/* Col 4: MTD Revenue & AE Name */}
-                      <td className="py-4 px-6">
+                      <td className="py-4 px-6 whitespace-nowrap">
                         <div className="font-black text-base text-slate-900 dark:text-white">
                           {c.mtdRevenue}
                         </div>
@@ -771,28 +771,28 @@ export default function DireksiB2BPage() {
                       </td>
 
                       {/* Col 5: SLA Expiry Status Badge */}
-                      <td className="py-4 px-6">
+                      <td className="py-4 px-6 whitespace-nowrap align-middle">
                         <div className="flex flex-col items-start gap-1">
-                          <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-extrabold uppercase tracking-wider border ${
+                          <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-extrabold uppercase tracking-wider border whitespace-nowrap shrink-0 ${
                             c.status === 'Active' 
                               ? 'bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 border-emerald-200 dark:border-emerald-800' 
                               : c.status === 'Renewal Alert'
                               ? 'bg-amber-50 dark:bg-amber-950/40 text-amber-700 dark:text-amber-300 border-amber-200 dark:border-amber-800 animate-pulse'
                               : 'bg-rose-50 dark:bg-rose-950/40 text-rose-700 dark:text-rose-300 border-rose-200 dark:border-rose-800 animate-pulse'
                           }`}>
-                            <span className={`w-1.5 h-1.5 rounded-full ${
+                            <span className={`w-1.5 h-1.5 rounded-full shrink-0 ${
                               c.status === 'Active' ? 'bg-emerald-500' : c.status === 'Renewal Alert' ? 'bg-amber-500' : 'bg-rose-500'
                             }`} />
-                            {c.status === 'Active' ? 'SLA Aman' : c.status === 'Renewal Alert' ? 'Renewal Alert' : 'Critical Expiry'}
+                            <span>{c.status === 'Active' ? 'SLA Aman' : c.status === 'Renewal Alert' ? 'Renewal Alert' : 'Critical Expiry'}</span>
                           </span>
-                          <span className="text-[11px] font-bold text-slate-500 dark:text-slate-400">
+                          <span className="text-[11px] font-bold text-slate-500 dark:text-slate-400 whitespace-nowrap">
                             End: {c.contractEnd} ({c.expiryDays} hr)
                           </span>
                         </div>
                       </td>
 
                       {/* Col 6: Actions */}
-                      <td className="py-4 px-6 text-right">
+                      <td className="py-4 px-6 text-right whitespace-nowrap align-middle">
                         <div className="flex items-center justify-end gap-1.5">
                           {c.status !== 'Active' && (
                             <button

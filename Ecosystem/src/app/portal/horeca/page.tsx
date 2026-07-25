@@ -679,13 +679,13 @@ export default function HorecaCommercialPage() {
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse">
               <thead>
-                <tr className="bg-slate-100/70 dark:bg-slate-800/60 text-[11px] font-extrabold text-slate-500 dark:text-slate-400 uppercase tracking-wider border-b border-slate-200 dark:border-slate-800">
-                  <th className="py-4 px-6">Mitra Komersial &amp; Rute Logistik</th>
-                  <th className="py-4 px-6">Sektor &amp; Metode Suplai CNG</th>
-                  <th className="py-4 px-6">Kuota vs Konsumsi Bulanan (Sm³)</th>
-                  <th className="py-4 px-6">Omzet MTD &amp; AE</th>
-                  <th className="py-4 px-6">Tekanan Gas &amp; Safety NFC</th>
-                  <th className="py-4 px-6 text-right">Aksi Strategis</th>
+                <tr className="bg-slate-100/70 dark:bg-slate-800/60 text-[11px] font-extrabold text-slate-500 dark:text-slate-400 uppercase tracking-wider border-b border-slate-200 dark:border-slate-800 whitespace-nowrap">
+                  <th className="py-4 px-6 whitespace-nowrap">Mitra Komersial &amp; Rute Logistik</th>
+                  <th className="py-4 px-6 whitespace-nowrap">Sektor &amp; Metode Suplai CNG</th>
+                  <th className="py-4 px-6 whitespace-nowrap">Kuota vs Konsumsi Bulanan (Sm³)</th>
+                  <th className="py-4 px-6 whitespace-nowrap">Omzet MTD &amp; AE</th>
+                  <th className="py-4 px-6 whitespace-nowrap">Tekanan Gas &amp; Safety NFC</th>
+                  <th className="py-4 px-6 text-right whitespace-nowrap">Aksi Strategis</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100 dark:divide-slate-800/80 text-sm">
@@ -716,7 +716,7 @@ export default function HorecaCommercialPage() {
                       </td>
 
                       {/* Col 2: Sector & Supply Type */}
-                      <td className="py-4 px-6">
+                      <td className="py-4 px-6 whitespace-nowrap">
                         <div className="space-y-1">
                           <span className="inline-block px-2.5 py-0.5 rounded-lg text-xs font-extrabold bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
                             {c.sector}
@@ -729,7 +729,7 @@ export default function HorecaCommercialPage() {
                       </td>
 
                       {/* Col 3: Quota vs Utilization Progress (Sm3) */}
-                      <td className="py-4 px-6">
+                      <td className="py-4 px-6 whitespace-nowrap">
                         <div className="w-48">
                           <div className="flex justify-between text-xs font-bold mb-1">
                             <span className="text-slate-900 dark:text-white font-mono">{c.utilizedSm3.toLocaleString()} Sm³</span>
@@ -752,7 +752,7 @@ export default function HorecaCommercialPage() {
                       </td>
 
                       {/* Col 4: MTD Revenue & AE Name */}
-                      <td className="py-4 px-6">
+                      <td className="py-4 px-6 whitespace-nowrap">
                         <div className="font-black text-base text-slate-900 dark:text-white">
                           {c.mtdRevenue}
                         </div>
@@ -763,28 +763,28 @@ export default function HorecaCommercialPage() {
                       </td>
 
                       {/* Col 5: Safety Status & Pressure Bar */}
-                      <td className="py-4 px-6">
+                      <td className="py-4 px-6 whitespace-nowrap align-middle">
                         <div className="flex flex-col items-start gap-1">
-                          <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-extrabold uppercase tracking-wider border ${
+                          <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-extrabold uppercase tracking-wider border whitespace-nowrap shrink-0 ${
                             c.safetyStatus === 'Normal Secure' 
                               ? 'bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 border-emerald-200 dark:border-emerald-800' 
                               : c.safetyStatus === 'SLA Inspection Due'
                               ? 'bg-amber-50 dark:bg-amber-950/40 text-amber-700 dark:text-amber-300 border-amber-200 dark:border-amber-800 animate-pulse'
                               : 'bg-rose-50 dark:bg-rose-950/40 text-rose-700 dark:text-rose-300 border-rose-200 dark:border-rose-800 animate-pulse'
                           }`}>
-                            <span className={`w-1.5 h-1.5 rounded-full ${
+                            <span className={`w-1.5 h-1.5 rounded-full shrink-0 ${
                               c.safetyStatus === 'Normal Secure' ? 'bg-emerald-500' : c.safetyStatus === 'SLA Inspection Due' ? 'bg-amber-500' : 'bg-rose-500'
                             }`} />
-                            {c.safetyStatus === 'Normal Secure' ? 'Normal Secure' : c.safetyStatus === 'SLA Inspection Due' ? 'Inspection Due' : 'Pressure Alert'}
+                            <span>{c.safetyStatus === 'Normal Secure' ? 'Normal Secure' : c.safetyStatus === 'SLA Inspection Due' ? 'Inspection Due' : 'Pressure Alert'}</span>
                           </span>
-                          <span className="text-[11px] font-bold text-slate-500 dark:text-slate-400 font-mono">
+                          <span className="text-[11px] font-bold text-slate-500 dark:text-slate-400 font-mono whitespace-nowrap">
                             Tekanan Operasi: {c.operatingPressureBar} Bar
                           </span>
                         </div>
                       </td>
 
                       {/* Col 6: Actions */}
-                      <td className="py-4 px-6 text-right">
+                      <td className="py-4 px-6 text-right whitespace-nowrap align-middle">
                         <div className="flex items-center justify-end gap-1.5">
                           {c.safetyStatus !== 'Normal Secure' && (
                             <button
