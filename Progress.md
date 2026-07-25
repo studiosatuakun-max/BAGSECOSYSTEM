@@ -62,7 +62,11 @@ To elevate BaGS Ecosystem into an autonomous, next-generation enterprise ERP, we
   - **Spasial & Breathing Room Enhancement**: Standardized main container top padding to `pt-10 pb-12` and vertical spacing to `space-y-8`, eliminating visual cramping against floating top headers.
   - **Staggered Entrance & Interactive Hover Dynamics**: Added sequential bottom-up entrance animations (`animate-in fade-in slide-in-from-bottom-6 duration-700`) with proportional delays (`0ms`, `150ms`, `300ms`, `450ms`) and dynamic hover elevations (`hover:-translate-y-1.5 hover:shadow-2xl`) across hero metric cards.
   - **Frosted Acrylic Frame + Accent Glow Bar**: Enhanced `PortalHeader` with translucent blur effects (`bg-white/85 dark:bg-slate-900/85 backdrop-blur-xl`) and a bottom 2px gradient accent line matching division identity (Indigo/Blue for Industrial, Warm Amber/Gold for Horeca).
-  - **Universal Slim Pill Badge Standard (`whitespace-nowrap shrink-0`)**: Locked all top-right card badges with anti-wrap and anti-squeeze properties to prevent vertical oval wrapping, ensuring sleek 1-line horizontal pills across all screen resolutions.
+- [x] **Universal Slim Table Badge Rule**: Applied `whitespace-nowrap shrink-0 align-middle` across all table cells and status badges in Industrial and Horeca modules to guarantee 1-line horizontal pills without oval wrapping under any screen width.
+- [x] **Modul Armada & Tube-Skid Console — Gold Benchmark Upgrade (`/portal/armada`)**:
+  - Transformed generic GPS template into the **Gold Benchmark Baskara Fleet & Skid Console** with Cyan/Blue Frosted Glassmorphism, real-time ATEX telemetry indicators, and executive hero metrics.
+  - **Interactive CNG Dispatch & Mileage Analytics**: Built multi-layer Recharts area chart comparing **Volume Gas Terkirim (MMBTU) vs Jarak Tempuh Armada Milk-run (km)** across time tabs (`Today`, `7D`, `1M`, `Q3`), alongside a Route Zone distribution pie chart (Surabaya, Gresik, Sidoarjo, Mojokerto/Pasuruan).
+  - **Master Database Armada & Tube-Skid + Advanced CRUD**: Replaced basic GPS table with enterprise logistics tracking for Prime Movers, 20ft/40ft Tube-Skids, SIO ATEX Driver validity, operating pressure (Bar), and slim 1-line operational badges (`En Route`, `Discharging`, `Standby`, `ATEX Maintenance`).
 - [x] Committed and pushed all updates to GitHub repository branch `main`.
 
 ## Next Steps
@@ -70,4 +74,5 @@ To elevate BaGS Ecosystem into an autonomous, next-generation enterprise ERP, we
 - [ ] Connect and configure live Supabase tables (`dispatches` and `dispatch_files` storage bucket) for permanent production persistence.
 - [ ] Implement end-to-end user authentication and role-based access control (RBAC) linking login credentials to specific division inbox filters.
 - [ ] Further specific operational feature refinements and QA testing across mobile and desktop devices.
+
 
