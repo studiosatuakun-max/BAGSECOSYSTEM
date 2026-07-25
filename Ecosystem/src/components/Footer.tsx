@@ -4,57 +4,55 @@ import Link from 'next/link';
 
 export default function Footer() {
   return (
-    <footer className="w-full border-t border-border bg-background">
-      <div className="max-w-7xl mx-auto px-6 py-8">
-        {/* Linear Single-Row Pattern */}
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-          {/* Logo + Copyright */}
-          <div className="flex items-center gap-3">
+    <footer className="w-full border-t border-slate-200/80 dark:border-slate-800 bg-white dark:bg-slate-950 transition-colors">
+      <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 xl:px-10 2xl:px-12 py-6">
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-xs font-semibold text-slate-500 dark:text-slate-400">
+          
+          {/* Left: Copyright */}
+          <div className="flex items-center gap-2.5">
             <Image
               src="/assets/images/icon.png"
               alt="BaGS Logo"
-              width={28}
-              height={28}
+              width={22}
+              height={22}
               className="object-contain"
             />
-            <span className="text-muted-foreground font-medium" style={{ fontSize: '13px' }}>
+            <span className="font-bold text-slate-700 dark:text-slate-300">
               © 2026 PT Baskara Asri Ghas
             </span>
           </div>
 
-          {/* System Status */}
-          <div className="flex items-center gap-2 text-muted-foreground" style={{ fontSize: '11px', fontWeight: 600, letterSpacing: '0.1em' }}>
-            <span className="w-1.5 h-1.5 rounded-full bg-status-green status-pulse" />
-            <span>SECURE ENVIRONMENT</span>
-            <span className="text-border">•</span>
-            <span className="w-1.5 h-1.5 rounded-full bg-status-green status-pulse" />
-            <span>REAL-TIME TELEMETRY</span>
+          {/* Center: Ecosystem Engine Attribution */}
+          <div className="flex items-center gap-1.5">
+            <span className="font-extrabold text-slate-900 dark:text-white tracking-tight bg-slate-100 dark:bg-slate-800 px-3 py-1 rounded-full border border-slate-200 dark:border-slate-700">
+              Baskara Ecosystem Engine v2
+            </span>
           </div>
 
-          {/* Links */}
-          <div className="flex items-center gap-6">
+          {/* Right: Links */}
+          <div className="flex items-center gap-5 font-bold">
             <Link
               href="#"
-              className="text-muted-foreground hover:text-foreground transition-colors font-medium"
-              style={{ fontSize: '13px' }}
+              className="hover:text-cyan-600 dark:hover:text-cyan-400 transition-colors"
             >
               Privacy
             </Link>
+            <span className="text-slate-300 dark:text-slate-700">•</span>
             <Link
               href="#"
-              className="text-muted-foreground hover:text-foreground transition-colors font-medium"
-              style={{ fontSize: '13px' }}
+              className="hover:text-cyan-600 dark:hover:text-cyan-400 transition-colors"
             >
               Terms
             </Link>
+            <span className="text-slate-300 dark:text-slate-700">•</span>
             <Link
               href="#"
-              className="text-muted-foreground hover:text-foreground transition-colors font-medium"
-              style={{ fontSize: '13px' }}
+              className="hover:text-cyan-600 dark:hover:text-cyan-400 transition-colors"
             >
               Support
             </Link>
           </div>
+
         </div>
       </div>
     </footer>

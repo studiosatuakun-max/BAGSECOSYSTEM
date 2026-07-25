@@ -854,16 +854,9 @@ export default function DireksiB2BPage() {
             <div className="flex items-center gap-4">
               <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-emerald-500" /> SLA &gt; 60 Hari</span>
               <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-amber-500" /> Renewal Alert (30-60 Hari)</span>
-              <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-rose-500" /> Critical Expiry (&lt; 30 Hari)</span>
             </div>
           </div>
         </div>
-
-        {/* Footer Attribution Strip */}
-        <div className="mt-8 pt-4 border-t border-slate-200/60 dark:border-slate-800 flex items-center justify-center text-xs text-slate-400 font-medium">
-          <span className="font-extrabold text-slate-700 dark:text-slate-300">Baskara Ecosystem Engine v2</span>
-        </div>
-
       </div>
 
       {/* --- ADVANCED LUXURY CRUD MODAL --- */}
