@@ -227,7 +227,7 @@ export default function InternalPortalsSection() {
               {/* Subtle Ambient Hover Glow */}
               <div className="absolute -top-24 -right-24 w-48 h-48 rounded-full blur-3xl pointer-events-none opacity-0 group-hover:opacity-40 transition-opacity duration-500" style={{ backgroundColor: div.accentColor }} />
 
-              <div className="p-6.5 flex flex-col flex-1 relative z-10">
+              <div className="p-6 md:p-7 flex flex-col flex-1 relative z-10">
                 {/* Header Row */}
                 <div className="flex items-start justify-between mb-4">
                   <div className="flex items-center gap-3.5">
@@ -251,7 +251,7 @@ export default function InternalPortalsSection() {
                   </div>
 
                   {/* Secure badge */}
-                  <div className="secure-badge bg-white/60 dark:bg-slate-800/60 backdrop-blur-md text-muted-foreground flex-shrink-0 border border-white/50 dark:border-slate-700/50 shadow-2xs">
+                  <div className="secure-badge bg-white/60 dark:bg-slate-800/60 backdrop-blur-md text-muted-foreground flex-shrink-0 border border-white/50 dark:border-slate-700/50 shadow-sm">
                     <Icon name="LockIcon" size={9} variant="solid" />
                     <span>Secure</span>
                   </div>
@@ -267,7 +267,7 @@ export default function InternalPortalsSection() {
                   {div.features.map((feat) => (
                     <span
                       key={feat}
-                      className="rounded-full px-2.5 py-0.5 font-semibold bg-white/50 dark:bg-slate-800/50 backdrop-blur-sm shadow-2xs"
+                      className="rounded-full px-2.5 py-0.5 font-semibold bg-white/50 dark:bg-slate-800/50 backdrop-blur-sm shadow-sm"
                       style={{
                         fontSize: '10px',
                         color: div.accentColor,

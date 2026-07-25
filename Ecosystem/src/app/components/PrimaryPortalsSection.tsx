@@ -96,7 +96,7 @@ export default function PrimaryPortalsSection() {
               {/* Feature pills */}
               <div className="flex flex-wrap gap-2 mb-7">
                 {['Custody Transfer', 'Contract Mgmt', 'Large-Scale Delivery', 'B2B Billing']?.map((tag) =>
-                <span key={tag} className="bg-white/60 dark:bg-slate-800/60 backdrop-blur-md text-industrial dark:text-indigo-300 border border-industrial/20 dark:border-indigo-500/30 rounded-full px-3 py-1 font-semibold shadow-2xs" style={{ fontSize: '11px' }}>
+                <span key={tag} className="bg-white/60 dark:bg-slate-800/60 backdrop-blur-md text-industrial dark:text-indigo-300 border border-industrial/20 dark:border-indigo-500/30 rounded-full px-3 py-1 font-semibold shadow-sm" style={{ fontSize: '11px' }}>
                     {tag}
                   </span>
                 )}
@@ -156,7 +156,7 @@ export default function PrimaryPortalsSection() {
               {/* Feature pills */}
               <div className="flex flex-wrap gap-2 mb-7">
                 {['Milk-Run Logistics', 'Cylinder Deposits', 'Mobile App', 'Retail Orders']?.map((tag) =>
-                <span key={tag} className="bg-white/60 dark:bg-slate-800/60 backdrop-blur-md border rounded-full px-3 py-1 font-semibold shadow-2xs" style={{ fontSize: '11px', color: 'var(--amber-dark)', borderColor: 'rgba(245,158,11,0.3)' }}>
+                <span key={tag} className="bg-white/60 dark:bg-slate-800/60 backdrop-blur-md border rounded-full px-3 py-1 font-semibold shadow-sm" style={{ fontSize: '11px', color: 'var(--amber-dark)', borderColor: 'rgba(245,158,11,0.3)' }}>
                     {tag}
                   </span>
                 )}
