@@ -219,12 +219,59 @@
     text-transform: uppercase;
   }
 
-  /* Hero floating card glass */
+  /* Hero floating card & Modern UI Frosted Glassmorphism */
   .glass-card {
-    background: rgba(255, 255, 255, 0.92);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
+    background: rgba(255, 255, 255, 0.65);
+    backdrop-filter: blur(24px) saturate(180%);
+    -webkit-backdrop-filter: blur(24px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    box-shadow: 0 15px 35px -5px rgba(0, 0, 0, 0.15), 0 0 1px 1px rgba(255, 255, 255, 0.3) inset;
+  }
+
+  .glass-panel {
+    background: rgba(255, 255, 255, 0.72);
+    backdrop-filter: blur(28px) saturate(200%);
+    -webkit-backdrop-filter: blur(28px) saturate(200%);
+    border: 1px solid rgba(255, 255, 255, 0.65);
+    box-shadow: 0 25px 60px -15px rgba(31, 38, 135, 0.15), 0 0 20px rgba(255, 255, 255, 0.4) inset;
+  }
+
+  .glass-bento {
+    background: rgba(255, 255, 255, 0.75);
+    backdrop-filter: blur(20px) saturate(160%);
+    -webkit-backdrop-filter: blur(20px) saturate(160%);
     border: 1px solid rgba(255, 255, 255, 0.6);
+    box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.08);
+    transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .glass-bento:hover {
+    background: rgba(255, 255, 255, 0.88);
+    transform: translateY(-6px) scale(1.01);
+    box-shadow: 0 20px 45px -10px rgba(79, 46, 229, 0.18), 0 0 15px rgba(99, 102, 241, 0.15);
+    border-color: rgba(99, 102, 241, 0.4);
+  }
+
+  .ambient-glow-1 {
+    position: absolute;
+    width: 380px;
+    height: 380px;
+    background: radial-gradient(circle, rgba(99, 102, 241, 0.18) 0%, rgba(99, 102, 241, 0) 70%);
+    border-radius: 50%;
+    filter: blur(40px);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .ambient-glow-2 {
+    position: absolute;
+    width: 420px;
+    height: 420px;
+    background: radial-gradient(circle, rgba(16, 185, 129, 0.15) 0%, rgba(16, 185, 129, 0) 70%);
+    border-radius: 50%;
+    filter: blur(45px);
+    pointer-events: none;
+    z-index: 0;
   }
 
   /* CTA strip */

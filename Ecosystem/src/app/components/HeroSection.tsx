@@ -96,14 +96,14 @@ export default function HeroSection() {
               customer service, and financial control across all BaGS divisions.
             </p>
 
-            {/* Stats row */}
-            <div className="flex flex-wrap gap-6">
+            {/* Stats row (Frosted Glass Pills) */}
+            <div className="flex flex-wrap gap-4">
               {stats.map((stat) =>
-                <div key={stat.label} className="flex flex-col">
+                <div key={stat.label} className="flex flex-col bg-white/15 dark:bg-slate-900/40 backdrop-blur-md border border-white/25 px-5 py-3.5 rounded-2xl shadow-lg hover:bg-white/25 hover:border-white/40 transition-all duration-300 hover:-translate-y-0.5">
                   <span className="text-white font-extrabold" style={{ fontSize: 'clamp(1.1rem, 2vw, 1.5rem)' }}>
                     {stat.value}
                   </span>
-                  <span className="text-white font-medium" style={{ fontSize: '11px', opacity: 0.6, letterSpacing: '0.06em', textTransform: 'uppercase' }}>
+                  <span className="text-indigo-200 font-bold" style={{ fontSize: '11px', opacity: 0.9, letterSpacing: '0.08em', textTransform: 'uppercase' }}>
                     {stat.label}
                   </span>
                 </div>
@@ -111,32 +111,35 @@ export default function HeroSection() {
             </div>
           </div>
 
-          {/* Right: Floating status card */}
+          {/* Right: Floating status card (Frosted Glass Panel) */}
           <div className="lg:col-span-5 xl:col-span-4 flex lg:justify-end">
-            <div className="glass-card rounded-2xl p-6 w-full max-w-xs shadow-portal">
-              <div className="flex items-center justify-between mb-5">
-                <span className="font-bold text-foreground" style={{ fontSize: '13px' }}>System Status</span>
-                <span className="text-muted-foreground" style={{ fontSize: '11px' }}>Live · {new Date().toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' })}</span>
+            <div className="glass-panel rounded-[2.2rem] p-7 w-full max-w-xs shadow-2xl relative group hover:scale-[1.02] hover:shadow-[0_20px_50px_rgba(16,185,129,0.2)] transition-all duration-500 overflow-hidden">
+              <div className="absolute -top-16 -right-16 w-32 h-32 bg-green-500/20 rounded-full blur-2xl pointer-events-none" />
+              <div className="absolute -bottom-16 -left-16 w-32 h-32 bg-indigo-500/15 rounded-full blur-2xl pointer-events-none" />
+              
+              <div className="flex items-center justify-between mb-5 relative z-10">
+                <span className="font-extrabold text-slate-900 dark:text-white tracking-tight" style={{ fontSize: '14px' }}>System Status</span>
+                <span className="text-slate-600 dark:text-slate-300 font-semibold bg-white/50 dark:bg-slate-800/50 backdrop-blur-md px-2.5 py-1 rounded-full border border-white/60" style={{ fontSize: '10px' }}>Live · {new Date().toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' })}</span>
               </div>
 
-              <div className="space-y-3">
+              <div className="space-y-3 relative z-10">
                 {[
-                  { label: 'ATEX Zone A', status: 'Nominal', color: 'text-green-ops' },
-                  { label: 'ATEX Zone B', status: 'Nominal', color: 'text-green-ops' },
-                  { label: 'Telemetry Feed', status: 'Active', color: 'text-green-ops' },
-                  { label: 'CNG Pressure', status: '218 bar', color: 'text-fleet-blue' },
-                  { label: 'Active Deliveries', status: '14 routes', color: 'text-fleet-blue' }].
+                  { label: 'ATEX Zone A', status: 'Nominal', color: 'text-emerald-600 dark:text-emerald-400 font-bold' },
+                  { label: 'ATEX Zone B', status: 'Nominal', color: 'text-emerald-600 dark:text-emerald-400 font-bold' },
+                  { label: 'Telemetry Feed', status: 'Active', color: 'text-emerald-600 dark:text-emerald-400 font-bold' },
+                  { label: 'CNG Pressure', status: '218 bar', color: 'text-indigo-600 dark:text-indigo-400 font-bold' },
+                  { label: 'Active Deliveries', status: '14 routes', color: 'text-indigo-600 dark:text-indigo-400 font-bold' }].
                   map((row) =>
-                    <div key={row.label} className="flex items-center justify-between py-1 border-b border-border last:border-0">
-                      <span className="text-muted-foreground font-medium" style={{ fontSize: '12px' }}>{row.label}</span>
-                      <span className={`font-bold ${row.color}`} style={{ fontSize: '12px' }}>{row.status}</span>
+                    <div key={row.label} className="flex items-center justify-between py-1.5 border-b border-slate-200/60 dark:border-slate-700/60 last:border-0">
+                      <span className="text-slate-700 dark:text-slate-200 font-medium" style={{ fontSize: '12px' }}>{row.label}</span>
+                      <span className={row.color} style={{ fontSize: '12px' }}>{row.status}</span>
                     </div>
                   )}
               </div>
 
-              <div className="mt-5 flex items-center gap-2 bg-green-ops-light rounded-xl px-3 py-2">
-                <span className="w-2 h-2 rounded-full bg-status-green status-pulse flex-shrink-0" />
-                <span className="text-green-ops font-bold" style={{ fontSize: '11px', letterSpacing: '0.08em' }}>
+              <div className="mt-6 flex items-center gap-2.5 bg-emerald-500/15 dark:bg-emerald-500/20 backdrop-blur-md border border-emerald-500/30 rounded-2xl px-3.5 py-2.5 relative z-10 shadow-sm">
+                <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 status-pulse flex-shrink-0 shadow-[0_0_8px_rgba(16,185,129,0.8)]" />
+                <span className="text-emerald-700 dark:text-emerald-300 font-extrabold" style={{ fontSize: '11px', letterSpacing: '0.08em' }}>
                   ALL SYSTEMS OPERATIONAL
                 </span>
               </div>

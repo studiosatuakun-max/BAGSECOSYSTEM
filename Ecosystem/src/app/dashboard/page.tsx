@@ -19,15 +19,20 @@ export const metadata: Metadata = {
 
 export default function HomePage() {
   return (
-    <div className="min-h-screen bg-background flex flex-col">
+    <div className="min-h-screen bg-background flex flex-col relative overflow-hidden">
       {/* Grain texture overlay */}
       <div className="grain-overlay" aria-hidden="true" />
+
+      {/* Ambient background glows for glassmorphism depth */}
+      <div className="ambient-glow-1 top-[750px] -left-32 z-0 opacity-50" />
+      <div className="ambient-glow-2 top-[1200px] -right-32 z-0 opacity-40" />
+      <div className="ambient-glow-1 bottom-40 left-1/3 z-0 opacity-35" />
 
       {/* Navigation */}
       <Header />
 
       {/* Main Content */}
-      <main className="flex-1">
+      <main className="flex-1 relative z-10">
         {/* Hero */}
         <HeroSection />
 

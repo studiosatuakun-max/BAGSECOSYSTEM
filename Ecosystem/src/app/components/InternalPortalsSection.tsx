@@ -216,19 +216,22 @@ export default function InternalPortalsSection() {
           </div>
         </div>
 
-        {/* BENTO GRID: 4 cols × 2 rows */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
+        {/* BENTO GRID: 4 cols × 2 rows (Frosted Glass Bento Grid) */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {divisions.map((div, idx) => (
             <div
               key={div.id}
-              className={`reveal-up-hidden stagger-${idx + 1} bento-card bg-card rounded-[2rem] border shadow-sm hover:shadow-xl transition-shadow duration-300 overflow-hidden flex flex-col group`}
+              className={`reveal-up-hidden stagger-${idx + 1} glass-bento rounded-[2.2rem] overflow-hidden flex flex-col group relative`}
               style={{ borderColor: div.borderColor }}
             >
-              <div className="p-6 flex flex-col flex-1">
+              {/* Subtle Ambient Hover Glow */}
+              <div className="absolute -top-24 -right-24 w-48 h-48 rounded-full blur-3xl pointer-events-none opacity-0 group-hover:opacity-40 transition-opacity duration-500" style={{ backgroundColor: div.accentColor }} />
+
+              <div className="p-6.5 flex flex-col flex-1 relative z-10">
                 {/* Header Row */}
                 <div className="flex items-start justify-between mb-4">
-                  <div className="flex items-center gap-3">
-                    <div className="icon-container" style={{ backgroundColor: div.bgLight }}>
+                  <div className="flex items-center gap-3.5">
+                    <div className="icon-container shadow-sm group-hover:scale-110 group-hover:rotate-6 transition-all duration-300" style={{ backgroundColor: div.bgLight }}>
                       <Icon
                         name={div.iconName as Parameters<typeof Icon>[0]['name']}
                         size={22}
@@ -238,36 +241,35 @@ export default function InternalPortalsSection() {
                       />
                     </div>
                     <div>
-                      <h3 className="font-extrabold text-foreground leading-tight" style={{ fontSize: '1rem' }}>
+                      <h3 className="font-extrabold text-foreground leading-tight group-hover:text-primary transition-colors" style={{ fontSize: '1.05rem' }}>
                         {div.title}
                       </h3>
-                      <p className="text-muted-foreground font-medium leading-tight" style={{ fontSize: '11px' }}>
+                      <p className="text-muted-foreground font-semibold leading-tight" style={{ fontSize: '11px' }}>
                         {div.subtitle}
                       </p>
                     </div>
                   </div>
 
                   {/* Secure badge */}
-                  <div className="secure-badge bg-muted text-muted-foreground flex-shrink-0">
+                  <div className="secure-badge bg-white/60 dark:bg-slate-800/60 backdrop-blur-md text-muted-foreground flex-shrink-0 border border-white/50 dark:border-slate-700/50 shadow-2xs">
                     <Icon name="LockIcon" size={9} variant="solid" />
                     <span>Secure</span>
                   </div>
                 </div>
 
                 {/* Description */}
-                <p className="text-muted-foreground leading-relaxed mb-4 flex-1" style={{ fontSize: '13px' }}>
+                <p className="text-muted-foreground leading-relaxed mb-5 flex-1" style={{ fontSize: '13px' }}>
                   {div.description}
                 </p>
 
                 {/* Feature tags */}
-                <div className="flex flex-wrap gap-1.5 mb-5">
+                <div className="flex flex-wrap gap-1.5 mb-6">
                   {div.features.map((feat) => (
                     <span
                       key={feat}
-                      className="rounded-full px-2.5 py-0.5 font-semibold"
+                      className="rounded-full px-2.5 py-0.5 font-semibold bg-white/50 dark:bg-slate-800/50 backdrop-blur-sm shadow-2xs"
                       style={{
                         fontSize: '10px',
-                        backgroundColor: div.bgLight,
                         color: div.accentColor,
                         border: `1px solid ${div.borderColor}`,
                       }}
@@ -280,7 +282,7 @@ export default function InternalPortalsSection() {
                 {/* CTA Button */}
                 <Link
                   href={`/portal/${div.id}`}
-                  className="magnetic-btn w-full flex items-center justify-center gap-2 rounded-xl py-2.5 font-bold border transition-all"
+                  className="magnetic-btn w-full flex items-center justify-center gap-2 rounded-2xl py-3 font-bold border transition-all duration-300 shadow-sm hover:shadow-md"
                   style={{
                     fontSize: '13px',
                     color: div.accentColor,
@@ -300,7 +302,7 @@ export default function InternalPortalsSection() {
                 >
                   <Icon name="LogInIcon" size={14} variant="outline" />
                   {div.ctaLabel}
-                  <Icon name="ArrowRightIcon" size={13} variant="outline" />
+                  <Icon name="ArrowRightIcon" size={13} variant="outline" className="group-hover:translate-x-1 transition-transform" />
                 </Link>
               </div>
             </div>
