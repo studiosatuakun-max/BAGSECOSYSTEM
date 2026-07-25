@@ -19,14 +19,14 @@ export const metadata: Metadata = {
 
 export default function HomePage() {
   return (
-    <div className="min-h-screen bg-background flex flex-col relative overflow-hidden">
-      {/* Grain texture overlay */}
-      <div className="grain-overlay" aria-hidden="true" />
-
-      {/* Ambient background glows for glassmorphism depth */}
-      <div className="ambient-glow-1 top-[750px] -left-32 z-0 opacity-50" />
-      <div className="ambient-glow-2 top-[1200px] -right-32 z-0 opacity-40" />
-      <div className="ambient-glow-1 bottom-40 left-1/3 z-0 opacity-35" />
+    <div className="min-h-screen bg-background flex flex-col relative">
+      {/* Background decorations wrapper with overflow-hidden to prevent horizontal scrollbars without breaking sticky header */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
+        <div className="grain-overlay" aria-hidden="true" />
+        <div className="ambient-glow-1 top-[750px] -left-32 opacity-50" />
+        <div className="ambient-glow-2 top-[1200px] -right-32 opacity-40" />
+        <div className="ambient-glow-1 bottom-40 left-1/3 opacity-35" />
+      </div>
 
       {/* Navigation */}
       <Header />

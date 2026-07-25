@@ -13,7 +13,7 @@ const navigation = [
 
 export default function PusatLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="flex flex-col min-h-screen w-full bg-secondary font-sans relative overflow-x-hidden">
+    <div className="flex flex-col min-h-screen w-full bg-slate-50 font-sans relative">
       <PortalHeader
         title="Modul Pusat"
         subtitle="Super Admin Console"
@@ -24,14 +24,13 @@ export default function PusatLayout({ children }: { children: React.ReactNode })
       />
 
       {/* Main Page Content */}
-      <main className="flex-1 overflow-y-auto p-4 sm:p-6 md:p-8 bg-secondary">
-        <div className="max-w-7xl mx-auto">
-          {children}
-        </div>
-      </main>
+      <div className="flex-1 w-full">
+        {children}
+      </div>
 
       {/* Global Telemetry Footer */}
       <Footer />
     </div>
   );
 }
+
