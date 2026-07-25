@@ -860,15 +860,8 @@ export default function DireksiB2BPage() {
         </div>
 
         {/* Footer Attribution Strip */}
-        <div className="mt-8 pt-4 border-t border-slate-200/60 dark:border-slate-800 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-400 gap-2 font-medium">
-          <div className="flex items-center gap-2">
-            <span className="font-extrabold text-slate-700 dark:text-slate-300">Baskara Executive Engine v2.5.0 (Luxury B2B Benchmark)</span>
-            <span>·</span>
-            <span>PT Baskara Asri Ghas Executive Console</span>
-          </div>
-          <div>
-            <span>Empowering East Java Industrial Sector with Sustainable Clean Energy</span>
-          </div>
+        <div className="mt-8 pt-4 border-t border-slate-200/60 dark:border-slate-800 flex items-center justify-center text-xs text-slate-400 font-medium">
+          <span className="font-extrabold text-slate-700 dark:text-slate-300">Baskara Ecosystem Engine v2</span>
         </div>
 
       </div>
