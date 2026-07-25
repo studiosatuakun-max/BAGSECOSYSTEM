@@ -1,5 +1,6 @@
 import React from 'react';
 import OpsTopBar from './components/OpsTopBar';
+import Footer from '@/components/Footer';
 import TelemetryChartCard from './components/TelemetryChartCard';
 import LelAlertCard from './components/LelAlertCard';
 import GroundingInterlockCard from './components/GroundingInterlockCard';
@@ -57,13 +58,8 @@ export default function OpsHsseDashboard() {
 
         </div>
 
-        {/* Footer attribution */}
-        <div className="mt-6 flex items-center justify-between text-xs text-muted-foreground">
-          <span className="font-medium tracking-wide">BaskGhasOps Control System v2.4.1</span>
-          <span>ATEX Zone 1 Compliant · IEC 60079 · Rev. 2026-07</span>
-        </div>
       </main>
-  {/* Enterprise Dispatch Inbox Widget */}
-</div>
+      <Footer />
+    </div>
   );
 }

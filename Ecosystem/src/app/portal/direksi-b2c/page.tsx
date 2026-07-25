@@ -1,6 +1,8 @@
 'use client';
 
-import InboxWidget from '@/app/components/InboxWidget';
+import PortalHeader from '@/components/PortalHeader';
+import Footer from '@/components/Footer';
+
 import React, { useState } from 'react';
 import Link from 'next/link';
 import Icon from '@/components/ui/AppIcon';
@@ -76,31 +78,19 @@ export default function DireksiB2CPage() {
   return (
     <div className="min-h-screen bg-slate-50 font-sans relative">
       {/* Top Header */}
-      <header className="h-14 border-b border-slate-200 bg-white flex items-center justify-between px-6 sticky top-0 z-10 shadow-sm">
-        <div className="flex items-center gap-4">
-          <Link href="/dashboard" className="flex items-center gap-2 text-slate-500 hover:text-slate-900 transition-colors">
-            <Icon name="ArrowLeftIcon" size={18} variant="outline" />
-            <span className="font-semibold text-sm">Back</span>
-          </Link>
-          <div className="h-4 w-px bg-slate-200" />
-          <div className="flex flex-col">
-            <span className="font-extrabold text-sm text-slate-900 leading-tight">Horeca Dashboard</span>
-            <span className="text-[10px] text-slate-500 font-medium">Retail B2C Monitor</span>
+      <PortalHeader
+        title="Horeca Dashboard"
+        subtitle="Retail B2C Monitor"
+        roleBadge="B2C Director Access"
+        roleColor="amber"
+        showInbox={true}
+        rightCustom={
+          <div className="hidden sm:flex flex-col text-right justify-center font-mono leading-tight">
+            <span className="text-xs font-bold text-foreground">09:03:16</span>
+            <span className="text-[10px] text-muted-foreground font-medium">Live Data</span>
           </div>
-        </div>
-        
-        <div className="flex items-center gap-4">
-          <InboxWidget variant="header" />
-          <div className="flex items-center gap-2 bg-amber-50 text-amber-700 px-3 py-1 rounded-full text-xs font-bold border border-amber-200">
-            <div className="w-2 h-2 rounded-full bg-amber-500 animate-pulse" />
-            B2C Director Access
-          </div>
-          <div className="text-right flex flex-col justify-center">
-            <span className="text-xs font-bold text-slate-900">09:03:16</span>
-            <span className="text-[10px] text-slate-500 font-medium">Live Data</span>
-          </div>
-        </div>
-      </header>
+        }
+      />
 
       <main className="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 xl:px-10 2xl:px-12 py-5 pb-8">
         {/* Bento Grid */}
@@ -291,7 +281,7 @@ export default function DireksiB2CPage() {
           </div>
         </div>
       )}
-  {/* Enterprise Dispatch Inbox Widget */}
-</div>
+  <Footer />
+    </div>
   );
 }
