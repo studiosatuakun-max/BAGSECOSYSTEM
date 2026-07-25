@@ -307,13 +307,13 @@ export default function HorecaCommercialPage() {
       />
 
       {/* Main Content Area */}
-      <div className="flex-1 w-full max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 xl:px-10 2xl:px-12 py-6 space-y-6">
+      <div className="flex-1 w-full max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 xl:px-10 2xl:px-12 pt-10 pb-12 space-y-8">
         
         {/* ROW 1: EXECUTIVE HERO METRICS (4 CARDS) WITH WARM GOLD/AMBER FROSTED GLASSMORPHISM */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-5">
           
           {/* Card 1: Commercial Revenue MTD & Target Achievement */}
-          <div className="bg-gradient-to-br from-amber-900 via-amber-950 to-slate-950 text-white p-6 rounded-3xl border border-amber-800/60 shadow-xl relative overflow-hidden flex flex-col justify-between group hover:border-amber-600/80 transition-all duration-300">
+          <div className="bg-gradient-to-br from-amber-900 via-amber-950 to-slate-950 text-white p-6 rounded-3xl border border-amber-800/60 shadow-xl relative overflow-hidden flex flex-col justify-between group hover:border-amber-500 hover:-translate-y-1.5 hover:shadow-2xl hover:shadow-amber-950/50 transition-all duration-300 animate-in fade-in slide-in-from-bottom-6 duration-700" style={{ animationDelay: '0ms', animationFillMode: 'both' }}>
             <div className="absolute -right-8 -top-8 w-32 h-32 bg-amber-500/20 rounded-full blur-2xl group-hover:bg-amber-500/30 transition-all duration-500 pointer-events-none" />
             <div>
               <div className="flex items-center justify-between text-amber-300 mb-2">
@@ -348,7 +348,7 @@ export default function HorecaCommercialPage() {
           </div>
 
           {/* Card 2: Active CNG Cradle Cascades & Volume Deployed */}
-          <div className="bg-white dark:bg-slate-900 p-6 rounded-3xl border border-slate-200/80 dark:border-slate-800 shadow-lg shadow-slate-100/50 dark:shadow-none flex flex-col justify-between group hover:border-slate-300 dark:hover:border-slate-700 transition-all duration-300 relative overflow-hidden">
+          <div className="bg-white dark:bg-slate-900 p-6 rounded-3xl border border-slate-200/80 dark:border-slate-800 shadow-lg shadow-slate-100/50 dark:shadow-none flex flex-col justify-between group hover:border-amber-400 dark:hover:border-amber-600 hover:-translate-y-1.5 hover:shadow-2xl hover:shadow-amber-500/10 transition-all duration-300 relative overflow-hidden animate-in fade-in slide-in-from-bottom-6 duration-700" style={{ animationDelay: '150ms', animationFillMode: 'both' }}>
             <div className="absolute -right-6 -bottom-6 w-28 h-28 bg-amber-500/5 rounded-full blur-xl pointer-events-none" />
             <div>
               <div className="flex items-center justify-between text-slate-500 dark:text-slate-400 mb-2">
@@ -377,7 +377,7 @@ export default function HorecaCommercialPage() {
           </div>
 
           {/* Card 3: CNG Pressure & Safety Telemetry Radar (CRITICAL ANOMALY ALERT) */}
-          <div className="bg-gradient-to-br from-rose-50 to-amber-50/50 dark:from-rose-950/30 dark:to-amber-950/20 p-6 rounded-3xl border border-rose-200/80 dark:border-rose-900/50 shadow-lg shadow-rose-100/30 flex flex-col justify-between group hover:border-rose-300 transition-all duration-300 relative overflow-hidden">
+          <div className="bg-gradient-to-br from-rose-50 to-amber-50/50 dark:from-rose-950/30 dark:to-amber-950/20 p-6 rounded-3xl border border-rose-200/80 dark:border-rose-900/50 shadow-lg shadow-rose-100/30 flex flex-col justify-between group hover:border-rose-400 dark:hover:border-rose-500 hover:-translate-y-1.5 hover:shadow-2xl hover:shadow-rose-500/15 transition-all duration-300 relative overflow-hidden animate-in fade-in slide-in-from-bottom-6 duration-700" style={{ animationDelay: '300ms', animationFillMode: 'both' }}>
             <div className="absolute top-0 right-0 w-24 h-24 bg-rose-500/10 rounded-full blur-xl pointer-events-none" />
             <div>
               <div className="flex items-center justify-between mb-2">
@@ -409,7 +409,7 @@ export default function HorecaCommercialPage() {
           </div>
 
           {/* Card 4: Price Spread & CNG Margin Index */}
-          <div className="bg-white dark:bg-slate-900 p-6 rounded-3xl border border-slate-200/80 dark:border-slate-800 shadow-lg shadow-slate-100/50 dark:shadow-none flex flex-col justify-between group hover:border-slate-300 dark:hover:border-slate-700 transition-all duration-300 relative overflow-hidden">
+          <div className="bg-white dark:bg-slate-900 p-6 rounded-3xl border border-slate-200/80 dark:border-slate-800 shadow-lg shadow-slate-100/50 dark:shadow-none flex flex-col justify-between group hover:border-emerald-400 dark:hover:border-emerald-600 hover:-translate-y-1.5 hover:shadow-2xl hover:shadow-emerald-500/10 transition-all duration-300 relative overflow-hidden animate-in fade-in slide-in-from-bottom-6 duration-700" style={{ animationDelay: '450ms', animationFillMode: 'both' }}>
             <div>
               <div className="flex items-center justify-between text-slate-500 dark:text-slate-400 mb-2">
                 <span className="text-xs font-extrabold uppercase tracking-wider flex items-center gap-2 text-slate-700 dark:text-slate-300">

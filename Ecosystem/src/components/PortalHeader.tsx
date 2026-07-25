@@ -90,7 +90,7 @@ export default function PortalHeader({
 
   return (
     <>
-      <header className="w-full h-16 border-b border-border bg-card/95 backdrop-blur-md sticky top-0 z-40 shadow-xs flex items-center justify-between px-4 sm:px-6 transition-all">
+      <header className="w-full h-16 border-b border-border/80 bg-white/85 dark:bg-slate-900/85 backdrop-blur-xl sticky top-0 z-40 shadow-sm flex items-center justify-between px-4 sm:px-6 transition-all relative">
         {/* Left: Brand & Title */}
         <div className="flex items-center gap-4">
           <Link href={backUrl} className="flex items-center gap-3 group">
@@ -155,13 +155,22 @@ export default function PortalHeader({
 
           <Link
             href={backUrl}
-            className="flex items-center gap-1.5 text-muted-foreground hover:text-foreground font-bold text-xs px-3 py-1.5 rounded-xl hover:bg-muted transition-colors border border-transparent hover:border-border ml-1"
-            title="Back to Main Dashboard"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold text-muted-foreground hover:text-foreground hover:bg-secondary/80 transition-all border border-transparent hover:border-border"
+            title={backText}
           >
-            <Icon name="ArrowLeftOnRectangleIcon" size={16} variant="outline" />
-            <span className="hidden sm:inline">{backText}</span>
+            <Icon name="ArrowLeftOnRectangleIcon" size={16} />
+            <span className="hidden md:inline">{backText}</span>
           </Link>
         </div>
+
+        {/* Subtle 2px Bottom Accent Gradient Bar (High-End Acrylic Frame Effect) */}
+        <div className={`absolute bottom-0 left-0 right-0 h-[2px] opacity-80 ${
+          roleColor === 'amber' || roleColor === 'orange' ? 'bg-gradient-to-r from-amber-500 via-orange-500 to-yellow-400' :
+          roleColor === 'green' || roleColor === 'emerald' ? 'bg-gradient-to-r from-emerald-500 via-green-500 to-teal-400' :
+          roleColor === 'blue' || roleColor === 'cyan' ? 'bg-gradient-to-r from-blue-500 via-cyan-500 to-indigo-400' :
+          roleColor === 'red' || roleColor === 'pink' ? 'bg-gradient-to-r from-red-500 via-rose-500 to-pink-400' :
+          'bg-gradient-to-r from-indigo-500 via-purple-500 to-blue-500'
+        }`} />
       </header>
 
       {/* Responsive Navigation Bar for Tablet / Mobile (screens smaller than lg) */}
