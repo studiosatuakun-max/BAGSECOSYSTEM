@@ -41,7 +41,7 @@ export default function CustomerOrderDetailPage() {
         </button>
       </div>
 
-      <div className="flex-1 overflow-y-auto px-6 pb-[110px] relative z-10">
+      <div className="flex-1 overflow-y-auto px-6 pb-[110px] relative z-10 no-scrollbar [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
         <div className="space-y-4">
 
           {/* Customer Hero */}

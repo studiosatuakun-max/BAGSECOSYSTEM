@@ -55,7 +55,7 @@ export default function CylinderScanPage() {
         </div>
       </div>
 
-      <div className="flex-1 overflow-y-auto px-4 pb-36 relative z-10 pt-4">
+      <div className="flex-1 overflow-y-auto px-4 pb-36 relative z-10 pt-4 no-scrollbar [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
 
         {/* Scanner */}
         <div className="bg-white rounded-3xl border border-gray-200 p-8 shadow-sm mb-6 flex flex-col items-center relative overflow-hidden">

@@ -39,7 +39,7 @@ export default function DeliveryStopsPage() {
         </button>
       </div>
 
-      <div className="flex-1 overflow-y-auto px-4 pb-36 relative z-10 pt-4">
+      <div className="flex-1 overflow-y-auto px-4 pb-36 relative z-10 pt-4 no-scrollbar [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
         <div className="space-y-4">
 
           {/* Featured Stop */}

@@ -239,4 +239,24 @@
   .stagger-4 { transition-delay: 240ms; }
   .stagger-5 { transition-delay: 320ms; }
   .stagger-6 { transition-delay: 400ms; }
+
+/* Universal Scrollbar Hiding for Mobile Phone Mockups & App Portals */
+.no-scrollbar,
+.scrollbar-hide,
+.mockup-phone,
+.mockup-phone * {
+  -ms-overflow-style: none !important;  /* IE and Edge */
+  scrollbar-width: none !important;  /* Firefox */
+}
+.no-scrollbar::-webkit-scrollbar,
+.scrollbar-hide::-webkit-scrollbar,
+.mockup-phone::-webkit-scrollbar,
+.mockup-phone *::-webkit-scrollbar {
+  display: none !important;  /* Chrome, Safari and Opera */
+  width: 0px !important;
+  height: 0px !important;
+  background: transparent !important;
+  -webkit-appearance: none !important;
+}
+
 }

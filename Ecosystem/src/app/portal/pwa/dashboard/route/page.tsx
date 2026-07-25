@@ -85,7 +85,7 @@ export default function RouteMapPage() {
             </div>
           </div>
 
-          <div className="max-h-[260px] overflow-y-auto px-4 pb-2 space-y-2">
+          <div className="max-h-[260px] overflow-y-auto px-4 pb-2 space-y-2 no-scrollbar [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
             {stops.map((stop, i) => (
               <div key={stop.id} className="bg-white rounded-2xl border border-gray-100 flex items-center gap-3 p-3 shadow-sm">
                 <div className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold tabular-nums ${

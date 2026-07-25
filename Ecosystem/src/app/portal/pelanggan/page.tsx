@@ -25,7 +25,7 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="flex flex-col min-h-screen md:min-h-full md:h-full px-6 py-8 overflow-y-auto">
+    <div className="flex flex-col min-h-screen md:min-h-full md:h-full px-6 py-8 overflow-y-auto no-scrollbar [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
       <div className="flex-1 flex flex-col justify-center w-full mx-auto max-w-sm">
         
         {/* Header */}

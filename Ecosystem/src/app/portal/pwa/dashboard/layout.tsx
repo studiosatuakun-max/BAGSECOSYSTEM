@@ -55,7 +55,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
   return (
     <div className="relative flex flex-col h-full bg-[#FAFAFA]">
       {/* Main Content Area */}
-      <div className="flex-1 overflow-y-auto pb-[90px] w-full">
+      <div className="flex-1 overflow-y-auto pb-[90px] w-full no-scrollbar [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
         {children}
       </div>
 
