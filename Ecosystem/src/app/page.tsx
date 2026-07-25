@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import Icon from '@/components/ui/AppIcon';
+import { supabase } from '@/lib/supabaseClient';
 
 const demoAccounts = [
   { role: 'Super Admin', email: 'admin@baskara.id', pwd: 'password123', icon: 'ShieldCheckIcon', color: 'bg-indigo-100 text-indigo-700 border-indigo-200 hover:bg-indigo-200' },
@@ -21,17 +22,29 @@ export default function LoginPage() {
     setPassword(acc.pwd);
   };
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email || !password) return alert('Please enter email and password');
     
     setIsLoading(true);
-    // Simulate API delay
-    setTimeout(() => {
-      setIsLoading(false);
-      // For demo purposes, we'll just redirect to the ecosystem dashboard
-      window.location.href = '/dashboard';
-    }, 1200);
+    
+    // Attempt Supabase Authentication
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
+
+    setIsLoading(false);
+
+    if (error) {
+      console.warn('Supabase Auth Error:', error.message);
+      alert(`Supabase Auth Failed: ${error.message}\n\n(Bypassing for Demo Purposes)`);
+    } else {
+      console.log('Supabase Auth Success!', data);
+    }
+
+    // Redirect to dashboard (fallback logic for demo if users aren't created yet)
+    window.location.href = '/dashboard';
   };
 
   return (
