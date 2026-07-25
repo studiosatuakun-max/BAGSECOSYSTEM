@@ -5,9 +5,9 @@ import AppImage from '@/components/ui/AppImage';
 
 
 const stats = [
-{ value: '5.5 MMSCFD', label: 'Station Capacity' },
-{ value: '140,000 m³', label: 'CNG / Day' },
-{ value: 'Since 2010', label: 'Operational' }];
+  { value: '5.5 MMSCFD', label: 'Station Capacity' },
+  { value: '140,000 m³', label: 'CNG / Day' },
+  { value: 'Since 2010', label: 'Operational' }];
 
 
 export default function HeroSection() {
@@ -39,7 +39,7 @@ export default function HeroSection() {
       className="relative w-full overflow-hidden"
       style={{ minHeight: 'clamp(480px, 60vh, 680px)' }}
       aria-label="BaGS Ecosystem Hero">
-      
+
       {/* Background Image */}
       <div className="absolute inset-0 hero-parallax" style={{ transition: 'transform 0.15s ease-out', willChange: 'transform' }}>
         <AppImage
@@ -49,7 +49,7 @@ export default function HeroSection() {
           priority
           className="object-cover object-center"
           sizes="100vw" />
-        
+
       </div>
 
       {/* Scrim overlay — white text needs dark scrim */}
@@ -57,19 +57,19 @@ export default function HeroSection() {
 
       {/* Content */}
       <div className="relative z-10 max-w-7xl mx-auto px-6 h-full flex items-end pb-12 pt-16"
-      style={{ minHeight: 'clamp(480px, 60vh, 680px)' }}>
+        style={{ minHeight: 'clamp(480px, 60vh, 680px)' }}>
         <div className="w-full grid grid-cols-1 lg:grid-cols-12 gap-8 items-end">
 
           {/* Left: Headline */}
           <div className="lg:col-span-7 xl:col-span-8">
             {/* Logo */}
             <div className="mb-6">
-              <AppImage 
-                src="/assets/images/logo2.png" 
-                alt="BaGS Logo" 
-                width={200} 
-                height={80} 
-                className="object-contain object-left" 
+              <AppImage
+                src="/assets/images/logo.png"
+                alt="BaGS Logo"
+                width={200}
+                height={80}
+                className="object-contain object-left"
                 unoptimized
               />
             </div>
@@ -99,7 +99,7 @@ export default function HeroSection() {
             {/* Stats row */}
             <div className="flex flex-wrap gap-6">
               {stats.map((stat) =>
-              <div key={stat.label} className="flex flex-col">
+                <div key={stat.label} className="flex flex-col">
                   <span className="text-white font-extrabold" style={{ fontSize: 'clamp(1.1rem, 2vw, 1.5rem)' }}>
                     {stat.value}
                   </span>
@@ -121,17 +121,17 @@ export default function HeroSection() {
 
               <div className="space-y-3">
                 {[
-                { label: 'ATEX Zone A', status: 'Nominal', color: 'text-green-ops' },
-                { label: 'ATEX Zone B', status: 'Nominal', color: 'text-green-ops' },
-                { label: 'Telemetry Feed', status: 'Active', color: 'text-green-ops' },
-                { label: 'CNG Pressure', status: '218 bar', color: 'text-fleet-blue' },
-                { label: 'Active Deliveries', status: '14 routes', color: 'text-fleet-blue' }].
-                map((row) =>
-                <div key={row.label} className="flex items-center justify-between py-1 border-b border-border last:border-0">
-                    <span className="text-muted-foreground font-medium" style={{ fontSize: '12px' }}>{row.label}</span>
-                    <span className={`font-bold ${row.color}`} style={{ fontSize: '12px' }}>{row.status}</span>
-                  </div>
-                )}
+                  { label: 'ATEX Zone A', status: 'Nominal', color: 'text-green-ops' },
+                  { label: 'ATEX Zone B', status: 'Nominal', color: 'text-green-ops' },
+                  { label: 'Telemetry Feed', status: 'Active', color: 'text-green-ops' },
+                  { label: 'CNG Pressure', status: '218 bar', color: 'text-fleet-blue' },
+                  { label: 'Active Deliveries', status: '14 routes', color: 'text-fleet-blue' }].
+                  map((row) =>
+                    <div key={row.label} className="flex items-center justify-between py-1 border-b border-border last:border-0">
+                      <span className="text-muted-foreground font-medium" style={{ fontSize: '12px' }}>{row.label}</span>
+                      <span className={`font-bold ${row.color}`} style={{ fontSize: '12px' }}>{row.status}</span>
+                    </div>
+                  )}
               </div>
 
               <div className="mt-5 flex items-center gap-2 bg-green-ops-light rounded-xl px-3 py-2">
@@ -148,7 +148,7 @@ export default function HeroSection() {
 
       {/* Bottom fade to white */}
       <div className="absolute bottom-0 left-0 right-0 h-24 pointer-events-none"
-      style={{ background: 'linear-gradient(to bottom, transparent, rgba(255,255,255,0.85))' }} />
+        style={{ background: 'linear-gradient(to bottom, transparent, rgba(255,255,255,0.85))' }} />
     </section>);
 
 }

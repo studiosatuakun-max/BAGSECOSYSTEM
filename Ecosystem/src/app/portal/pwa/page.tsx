@@ -16,7 +16,7 @@ export default function LoginPage() {
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
-    setTimeout(() => { router.push('/dashboard'); }, 800);
+    setTimeout(() => { router.push('/portal/pwa/dashboard'); }, 800);
   };
 
   const autoFill = () => {
@@ -35,7 +35,7 @@ export default function LoginPage() {
           <Link href="/dashboard" className="inline-block mb-6 text-xs font-bold text-gray-500 hover:text-gray-900 bg-gray-100 hover:bg-gray-200 px-3 py-1.5 rounded-xl transition-colors">
             ← Back to Hub
           </Link>
-          <div className="w-16 h-16 bg-[var(--sky-500)] rounded-2xl flex items-center justify-center mx-auto mb-5 shadow-sm text-white">
+          <div className="w-16 h-16 bg-sky-500 hover:bg-sky-600 rounded-2xl flex items-center justify-center mx-auto mb-5 shadow-sm text-white">
             <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor">
               <path d="M12 2c1.6 4 3.6 4.4 4.8 6A6 6 0 0 1 18 12a6 6 0 0 1-12 0c0-.4 0-.8.1-1.2a2.5 2.5 0 1 0 4-2.4C11.4 7.5 12 2 12 2z"/>
             </svg>
@@ -72,7 +72,7 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={isSubmitting}
-              className="w-full h-12 bg-[var(--sky-500)] text-white rounded-xl font-bold mt-2 shadow-sm active:scale-[0.98] transition-all disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+              className="w-full h-12 bg-sky-500 hover:bg-sky-600 text-white rounded-xl font-bold mt-2 shadow-sm active:scale-[0.98] transition-all disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center gap-2"
             >
               {isSubmitting ? (
                 <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
@@ -87,7 +87,7 @@ export default function LoginPage() {
             <button
               onClick={autoFill}
               type="button"
-              className="text-xs font-bold text-[var(--sky-600)] hover:text-[var(--sky-700)] transition-colors inline-flex items-center gap-1.5"
+              className="text-xs font-bold text-sky-600 hover:text-sky-700 hover:text-[var(--sky-700)] transition-colors inline-flex items-center gap-1.5"
             >
               <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L9.91 8.84 3 9.27l5.46 4.73L6.82 21 12 17.27 17.18 21l-1.64-7 5.46-4.73-6.91-.43z"/></svg>
               Auto-fill Demo Credentials

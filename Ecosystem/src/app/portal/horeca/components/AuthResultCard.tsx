@@ -1,6 +1,6 @@
 import React from 'react';
 import { CheckCircle2, Cylinder, Calendar, Hash, Building2, Clock } from 'lucide-react';
-import Icon from '@/components/ui/AppIcon';
+import Icon from '@/app/portal/horeca/components/ui/AppIcon';
 
 
 const mockCylinder = {

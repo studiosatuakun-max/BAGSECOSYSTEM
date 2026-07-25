@@ -64,7 +64,7 @@ const divisions: DivisionCard[] = [
     accentColor: 'var(--amber)',
     bgLight: 'var(--amber-light)',
     borderColor: 'rgba(245,158,11,0.2)',
-    ctaLabel: 'Customer Portal',
+    ctaLabel: 'Customer App',
   },
   {
     id: 'keuangan',
@@ -112,7 +112,7 @@ const divisions: DivisionCard[] = [
     accentColor: 'var(--blue)',
     bgLight: 'var(--blue-light)',
     borderColor: 'rgba(59,130,246,0.2)',
-    ctaLabel: 'Preview PWA',
+    ctaLabel: 'Driver App',
   },
   {
     id: 'cs',

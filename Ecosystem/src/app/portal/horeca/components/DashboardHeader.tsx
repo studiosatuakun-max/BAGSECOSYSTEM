@@ -1,6 +1,6 @@
 import React from 'react';
 import { Bell, Flame } from 'lucide-react';
-import AppLogo from '@/components/ui/AppLogo';
+import AppLogo from '@/app/portal/horeca/components/ui/AppLogo';
 import Link from 'next/link';
 
 export default function DashboardHeader() {

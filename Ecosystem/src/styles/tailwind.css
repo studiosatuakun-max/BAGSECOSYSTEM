@@ -3,6 +3,27 @@
 @tailwind utilities;
 
 :root {
+  /* Driver PWA & Horeca Gas variables */
+  --sky-50:  #F0F9FF;
+  --sky-100: #E0F2FE;
+  --sky-200: #BAE6FD;
+  --sky-500: #0EA5E9;
+  --sky-600: #0284C7;
+  --sky-700: #0369A1;
+
+  --lime-50:  #F7FEE7;
+  --lime-100: #ECFCCB;
+  --lime-200: #D9F99D;
+  --lime-500: #84CC16;
+  --lime-600: #65A30D;
+  --lime-700: #4D7C0F;
+
+  --text-primary: #111827;
+  --text-secondary: #4B5563;
+  --text-tertiary: #9CA3AF;
+  --error: #EF4444;
+  --error-bg: #FEE2E2;
+
   --background: #FFFFFF;
   --foreground: #0F172A;
   --primary: #1E3A5F;

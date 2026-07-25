@@ -20,7 +20,7 @@ export default function LoginPage() {
     setIsLoading(true);
     // Simulate network delay
     setTimeout(() => {
-      router.push('/dashboard');
+      router.push('/portal/pelanggan/dashboard');
     }, 800);
   };
 
@@ -78,7 +78,7 @@ export default function LoginPage() {
               <button
                 type="submit"
                 disabled={isLoading || !email || !password}
-                className="w-full h-12 bg-primary text-primary-foreground font-bold rounded-xl transition-all shadow-sm active:scale-[0.98] disabled:opacity-50 disabled:active:scale-100 flex items-center justify-center gap-2"
+                className="w-full h-12 bg-amber-500 hover:bg-amber-600 text-white font-bold rounded-xl transition-all shadow-sm active:scale-[0.98] disabled:opacity-50 disabled:active:scale-100 flex items-center justify-center gap-2"
               >
                 {isLoading ? (
                   <>
@@ -97,7 +97,7 @@ export default function LoginPage() {
             <button
               onClick={handleAutoFill}
               type="button"
-              className="w-full h-10 bg-secondary text-primary font-bold text-[13px] rounded-lg transition-colors hover:brightness-95 flex items-center justify-center gap-2"
+              className="w-full h-10 bg-amber-50 hover:bg-amber-100 text-amber-700 font-bold text-[13px] rounded-lg transition-colors hover:brightness-95 flex items-center justify-center gap-2"
             >
               <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
                 <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
