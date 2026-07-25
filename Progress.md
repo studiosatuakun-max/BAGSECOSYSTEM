@@ -58,6 +58,11 @@ To elevate BaGS Ecosystem into an autonomous, next-generation enterprise ERP, we
   - Built the **Luxury CNG Horeca Executive Console** with warm amber/gold Frosted Glassmorphism, real-time telemetry indicators, and executive hero metrics.
   - Implemented **CNG Safety & Pressure Anomaly Radar**: Early warning system monitoring Cradle Cascades and Micro-bulk VGLs for pressure drops (e.g., JW Marriott drop to 185 Bar) and NFC manifold SLA inspections (Layar Resto).
   - Built **Master Commercial CNG Database & Advanced CRUD**: Tracked 450 active Cradle Racks with monthly Sm³ quota utilization progress bars, route zone mapping (Surabaya, Sidoarjo, Malang, Gresik), operating pressure (Bar), and automated safety status calculation.
+- [x] **Executive Portals Gold Benchmark UI/UX Polish (`/portal/industrial` & `/portal/horeca`)**:
+  - **Spasial & Breathing Room Enhancement**: Standardized main container top padding to `pt-10 pb-12` and vertical spacing to `space-y-8`, eliminating visual cramping against floating top headers.
+  - **Staggered Entrance & Interactive Hover Dynamics**: Added sequential bottom-up entrance animations (`animate-in fade-in slide-in-from-bottom-6 duration-700`) with proportional delays (`0ms`, `150ms`, `300ms`, `450ms`) and dynamic hover elevations (`hover:-translate-y-1.5 hover:shadow-2xl`) across hero metric cards.
+  - **Frosted Acrylic Frame + Accent Glow Bar**: Enhanced `PortalHeader` with translucent blur effects (`bg-white/85 dark:bg-slate-900/85 backdrop-blur-xl`) and a bottom 2px gradient accent line matching division identity (Indigo/Blue for Industrial, Warm Amber/Gold for Horeca).
+  - **Universal Slim Pill Badge Standard (`whitespace-nowrap shrink-0`)**: Locked all top-right card badges with anti-wrap and anti-squeeze properties to prevent vertical oval wrapping, ensuring sleek 1-line horizontal pills across all screen resolutions.
 - [x] Committed and pushed all updates to GitHub repository branch `main`.
 
 ## Next Steps
@@ -65,3 +70,4 @@ To elevate BaGS Ecosystem into an autonomous, next-generation enterprise ERP, we
 - [ ] Connect and configure live Supabase tables (`dispatches` and `dispatch_files` storage bucket) for permanent production persistence.
 - [ ] Implement end-to-end user authentication and role-based access control (RBAC) linking login credentials to specific division inbox filters.
 - [ ] Further specific operational feature refinements and QA testing across mobile and desktop devices.
+
