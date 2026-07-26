@@ -243,59 +243,48 @@ export default function ArmadaDashboardPage() {
 
       {/* Gold Benchmark Spacing: pt-10 pb-12 space-y-8 */}
       <main className="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 xl:px-10 2xl:px-12 pt-10 pb-12 space-y-8">
-        {/* EXECUTIVE FLEET & SKID TELEMETRY HERO BANNER */}
-        <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-slate-900 via-blue-950/90 to-slate-900 border border-cyan-500/30 p-6 sm:p-8 shadow-2xl backdrop-blur-xl text-white">
-          <div className="absolute top-0 right-0 -mt-8 -mr-8 w-64 h-64 bg-cyan-500/15 rounded-full blur-3xl pointer-events-none" />
-          
-          <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 relative z-10">
-            <div className="space-y-2 max-w-2xl">
-              <div className="flex items-center gap-2">
-                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-extrabold bg-blue-500/20 text-blue-300 border border-blue-500/30 whitespace-nowrap shrink-0 align-middle shadow-sm">
-                  <Icon name="TruckIcon" size={14} className="text-cyan-400" />
-                  <span>Fleet Logistics Engine v2.4</span>
-                </span>
-                <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-extrabold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 whitespace-nowrap shrink-0 align-middle shadow-sm">
-                  <Icon name="CheckCircleIcon" size={14} />
-                  <span>GPS &amp; ATEX Connected</span>
-                </span>
-              </div>
-              <h1 className="text-2xl sm:text-3xl font-black text-white tracking-tight leading-tight">
-                Mother Station Fleet &amp; Skid Dispatch Console
-              </h1>
-              <p className="text-sm font-medium text-slate-300 leading-relaxed">
-                Pusat kendali logistik armada Mother Station, pemantauan status pengiriman Skid Tube Trailer (20ft/40ft), kepatuhan sertifikasi ATEX/SIO supir, serta pengiriman darurat (Emergency Dispatch) secara real-time.
-              </p>
+        {/* EXECUTIVE FLEET & SKID TELEMETRY HERO BANNER (Standardized with Stasiun) */}
+        <div className="bg-gradient-to-r from-blue-950 via-slate-900 to-slate-950 rounded-3xl p-6 sm:p-8 text-white shadow-xl relative overflow-hidden border border-cyan-500/30 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 animate-in fade-in slide-in-from-top-4 duration-500">
+          <div className="absolute -right-10 -bottom-10 w-48 h-48 bg-cyan-500/15 rounded-full blur-3xl pointer-events-none" />
+          <div className="space-y-2 max-w-3xl z-10">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-500/20 backdrop-blur-md border border-cyan-500/30 text-xs font-bold text-cyan-300 whitespace-nowrap shrink-0 align-middle shadow-2xs">
+              <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse" />
+              <span>Fleet Logistics Engine v2.4 · GPS &amp; ATEX Connected</span>
             </div>
-
-            <div className="flex flex-wrap items-center gap-3 shrink-0">
-              <button
-                onClick={handleTriggerFleetSync}
-                disabled={isSyncingFleet || fleetSyncSuccess}
-                className={`flex items-center gap-2 px-5 py-3 rounded-2xl font-black text-xs transition-all duration-300 shadow-xl active:scale-95 disabled:cursor-not-allowed border whitespace-nowrap shrink-0 align-middle ${
-                  fleetSyncSuccess
-                    ? 'bg-emerald-600 border-emerald-500 text-white shadow-emerald-950/50'
-                    : 'bg-slate-900/80 hover:bg-slate-800 border-cyan-500/40 text-cyan-300 hover:text-white shadow-cyan-950/20'
-                }`}
-              >
-                {isSyncingFleet ? (
-                  <>
-                    <Icon name="ArrowPathIcon" size={15} className="animate-spin text-cyan-400" />
-                    <span>Syncing GPS Telemetry...</span>
-                  </>
-                ) : fleetSyncSuccess ? (
-                  <>
-                    <Icon name="CheckCircleIcon" size={15} className="text-white" />
-                    <span>All Fleets Synchronized</span>
-                  </>
-                ) : (
-                  <>
-                    <Icon name="BoltIcon" size={15} />
-                    <span>[⚡ Sync Fleet Telemetry]</span>
-                  </>
-                )}
-              </button>
-            </div>
+            <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-white">
+              Mother Station Fleet &amp; Skid Dispatch Console
+            </h1>
+            <p className="text-xs sm:text-sm text-slate-300 leading-relaxed font-medium">
+              Pusat kendali logistik armada Mother Station, pemantauan status pengiriman Skid Tube Trailer (20ft/40ft), kepatuhan sertifikasi ATEX/SIO supir, serta pengiriman darurat (Emergency Dispatch) secara real-time.
+            </p>
           </div>
+
+          <button
+            onClick={handleTriggerFleetSync}
+            disabled={isSyncingFleet || fleetSyncSuccess}
+            className={`px-5 py-3 font-extrabold rounded-2xl text-xs sm:text-sm shadow-lg transition-all flex items-center gap-2.5 active:scale-95 shrink-0 whitespace-nowrap z-10 self-stretch sm:self-auto justify-center disabled:cursor-not-allowed ${
+              fleetSyncSuccess
+                ? 'bg-gradient-to-r from-emerald-600 to-teal-700 text-white shadow-emerald-950/50'
+                : 'bg-gradient-to-r from-blue-500 to-cyan-600 hover:from-blue-400 hover:to-cyan-500 text-white shadow-cyan-500/30'
+            }`}
+          >
+            {isSyncingFleet ? (
+              <>
+                <Icon name="ArrowPathIcon" size={18} className="animate-spin text-white" />
+                <span>Syncing Telemetry...</span>
+              </>
+            ) : fleetSyncSuccess ? (
+              <>
+                <Icon name="CheckCircleIcon" size={18} className="text-white" />
+                <span>Fleets Synchronized</span>
+              </>
+            ) : (
+              <>
+                <Icon name="BoltIcon" size={18} />
+                <span>Sync Fleet Telemetry</span>
+              </>
+            )}
+          </button>
         </div>
         
         {/* ROW 1: 4 HERO METRIC CARDS (Frosted Acrylic Glassmorphism + Slim 1-Line Badges) */}

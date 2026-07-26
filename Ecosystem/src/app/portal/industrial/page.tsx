@@ -329,59 +329,48 @@ export default function DireksiB2BPage() {
 
       {/* Main Content Area */}
       <div className="flex-1 w-full max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 xl:px-10 2xl:px-12 pt-10 pb-12 space-y-8">
-        {/* EXECUTIVE INDUSTRIAL BULK CNG HERO BANNER */}
-        <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-slate-900 via-indigo-950/90 to-slate-900 border border-indigo-500/30 p-6 sm:p-8 shadow-2xl backdrop-blur-xl text-white">
-          <div className="absolute top-0 right-0 -mt-8 -mr-8 w-64 h-64 bg-indigo-500/15 rounded-full blur-3xl pointer-events-none" />
-          
-          <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 relative z-10">
-            <div className="space-y-2 max-w-2xl">
-              <div className="flex items-center gap-2">
-                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-extrabold bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 whitespace-nowrap shrink-0 align-middle shadow-sm">
-                  <Icon name="BuildingOfficeIcon" size={14} className="text-indigo-400" />
-                  <span>Industrial Bulk CNG v2.4</span>
-                </span>
-                <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-extrabold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 whitespace-nowrap shrink-0 align-middle shadow-sm">
-                  <Icon name="CheckCircleIcon" size={14} />
-                  <span>PRMS Metering Active</span>
-                </span>
-              </div>
-              <h1 className="text-2xl sm:text-3xl font-black text-white tracking-tight leading-tight">
-                Industrial Bulk CNG &amp; PRMS Pipeline Console
-              </h1>
-              <p className="text-sm font-medium text-slate-300 leading-relaxed">
-                Pusat kendali suplai gas alam padat (CNG) rute manufaktur &amp; kawasan industri berat, pemantauan utilisasi kuota bulanan (MMBTU/Sm³), serta peringatan dini perpanjangan kontrak SLA B2B.
-              </p>
+        {/* EXECUTIVE INDUSTRIAL BULK CNG HERO BANNER (Standardized with Stasiun) */}
+        <div className="bg-gradient-to-r from-indigo-950 via-slate-900 to-slate-950 rounded-3xl p-6 sm:p-8 text-white shadow-xl relative overflow-hidden border border-indigo-500/30 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 animate-in fade-in slide-in-from-top-4 duration-500">
+          <div className="absolute -right-10 -bottom-10 w-48 h-48 bg-indigo-500/15 rounded-full blur-3xl pointer-events-none" />
+          <div className="space-y-2 max-w-3xl z-10">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-500/20 backdrop-blur-md border border-indigo-500/30 text-xs font-bold text-indigo-300 whitespace-nowrap shrink-0 align-middle shadow-2xs">
+              <span className="w-1.5 h-1.5 rounded-full bg-indigo-400 animate-pulse" />
+              <span>Industrial Bulk CNG v2.4 · PRMS Metering Active</span>
             </div>
-
-            <div className="flex flex-wrap items-center gap-3 shrink-0">
-              <button
-                onClick={handleTriggerPrmsSync}
-                disabled={isSyncingPrms || prmsSyncSuccess}
-                className={`flex items-center gap-2 px-5 py-3 rounded-2xl font-black text-xs transition-all duration-300 shadow-xl active:scale-95 disabled:cursor-not-allowed border whitespace-nowrap shrink-0 align-middle ${
-                  prmsSyncSuccess
-                    ? 'bg-emerald-600 border-emerald-500 text-white shadow-emerald-950/50'
-                    : 'bg-slate-900/80 hover:bg-slate-800 border-indigo-500/40 text-indigo-300 hover:text-white shadow-indigo-950/20'
-                }`}
-              >
-                {isSyncingPrms ? (
-                  <>
-                    <Icon name="ArrowPathIcon" size={15} className="animate-spin text-indigo-400" />
-                    <span>Syncing PRMS Meters...</span>
-                  </>
-                ) : prmsSyncSuccess ? (
-                  <>
-                    <Icon name="CheckCircleIcon" size={15} className="text-white" />
-                    <span>PRMS Telemetry Verified</span>
-                  </>
-                ) : (
-                  <>
-                    <Icon name="BoltIcon" size={15} />
-                    <span>[⚡ Sync PRMS Pipeline Data]</span>
-                  </>
-                )}
-              </button>
-            </div>
+            <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-white">
+              Industrial Bulk CNG &amp; PRMS Pipeline Console
+            </h1>
+            <p className="text-xs sm:text-sm text-slate-300 leading-relaxed font-medium">
+              Pusat kendali suplai gas alam padat (CNG) rute manufaktur &amp; kawasan industri berat, pemantauan utilisasi kuota bulanan (MMBTU/Sm³), serta peringatan dini perpanjangan kontrak SLA B2B.
+            </p>
           </div>
+
+          <button
+            onClick={handleTriggerPrmsSync}
+            disabled={isSyncingPrms || prmsSyncSuccess}
+            className={`px-5 py-3 font-extrabold rounded-2xl text-xs sm:text-sm shadow-lg transition-all flex items-center gap-2.5 active:scale-95 shrink-0 whitespace-nowrap z-10 self-stretch sm:self-auto justify-center disabled:cursor-not-allowed ${
+              prmsSyncSuccess
+                ? 'bg-gradient-to-r from-emerald-600 to-teal-700 text-white shadow-emerald-950/50'
+                : 'bg-gradient-to-r from-indigo-500 to-cyan-600 hover:from-indigo-400 hover:to-cyan-500 text-white shadow-indigo-500/30'
+            }`}
+          >
+            {isSyncingPrms ? (
+              <>
+                <Icon name="ArrowPathIcon" size={18} className="animate-spin text-white" />
+                <span>Syncing PRMS...</span>
+              </>
+            ) : prmsSyncSuccess ? (
+              <>
+                <Icon name="CheckCircleIcon" size={18} className="text-white" />
+                <span>Telemetry Verified</span>
+              </>
+            ) : (
+              <>
+                <Icon name="BoltIcon" size={18} />
+                <span>Sync PRMS Pipeline</span>
+              </>
+            )}
+          </button>
         </div>
         
         {/* ROW 1: EXECUTIVE HERO METRICS (4 CARDS) WITH FROSTED GLASSMORPHISM & ACCENT GLOWS */}
