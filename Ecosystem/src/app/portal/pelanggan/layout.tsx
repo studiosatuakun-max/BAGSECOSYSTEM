@@ -4,6 +4,11 @@ import type { Metadata } from 'next';
 export const metadata: Metadata = {
   title: 'Customer App — BaGS Ecosystem',
   description: 'Mobile Customer App for BaGS Ecosystem',
+  icons: {
+    icon: '/assets/images/icon.png',
+    shortcut: '/assets/images/icon.png',
+    apple: '/assets/images/icon.png',
+  },
 };
 
 export default function MobilePortalLayout({ children }: { children: React.ReactNode }) {

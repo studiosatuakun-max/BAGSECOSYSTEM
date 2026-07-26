@@ -26,32 +26,35 @@ export default function TaxComplianceCard() {
   return (
     <div className="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200/80 dark:border-slate-800 p-6 shadow-xl hover:shadow-2xl transition-all duration-300 h-full flex flex-col justify-between gap-5 group">
       {/* Header */}
-      <div className="flex items-start justify-between gap-3 border-b border-slate-100 dark:border-slate-800 pb-4">
-        <div className="flex items-center gap-3">
-          <div className="w-11 h-11 rounded-2xl bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-200 dark:border-emerald-800 flex items-center justify-center text-emerald-600 dark:text-emerald-400 shrink-0 shadow-inner group-hover:scale-105 transition-transform duration-300">
-            <ShieldCheck size={20} />
-          </div>
-          <div>
-            <div className="flex items-center gap-2">
-              <h2 className="text-base font-black text-slate-900 dark:text-white tracking-tight">
+      <div className="flex flex-col gap-3 border-b border-slate-100 dark:border-slate-800 pb-4">
+        <div className="flex items-center justify-between gap-2">
+          <div className="flex items-center gap-3">
+            <div className="w-11 h-11 rounded-2xl bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-200 dark:border-emerald-800 flex items-center justify-center text-emerald-600 dark:text-emerald-400 shrink-0 shadow-inner group-hover:scale-105 transition-transform duration-300">
+              <ShieldCheck size={20} />
+            </div>
+            <div>
+              <h2 className="text-base font-black text-slate-900 dark:text-white tracking-tight leading-tight">
                 Kepatuhan Pajak MIGAS
               </h2>
-              <span className="inline-flex items-center gap-1 bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-200 dark:border-emerald-800 text-emerald-700 dark:text-emerald-300 text-[10px] font-extrabold px-2 py-0.5 rounded-full whitespace-nowrap shrink-0 align-middle">
-                <Sparkles size={10} />
-                <span>DGT Online</span>
-              </span>
+              <p className="text-[11px] font-semibold text-slate-400 mt-0.5">
+                Rekap E-Faktur PPh CNG Juli 2026
+              </p>
             </div>
-            <p className="text-xs font-semibold text-slate-400 mt-0.5">
-              Rekap E-Faktur & Kewajiban PPh CNG Juli 2026
-            </p>
           </div>
         </div>
-        {overall < 100 && (
-          <span className="inline-flex items-center gap-1 bg-amber-50 dark:bg-amber-950/60 border border-amber-200 dark:border-amber-800 text-amber-700 dark:text-amber-400 text-[11px] font-extrabold px-3 py-1 rounded-full whitespace-nowrap shrink-0 align-middle shadow-2xs">
-            <AlertTriangle size={12} className="text-amber-500" />
-            <span>2 Menunggu</span>
+
+        <div className="flex items-center gap-2 flex-wrap">
+          <span className="inline-flex items-center gap-1 bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-200 dark:border-emerald-800 text-emerald-700 dark:text-emerald-300 text-[10px] font-extrabold px-2.5 py-1 rounded-full whitespace-nowrap shrink-0 align-middle">
+            <Sparkles size={11} />
+            <span>DGT Online</span>
           </span>
-        )}
+          {overall < 100 && (
+            <span className="inline-flex items-center gap-1 bg-amber-50 dark:bg-amber-950/60 border border-amber-200 dark:border-amber-800 text-amber-700 dark:text-amber-400 text-[10px] font-extrabold px-2.5 py-1 rounded-full whitespace-nowrap shrink-0 align-middle shadow-2xs">
+              <AlertTriangle size={11} className="text-amber-500" />
+              <span>2 Menunggu</span>
+            </span>
+          )}
+        </div>
       </div>
 
       {/* Radial Chart & Overall Score */}

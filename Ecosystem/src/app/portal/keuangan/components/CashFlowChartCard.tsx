@@ -14,8 +14,8 @@ const CashFlowChart = dynamic(() => import('./CashFlowChart'), {
 });
 
 const periods = [
-  { label: '6 Bln', value: '6m' },
-  { label: '12 Bln', value: '12m' },
+  { label: '6M', value: '6m' },
+  { label: '12M', value: '12m' },
   { label: 'YTD', value: 'ytd' },
   { label: 'Q3 Proyeksi', value: 'q3' },
 ];
@@ -54,9 +54,9 @@ export default function CashFlowChartCard() {
               <button
                 key={`period-${p.value}`}
                 onClick={() => setActivePeriod(p.value)}
-                className={`px-3 py-1.5 rounded-xl text-xs font-extrabold transition-all duration-200 ${
+                className={`px-3 py-1.5 rounded-xl text-xs font-black transition-all duration-200 ${
                   activePeriod === p.value
-                    ? 'bg-white dark:bg-slate-900 text-slate-900 dark:text-white shadow-sm border border-slate-200/60 dark:border-slate-700'
+                    ? 'bg-slate-900 dark:bg-amber-500 text-white dark:text-slate-950 shadow-md'
                     : 'text-slate-500 hover:text-slate-900 dark:hover:text-white'
                 }`}
               >

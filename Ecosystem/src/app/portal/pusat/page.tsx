@@ -128,6 +128,19 @@ export default function PusatDashboardOverview() {
     setIsModalOpen(false);
   };
 
+  const [isPurging, setIsPurging] = useState(false);
+  const [purgeSuccess, setPurgeSuccess] = useState(false);
+
+  const handleTriggerCheckpoint = () => {
+    setIsPurging(true);
+    setPurgeSuccess(false);
+    setTimeout(() => {
+      setIsPurging(false);
+      setPurgeSuccess(true);
+      setTimeout(() => setPurgeSuccess(false), 4000);
+    }, 1500);
+  };
+
   const handleDeleteLog = (id: string) => {
     if (confirm(`Are you sure you want to purge telemetry audit log ${id}?`)) {
       setLogs(logs.filter((item) => item.id !== id));
@@ -136,6 +149,60 @@ export default function PusatDashboardOverview() {
 
   return (
     <div className="space-y-8 animate-in fade-in duration-500">
+      {/* EXECUTIVE ROOT GOVERNANCE HERO BANNER */}
+      <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-slate-900 via-indigo-950/90 to-slate-900 border border-indigo-500/30 p-6 sm:p-8 shadow-2xl backdrop-blur-xl text-white">
+        <div className="absolute top-0 right-0 -mt-8 -mr-8 w-64 h-64 bg-indigo-500/15 rounded-full blur-3xl pointer-events-none" />
+        
+        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 relative z-10">
+          <div className="space-y-2 max-w-2xl">
+            <div className="flex items-center gap-2">
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-extrabold bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 whitespace-nowrap shrink-0 align-middle shadow-sm">
+                <Icon name="ShieldCheckIcon" size={14} className="text-indigo-400" />
+                <span>Root Governance Core v2.4</span>
+              </span>
+              <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-extrabold bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 whitespace-nowrap shrink-0 align-middle shadow-sm">
+                <Icon name="ServerStackIcon" size={14} />
+                <span>9 Portals Synchronized</span>
+              </span>
+            </div>
+            <h1 className="text-2xl sm:text-3xl font-black text-white tracking-tight leading-tight">
+              Enterprise Root Governance & Telemetry Console
+            </h1>
+            <p className="text-sm font-medium text-slate-300 leading-relaxed">
+              Pusat kendali supremasi sistem BASKARA, pemantauan latensi API Gateway 9 portal, sinkronisasi harga gas nasional (MIGAS HBA), serta pengaturan otoritas RBAC & PIN pengemudi.
+            </p>
+          </div>
+
+          <div className="flex flex-wrap items-center gap-3 shrink-0">
+            <button
+              onClick={handleTriggerCheckpoint}
+              disabled={isPurging || purgeSuccess}
+              className={`flex items-center gap-2 px-5 py-3 rounded-2xl font-black text-xs transition-all duration-300 shadow-xl active:scale-95 disabled:cursor-not-allowed border whitespace-nowrap shrink-0 align-middle ${
+                purgeSuccess
+                  ? 'bg-emerald-600 border-emerald-500 text-white shadow-emerald-950/50'
+                  : 'bg-slate-900/80 hover:bg-slate-800 border-indigo-500/40 text-indigo-300 hover:text-white shadow-indigo-950/20'
+              }`}
+            >
+              {isPurging ? (
+                <>
+                  <Icon name="ArrowPathIcon" size={15} className="animate-spin text-indigo-400" />
+                  <span>Flushing Gateway Cache...</span>
+                </>
+              ) : purgeSuccess ? (
+                <>
+                  <Icon name="CheckCircleIcon" size={15} className="text-white" />
+                  <span>Cluster Checkpoint Verified</span>
+                </>
+              ) : (
+                <>
+                  <Icon name="BoltIcon" size={15} />
+                  <span>[⚡ Trigger Core Checkpoint]</span>
+                </>
+              )}
+            </button>
+          </div>
+        </div>
+      </div>
       
       {/* ROW 1: EXECUTIVE ROOT HERO METRICS (4 CARDS) WITH ROYAL INDIGO / PURPLE GLASSMORPHISM */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-5">
