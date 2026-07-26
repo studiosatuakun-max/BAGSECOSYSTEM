@@ -94,12 +94,18 @@ To elevate BaGS Ecosystem into an autonomous, next-generation enterprise ERP, we
   - **Authentic BASKARA CNG Terminology & Data**: Replaced generic agribusiness/landscaping data with Mother Station industrial accounts (PT Krakatau Baja Smelter, PT Unilever Foods & Beverages, PT Indocement, Grand Hyatt Hotel Jakarta, PT Pabrik Kertas Tjiwi Kimia) tracking MMBTU contract values and Sm³/day utilization.
   - **Executive Bento Grid Integration**: Integrated previously disconnected components (`AcquisitionFunnelClient`, `CampaignROIChartInner`, `TopClientsTableClient`) into an executive 4-row bento layout with live CRUD modal for marketing campaign management.
   - Verified 100% clean production compilation via `npm run build` (10.0s build time).
+- [x] **Modul HR / Enterprise Workforce & ATEX SIO Control Center — Gold Benchmark Upgrade (`/portal/hr`)**:
+  - **Executive HR & ATEX Certification Hero Banner**: Added standardized acrylic hero banner matching Stasiun layout and dimensions with live SIO ATEX license compliance auditing trigger.
+  - **Full Dark / Light Mode Protection**: Upgraded root container (`bg-slate-50 dark:bg-slate-950`) and modernized all bento cards, attendance charts, leave request rows, and anniversary banners with clean Tailwind dark mode classes (`bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800`), eliminating broken legacy CSS variables.
+  - **Authentic BASKARA CNG Telemetry & SIO Tracking**: Embedded real CNG Mother Station operational departments (Skid Fleet & Drivers ATEX, Mother Station Operations, QHSE & MIGAS Compliance) and added official MIGAS/ATEX SIO license tracking numbers and expiration dates for heavy vehicle drivers and engineers.
+  - **Executive Bento Grid & Code Cleanup**: Integrated 5 upgraded client components (`WorkforceChart`, `AttendanceCard`, `LeaveRequestsList`, `AnniversaryBanner`, `OnboardingCTA`) into a sleek 4-row bento layout, removed orphaned `KpiCards.tsx`, and eliminated missing `@/lib/mockData` references.
+  - Verified 100% clean production compilation via `npm run build` (9.5s build time, 26.7 kB bundle).
 
 ## Next Steps (Sequential Module Upgrade Plan)
 - [x] **Step 2**: Upgrade **Modul Stasiun (`/portal/stasiun`)** — Mother Station Production, Compression & ATEX Console (Completed & Verified).
 - [x] **Step 3**: Upgrade **Modul Keuangan (`/portal/keuangan`)** — Finance & Invoicing Engine (Completed & Verified).
 - [x] **Step 4**: Upgrade **Modul Pemasaran (`/portal/pemasaran`)** — Commercial CRM & AE Pipeline Quotation (Completed & Verified).
-- [ ] **Step 5**: Upgrade **Modul HR (`/portal/hr`)** — Enterprise Personnel, Organization & Payroll.
+- [x] **Step 5**: Upgrade **Modul HR (`/portal/hr`)** — Enterprise Personnel, Organization & Payroll (Completed & Verified).
 - [ ] **Step 6**: Upgrade **Modul CS (`/portal/cs`)** — Customer Service Ticketing & Dispatch Assistance.
 - [ ] **Step 7**: Upgrade **Modul Skid (`/portal/skid`)** — B2B Industrial Client Portal & Custody Transfer.
 - [ ] **Step 8**: Upgrade **Modul Purchasing (`/portal/purchasing`)** — Procurement, Parts & Vendor Management.
