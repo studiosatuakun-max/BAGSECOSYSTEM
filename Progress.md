@@ -106,6 +106,13 @@ To elevate BaGS Ecosystem into an autonomous, next-generation enterprise ERP, we
   - **Authentic BASKARA CNG Ticketing & Emergency Telemetry**: Replaced generic placeholders with real industrial accounts and highway incidents (PT Krakatau Baja Smelter PRMS pressure drops, Skid Driver B 9120 VGL highway delays, PT Mayora custody transfer E-Faktur verification).
   - **Executive Bento Grid & Live Highway Feed**: Integrated 2 new modular client components (`TicketCategoryChart` with colorful `<Cell>` rendering and sleek tooltips, and `EmergencyDispatchFeed` with interactive highway SOS dispatching and Sonner toasts) into an executive 3-row bento layout.
   - Verified 100% clean production compilation via `npm run build` (8.5s build time, 17.7 kB bundle).
+- [x] **Modul Skid / B2B Industrial Client Portal & Custody Transfer — Gold Benchmark Upgrade (`/portal/skid`)**:
+  - **Standardized Executive Custody Transfer Hero Banner**: Added acrylic hero banner matching Stasiun/HR/CS layout and dimensions with live SCADA telemetry and E-Faktur synchronization triggers.
+  - **Full Dark / Light Mode Protection**: Upgraded root container (`bg-slate-50 dark:bg-slate-950`) and modernized all bento cards, charts, invoices, and modal dialogs with clean Tailwind dark mode classes (`bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800`), removing broken legacy CSS variables and missing import paths.
+  - **Authentic BASKARA CNG Custody Transfer Telemetry**: Converted legacy LPG placeholders into authentic 250 Bar CNG Mother Station Skid Tube Storage metrics, 240 Bar Manifold Inlet Pressure gauges with MIGAS safety thresholds, and DJP E-Faktur billing.
+  - **Executive Bento Grid & Re-integration of 5 Orphaned Components**: Integrated and upgraded 5 previously unused subcomponents (`TankInfoCard`, `PressureGaugeCard`, `ConsumptionTrendCard`, `LatestInvoiceCard`, `EmergencyRefillCard`) into an executive multi-row bento layout.
+  - **Master Custody Transfer Directory & CRUD Modal**: Replaced generic order tables with real B2B industrial accounts (PT Krakatau Baja Smelter, PT Unilever, PT Indocement), added real-time search, status filtering, 1-line slim status badges, and an interactive CRUD modal for scheduling Skid deliveries.
+  - Verified 100% clean production compilation via `npm run build` (12.0s build time, 28.5 kB bundle).
 
 ## Next Steps (Sequential Module Upgrade Plan)
 - [x] **Step 2**: Upgrade **Modul Stasiun (`/portal/stasiun`)** — Mother Station Production, Compression & ATEX Console (Completed & Verified).
@@ -113,7 +120,7 @@ To elevate BaGS Ecosystem into an autonomous, next-generation enterprise ERP, we
 - [x] **Step 4**: Upgrade **Modul Pemasaran (`/portal/pemasaran`)** — Commercial CRM & AE Pipeline Quotation (Completed & Verified).
 - [x] **Step 5**: Upgrade **Modul HR (`/portal/hr`)** — Enterprise Personnel, Organization & Payroll (Completed & Verified).
 - [x] **Step 6**: Upgrade **Modul CS (`/portal/cs`)** — Customer Service Ticketing & Dispatch Assistance (Completed & Verified).
-- [ ] **Step 7**: Upgrade **Modul Skid (`/portal/skid`)** — B2B Industrial Client Portal & Custody Transfer.
+- [x] **Step 7**: Upgrade **Modul Skid (`/portal/skid`)** — B2B Industrial Client Portal & Custody Transfer (Completed & Verified).
 - [ ] **Step 8**: Upgrade **Modul Purchasing (`/portal/purchasing`)** — Procurement, Parts & Vendor Management.
 - [ ] **Step 9**: Upgrade **Modul Legal (`/portal/legal`)** — Contracts, SLAs, MIGAS Compliance & Permits.
 - [ ] Connect and configure live Supabase tables (`dispatches` and `dispatch_files` storage bucket) for permanent production persistence.
