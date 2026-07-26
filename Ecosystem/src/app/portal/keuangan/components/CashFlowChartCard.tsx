@@ -2,12 +2,14 @@
 
 import React, { useState } from 'react';
 import dynamic from 'next/dynamic';
-import { TrendingUp, MoreHorizontal, Download } from 'lucide-react';
+import { TrendingUp, MoreHorizontal, Download, Sparkles } from 'lucide-react';
 
 const CashFlowChart = dynamic(() => import('./CashFlowChart'), {
   ssr: false,
   loading: () => (
-    <div className="h-[260px] animate-pulse bg-slate-100 rounded-xl" />
+    <div className="h-[280px] animate-pulse bg-slate-100 dark:bg-slate-800/50 rounded-2xl flex items-center justify-center text-xs text-slate-400 font-bold">
+      Loading Recharts Telemetry...
+    </div>
   ),
 });
 
@@ -15,80 +17,95 @@ const periods = [
   { label: '6 Bln', value: '6m' },
   { label: '12 Bln', value: '12m' },
   { label: 'YTD', value: 'ytd' },
+  { label: 'Q3 Proyeksi', value: 'q3' },
 ];
 
 export default function CashFlowChartCard() {
   const [activePeriod, setActivePeriod] = useState('12m');
 
   return (
-    <div className="bg-card rounded-2xl border border-border card-shadow p-5 lg:p-6 h-full flex flex-col">
+    <div className="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200/80 dark:border-slate-800 p-6 shadow-xl hover:shadow-2xl transition-all duration-300 h-full flex flex-col justify-between gap-5 group">
       {/* Header */}
-      <div className="flex items-start justify-between mb-4">
-        <div>
-          <div className="flex items-center gap-2 mb-0.5">
-            <div className="w-7 h-7 rounded-lg bg-primary/10 flex items-center justify-center">
-              <TrendingUp size={15} className="text-primary" />
-            </div>
-            <h2 className="text-[15px] font-700 text-foreground">Tren Arus Kas</h2>
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-100 dark:border-slate-800 pb-4">
+        <div className="flex items-center gap-3">
+          <div className="w-11 h-11 rounded-2xl bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-200 dark:border-emerald-800 flex items-center justify-center text-emerald-600 dark:text-emerald-400 shrink-0 shadow-inner group-hover:scale-105 transition-transform duration-300">
+            <TrendingUp size={20} />
           </div>
-          <p className="text-xs text-muted-foreground ml-9">Pendapatan vs. Pengeluaran (Rp Juta)</p>
+          <div>
+            <div className="flex items-center gap-2">
+              <h2 className="text-base font-black text-slate-900 dark:text-white tracking-tight">
+                Tren Arus Kas Custody Transfer CNG
+              </h2>
+              <span className="inline-flex items-center gap-1 bg-amber-50 dark:bg-amber-950/60 border border-amber-200 dark:border-amber-800 text-amber-700 dark:text-amber-400 text-[10px] font-extrabold px-2.5 py-0.5 rounded-full whitespace-nowrap shrink-0 align-middle">
+                <Sparkles size={10} />
+                <span>MMBTU Billing</span>
+              </span>
+            </div>
+            <p className="text-xs font-semibold text-slate-400 mt-0.5">
+              Pendapatan Penjualan Gas vs Biaya Operasional Mother Station & Kompresi (Rp Juta)
+            </p>
+          </div>
         </div>
-        <div className="flex items-center gap-2">
+
+        <div className="flex items-center gap-2 self-end sm:self-auto">
           {/* Period selector */}
-          <div className="flex items-center bg-secondary rounded-xl p-0.5">
-            {periods?.map((p) => (
+          <div className="flex items-center bg-slate-100 dark:bg-slate-800/80 rounded-2xl p-1 border border-slate-200/60 dark:border-slate-700/60">
+            {periods.map((p) => (
               <button
-                key={`period-${p?.value}`}
-                onClick={() => setActivePeriod(p?.value)}
-                className={`px-3 py-1.5 rounded-lg text-xs font-600 transition-all duration-150 ${
-                  activePeriod === p?.value
-                    ? 'bg-card text-primary card-shadow'
-                    : 'text-muted-foreground hover:text-foreground'
+                key={`period-${p.value}`}
+                onClick={() => setActivePeriod(p.value)}
+                className={`px-3 py-1.5 rounded-xl text-xs font-extrabold transition-all duration-200 ${
+                  activePeriod === p.value
+                    ? 'bg-white dark:bg-slate-900 text-slate-900 dark:text-white shadow-sm border border-slate-200/60 dark:border-slate-700'
+                    : 'text-slate-500 hover:text-slate-900 dark:hover:text-white'
                 }`}
               >
-                {p?.label}
+                {p.label}
               </button>
             ))}
           </div>
-          <button className="p-1.5 rounded-lg text-muted-foreground hover:bg-secondary hover:text-foreground transition-all duration-150">
-            <Download size={15} />
-          </button>
-          <button className="p-1.5 rounded-lg text-muted-foreground hover:bg-secondary hover:text-foreground transition-all duration-150">
-            <MoreHorizontal size={15} />
+          <button className="p-2 rounded-xl text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-white transition-all duration-150 border border-transparent hover:border-slate-200 dark:hover:border-slate-700">
+            <Download size={16} />
           </button>
         </div>
       </div>
+
       {/* Legend */}
-      <div className="flex items-center gap-5 mb-4">
-        <div className="flex items-center gap-1.5">
-          <span className="w-3 h-3 rounded-full bg-primary" />
-          <span className="text-xs text-muted-foreground font-500">Pendapatan</span>
+      <div className="flex flex-wrap items-center gap-6 px-2">
+        <div className="flex items-center gap-2">
+          <span className="w-3 h-3 rounded-full bg-emerald-500 shadow-2xs shadow-emerald-500/50" />
+          <span className="text-xs text-slate-600 dark:text-slate-300 font-extrabold">Pendapatan CNG (B2B Industrial & Horeca)</span>
         </div>
-        <div className="flex items-center gap-1.5">
-          <span className="w-3 h-3 rounded-full bg-accent" />
-          <span className="text-xs text-muted-foreground font-500">Pengeluaran</span>
+        <div className="flex items-center gap-2">
+          <span className="w-3 h-3 rounded-full bg-amber-500 shadow-2xs shadow-amber-500/50" />
+          <span className="text-xs text-slate-600 dark:text-slate-300 font-extrabold">Biaya Operasional Mother Station</span>
         </div>
-        <div className="flex items-center gap-1.5">
-          <span className="w-3 h-0.5 bg-positive" style={{ borderTop: '2px dashed var(--positive)' }} />
-          <span className="text-xs text-muted-foreground font-500">Net Cash</span>
+        <div className="flex items-center gap-2 ml-auto">
+          <span className="text-xs font-black text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-200 dark:border-emerald-800 px-2.5 py-1 rounded-lg">
+            Net Margin Avg: +64.2%
+          </span>
         </div>
       </div>
+
       {/* Chart */}
-      <div className="flex-1 min-h-[240px]">
+      <div className="flex-1 min-h-[280px] w-full">
         <CashFlowChart period={activePeriod} />
       </div>
-      {/* Summary row */}
-      <div className="grid grid-cols-3 gap-3 mt-4 pt-4 border-t border-border">
-        {[
-          { label: 'Total Pendapatan', value: 'Rp 8,7 M', color: 'text-primary' },
-          { label: 'Total Pengeluaran', value: 'Rp 3,2 M', color: 'text-accent' },
-          { label: 'Net Cash Flow', value: 'Rp 5,5 M', color: 'text-positive' },
-        ]?.map((s) => (
-          <div key={`summary-${s?.label}`} className="text-center">
-            <p className="text-xs text-muted-foreground font-500 mb-0.5">{s?.label}</p>
-            <p className={`text-sm font-700 tabular-nums ${s?.color}`}>{s?.value}</p>
-          </div>
-        ))}
+
+      {/* Summary footer */}
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 bg-slate-50 dark:bg-slate-950/60 p-4 rounded-2xl border border-slate-100 dark:border-slate-800 text-center sm:text-left">
+        <div>
+          <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Total Revenue YTD</span>
+          <p className="text-lg font-black text-slate-900 dark:text-white tabular-nums mt-0.5">Rp 12.450.000.000</p>
+        </div>
+        <div>
+          <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Total Ops Expense YTD</span>
+          <p className="text-lg font-black text-amber-600 dark:text-amber-400 tabular-nums mt-0.5">Rp 4.455.000.000</p>
+        </div>
+        <div>
+          <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Net Treasury Surplus</span>
+          <p className="text-lg font-black text-emerald-600 dark:text-emerald-400 tabular-nums mt-0.5">+ Rp 7.995.000.000</p>
+        </div>
       </div>
     </div>
   );
