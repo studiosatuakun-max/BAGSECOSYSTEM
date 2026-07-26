@@ -267,6 +267,19 @@ export default function HorecaCommercialPage() {
     showToast(`📄 Mengunduh Laporan Eksekutif CNG Komersial & Horeca (Sm³ & Revenue PDF)... Berhasil!`);
   };
 
+  const [isSyncingCradle, setIsSyncingCradle] = useState(false);
+  const [cradleSyncSuccess, setCradleSyncSuccess] = useState(false);
+
+  const handleTriggerCradleSync = () => {
+    setIsSyncingCradle(true);
+    setCradleSyncSuccess(false);
+    setTimeout(() => {
+      setIsSyncingCradle(false);
+      setCradleSyncSuccess(true);
+      setTimeout(() => setCradleSyncSuccess(false), 4000);
+    }, 1500);
+  };
+
   return (
     <div className="min-h-screen bg-slate-50/80 font-sans relative flex flex-col">
       {/* Toast Notification Banner */}
@@ -308,6 +321,60 @@ export default function HorecaCommercialPage() {
 
       {/* Main Content Area */}
       <div className="flex-1 w-full max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 xl:px-10 2xl:px-12 pt-10 pb-12 space-y-8">
+        {/* EXECUTIVE HORECA & COMMERCIAL GAS HERO BANNER */}
+        <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-slate-900 via-amber-950/90 to-slate-900 border border-amber-500/30 p-6 sm:p-8 shadow-2xl backdrop-blur-xl text-white">
+          <div className="absolute top-0 right-0 -mt-8 -mr-8 w-64 h-64 bg-amber-500/15 rounded-full blur-3xl pointer-events-none" />
+          
+          <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 relative z-10">
+            <div className="space-y-2 max-w-2xl">
+              <div className="flex items-center gap-2">
+                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-extrabold bg-amber-500/20 text-amber-300 border border-amber-500/30 whitespace-nowrap shrink-0 align-middle shadow-sm">
+                  <Icon name="FireIcon" size={14} className="text-amber-400" />
+                  <span>Commercial CNG Engine v2.4</span>
+                </span>
+                <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-extrabold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 whitespace-nowrap shrink-0 align-middle shadow-sm">
+                  <Icon name="CheckCircleIcon" size={14} />
+                  <span>Cradle &amp; Cascade Telemetry</span>
+                </span>
+              </div>
+              <h1 className="text-2xl sm:text-3xl font-black text-white tracking-tight leading-tight">
+                Horeca &amp; Commercial CNG Division Console
+              </h1>
+              <p className="text-sm font-medium text-slate-300 leading-relaxed">
+                Pusat kendali logistik dan distribusi CNG kemasan (Cradle Cascades &amp; Micro-Bulk VGL) untuk rute Hotel, Restoran, Kafe, dan Industri Komersial ringan dengan pemantauan SLA inspeksi tekanan aman.
+              </p>
+            </div>
+
+            <div className="flex flex-wrap items-center gap-3 shrink-0">
+              <button
+                onClick={handleTriggerCradleSync}
+                disabled={isSyncingCradle || cradleSyncSuccess}
+                className={`flex items-center gap-2 px-5 py-3 rounded-2xl font-black text-xs transition-all duration-300 shadow-xl active:scale-95 disabled:cursor-not-allowed border whitespace-nowrap shrink-0 align-middle ${
+                  cradleSyncSuccess
+                    ? 'bg-emerald-600 border-emerald-500 text-white shadow-emerald-950/50'
+                    : 'bg-slate-900/80 hover:bg-slate-800 border-amber-500/40 text-amber-300 hover:text-white shadow-amber-950/20'
+                }`}
+              >
+                {isSyncingCradle ? (
+                  <>
+                    <Icon name="ArrowPathIcon" size={15} className="animate-spin text-amber-400" />
+                    <span>Syncing Cradle Racks...</span>
+                  </>
+                ) : cradleSyncSuccess ? (
+                  <>
+                    <Icon name="CheckCircleIcon" size={15} className="text-white" />
+                    <span>All Cradles Verified</span>
+                  </>
+                ) : (
+                  <>
+                    <Icon name="BoltIcon" size={15} />
+                    <span>[⚡ Sync Cradle Telemetry]</span>
+                  </>
+                )}
+              </button>
+            </div>
+          </div>
+        </div>
         
         {/* ROW 1: EXECUTIVE HERO METRICS (4 CARDS) WITH WARM GOLD/AMBER FROSTED GLASSMORPHISM */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-5">
