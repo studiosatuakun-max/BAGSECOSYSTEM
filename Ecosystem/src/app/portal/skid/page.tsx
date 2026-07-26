@@ -503,12 +503,6 @@ export default function SkidPortalDashboardPage() {
             </table>
           </div>
         </div>
-
-        {/* Footer attribution */}
-        <div className="flex flex-col sm:flex-row items-center justify-between text-xs text-slate-400 dark:text-slate-500 font-bold gap-2 pt-4 border-t border-slate-200 dark:border-slate-800">
-          <span>Baskara SkidPortal &amp; Custody Transfer v2.5.0 Gold Benchmark</span>
-          <span>ISO 11120 Tube Manifold Monitoring · Terverifikasi MIGAS &amp; Metrologi</span>
-        </div>
       </main>
 
       {/* CRUD MODAL FOR DELIVERY PO */}
