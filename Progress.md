@@ -121,7 +121,7 @@ To elevate BaGS Ecosystem into an autonomous, next-generation enterprise ERP, we
 - [x] **Step 5**: Upgrade **Modul HR (`/portal/hr`)** — Enterprise Personnel, Organization & Payroll (Completed & Verified).
 - [x] **Step 6**: Upgrade **Modul CS (`/portal/cs`)** — Customer Service Ticketing & Dispatch Assistance (Completed & Verified).
 - [x] **Step 7**: Upgrade **Modul Skid (`/portal/skid`)** — B2B Industrial Client Portal & Custody Transfer (Completed & Verified).
-- [ ] **Step 8**: Upgrade **Modul Purchasing (`/portal/purchasing`)** — Procurement, Parts & Vendor Management.
+- [x] **Step 8**: Upgrade **Modul Purchasing (`/portal/purchasing`)** — Procurement, Parts & Vendor Management (Completed & Verified).
 - [ ] **Step 9**: Upgrade **Modul Legal (`/portal/legal`)** — Contracts, SLAs, MIGAS Compliance & Permits.
 - [ ] Connect and configure live Supabase tables (`dispatches` and `dispatch_files` storage bucket) for permanent production persistence.
 - [ ] Implement end-to-end user authentication and role-based access control (RBAC) linking login credentials to specific division inbox filters.
