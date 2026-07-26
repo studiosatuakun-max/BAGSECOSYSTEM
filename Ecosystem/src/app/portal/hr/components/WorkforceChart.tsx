@@ -67,17 +67,22 @@ export default function WorkforceChart() {
             <RadialBarChart
               cx="50%"
               cy="50%"
-              innerRadius="25%"
+              innerRadius="35%"
               outerRadius="95%"
+              barSize={10}
               data={departmentStats}
               startAngle={90}
               endAngle={-270}
             >
               <RadialBar
                 dataKey="headcount"
-                background={{ fill: '#f1f5f9' }}
-                cornerRadius={6}
-              />
+                background={{ fill: 'rgba(148, 163, 184, 0.15)' }}
+                cornerRadius={10}
+              >
+                {departmentStats.map((entry, index) => (
+                  <Cell key={`cell-dept-${index}`} fill={entry.color} />
+                ))}
+              </RadialBar>
               <Tooltip content={<CustomTooltip />} cursor={false} />
             </RadialBarChart>
           </ResponsiveContainer>

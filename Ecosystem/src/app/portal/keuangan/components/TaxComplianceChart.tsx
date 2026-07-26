@@ -6,6 +6,7 @@ import {
   RadialBar,
   ResponsiveContainer,
   PolarAngleAxis,
+  Cell,
 } from 'recharts';
 
 interface TaxItem {
@@ -37,7 +38,7 @@ export default function TaxComplianceChart({ overall, data }: TaxComplianceChart
           cy="50%"
           innerRadius="35%"
           outerRadius="95%"
-          barSize={9}
+          barSize={8}
           data={chartData}
           startAngle={90}
           endAngle={-270}
@@ -46,8 +47,12 @@ export default function TaxComplianceChart({ overall, data }: TaxComplianceChart
           <RadialBar
             dataKey="value"
             cornerRadius={6}
-            background={{ fill: '#334155', opacity: 0.2 }}
-          />
+            background={{ fill: 'rgba(148, 163, 184, 0.15)' }}
+          >
+            {chartData.map((entry, index) => (
+              <Cell key={`tax-cell-${index}`} fill={entry.fill} />
+            ))}
+          </RadialBar>
         </RadialBarChart>
       </ResponsiveContainer>
       <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
