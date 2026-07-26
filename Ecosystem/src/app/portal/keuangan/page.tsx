@@ -21,7 +21,7 @@ export default function FinanceDashboardPage() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 font-sans relative selection:bg-amber-500 selection:text-slate-950 flex flex-col justify-between">
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 font-sans relative selection:bg-amber-500 selection:text-slate-950 flex flex-col justify-between">
       {/* Background Glow */}
       <div className="fixed top-0 left-1/4 w-96 h-96 bg-amber-600/10 rounded-full blur-3xl pointer-events-none -z-10 animate-pulse" />
       <div className="fixed bottom-10 right-1/4 w-96 h-96 bg-emerald-600/10 rounded-full blur-3xl pointer-events-none -z-10" />
@@ -35,10 +35,10 @@ export default function FinanceDashboardPage() {
           roleColor="amber"
           showInbox={true}
           rightCustom={
-            <div className="hidden sm:flex items-center gap-3 bg-slate-900/80 border border-slate-800 rounded-2xl px-4 py-2 backdrop-blur-xl">
+            <div className="hidden sm:flex items-center gap-3 bg-white/80 dark:bg-slate-900/80 border border-slate-200/80 dark:border-slate-800 rounded-2xl px-4 py-2 backdrop-blur-xl shadow-sm">
               <div className="flex flex-col text-right font-mono leading-tight">
-                <span className="text-xs font-black text-amber-400">HBA INDEX $11.50</span>
-                <span className="text-[10px] text-slate-400 font-semibold">USD/IDR Rp 16.240</span>
+                <span className="text-xs font-black text-amber-600 dark:text-amber-400">HBA INDEX $11.50</span>
+                <span className="text-[10px] text-slate-500 dark:text-slate-400 font-semibold">USD/IDR Rp 16.240</span>
               </div>
               <div className="w-2 h-2 rounded-full bg-emerald-500 animate-ping" />
             </div>
