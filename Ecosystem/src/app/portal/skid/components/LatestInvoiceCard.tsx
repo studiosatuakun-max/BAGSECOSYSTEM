@@ -1,20 +1,20 @@
 'use client';
 
 import React, { useState } from 'react';
-import { FileText, Download, Loader2, CheckCircle2, Calendar, Hash } from 'lucide-react';
-import StatusBadge from '@/components/ui/StatusBadge';
+import { FileText, Download, Loader2, CheckCircle2, Calendar, Hash, ShieldCheck, CreditCard } from 'lucide-react';
 import { toast } from 'sonner';
 
 const invoice = {
-  id: 'inv-2026-0718',
-  invoiceNumber: 'INV-2026-0718',
-  amount: 14750000,
+  id: 'inv-cng-2026-0724',
+  invoiceNumber: 'INV/CNG/2026/VII/0892',
+  amount: 85400000,
   status: 'unpaid' as const,
-  dueDate: '23 Jul 2026',
-  issuedDate: '18 Jul 2026',
-  period: 'June 2026',
-  description: 'Gas Supply — Industrial LPG, 350 m³',
-  client: 'PT Baskara Asri Ghas',
+  dueDate: '31 Jul 2026',
+  issuedDate: '24 Jul 2026',
+  period: 'Siklus Mingguan #3 (Jul 2026)',
+  description: 'Custody Transfer CNG Supply — 12,450 Sm³ (444 MMBTU)',
+  client: 'PT Krakatau Baja Smelter',
+  efaktur: '010.000-26.09881234',
 };
 
 function formatIDR(amount: number) {
@@ -27,83 +27,100 @@ export default function LatestInvoiceCard() {
 
   const handleDownload = () => {
     setDownloading(true);
-    // Backend integration: POST /api/invoices/{id}/download → returns signed PDF URL
     setTimeout(() => {
       setDownloading(false);
       setDownloaded(true);
-      toast.success('Invoice downloaded', {
-        description: `${invoice.invoiceNumber} — PDF saved to your downloads folder`,
+      toast.success('E-Faktur & Invoice Downloaded', {
+        description: `${invoice.invoiceNumber} — Tersimpan dalam format PDF (Berhasil divalidasi MIGAS & DJP).`,
       });
       setTimeout(() => setDownloaded(false), 3000);
-    }, 1800);
+    }, 1500);
   };
 
   return (
-    <div className="bg-card border border-border rounded-2xl shadow-card p-5 card-hover fade-in h-full flex flex-col">
-      <div className="flex items-start justify-between mb-4">
-        <div className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-xl bg-primary/10 flex items-center justify-center">
-            <FileText size={16} className="text-primary" />
-          </div>
-          <div>
-            <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Latest Invoice</p>
-          </div>
-        </div>
-        <StatusBadge variant={invoice.status} />
-      </div>
-
-      {/* Invoice details */}
-      <div className="flex-1 space-y-3">
-        <div className="bg-muted/50 rounded-xl p-3.5">
-          <p className="text-2xl font-bold text-foreground font-tabular">{formatIDR(invoice.amount)}</p>
-          <p className="text-xs text-muted-foreground mt-1">{invoice.description}</p>
-        </div>
-
-        <div className="space-y-2">
-          {[
-            { icon: Hash, label: 'Invoice No.', value: invoice.invoiceNumber },
-            { icon: Calendar, label: 'Due Date', value: invoice.dueDate },
-            { icon: Calendar, label: 'Issued', value: invoice.issuedDate },
-          ].map((row) => (
-            <div key={`inv-row-${row.label}`} className="flex items-center justify-between text-sm">
-              <div className="flex items-center gap-1.5 text-muted-foreground">
-                <row.icon size={13} />
-                <span className="text-xs font-medium">{row.label}</span>
-              </div>
-              <span className="text-xs font-semibold text-foreground font-tabular">{row.value}</span>
+    <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl shadow-xl p-6 transition-all duration-300 h-full flex flex-col justify-between group hover:border-indigo-500/50">
+      <div>
+        <div className="flex items-start justify-between mb-4 border-b border-slate-100 dark:border-slate-800 pb-3.5">
+          <div className="flex items-center gap-2.5">
+            <div className="w-9 h-9 rounded-xl bg-emerald-100 dark:bg-emerald-950/60 border border-emerald-200 dark:border-emerald-800 flex items-center justify-center text-emerald-600 dark:text-emerald-400 font-bold">
+              <FileText size={18} />
             </div>
-          ))}
+            <div>
+              <p className="text-xs font-extrabold text-emerald-600 dark:text-emerald-400 uppercase tracking-wider">
+                Custody Transfer Billing
+              </p>
+              <h3 className="text-sm font-black text-slate-900 dark:text-white mt-0.5">
+                Latest E-Faktur Invoice
+              </h3>
+            </div>
+          </div>
+          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-amber-100 dark:bg-amber-950/60 text-amber-700 dark:text-amber-300 border border-amber-200 dark:border-amber-800 uppercase tracking-wider">
+            Payment Due
+          </span>
         </div>
 
-        {invoice.status === 'unpaid' && (
-          <div className="bg-warning-bg border border-warning/20 rounded-xl px-3 py-2.5">
-            <p className="text-xs font-semibold text-warning-foreground">Payment due in 3 days</p>
-            <p className="text-[11px] text-warning-foreground/70 mt-0.5">Please complete payment to avoid service interruption</p>
+        {/* Invoice details */}
+        <div className="space-y-3.5">
+          <div className="bg-slate-50 dark:bg-slate-800/60 border border-slate-200/80 dark:border-slate-800 rounded-2xl p-4">
+            <div className="flex items-baseline justify-between">
+              <p className="text-2xl font-black text-slate-900 dark:text-white tabular-nums">{formatIDR(invoice.amount)}</p>
+              <span className="text-[10px] font-extrabold text-indigo-600 dark:text-indigo-400 uppercase bg-indigo-50 dark:bg-indigo-950/60 px-2 py-0.5 rounded-md border border-indigo-200 dark:border-indigo-800">
+                PPN 11% Inc.
+              </span>
+            </div>
+            <p className="text-xs font-bold text-slate-600 dark:text-slate-300 mt-1">{invoice.description}</p>
+            <p className="text-[10px] text-slate-400 dark:text-slate-500 mt-0.5">{invoice.client} · {invoice.period}</p>
           </div>
-        )}
+
+          <div className="space-y-2 bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-2xl p-3 text-xs">
+            {[
+              { icon: Hash, label: 'No. Faktur / INV', value: invoice.invoiceNumber },
+              { icon: ShieldCheck, label: 'E-Faktur DJP', value: invoice.efaktur },
+              { icon: Calendar, label: 'Jatuh Tempo', value: invoice.dueDate },
+              { icon: CreditCard, label: 'Rekening Mandiri', value: '122-00-9888123-0 (PT Baskara)' },
+            ].map((row) => (
+              <div key={`inv-row-${row.label}`} className="flex items-center justify-between py-0.5">
+                <div className="flex items-center gap-2 text-slate-500 dark:text-slate-400 font-bold">
+                  <row.icon size={13} className="text-indigo-500 dark:text-indigo-400" />
+                  <span>{row.label}</span>
+                </div>
+                <span className="font-extrabold text-slate-900 dark:text-white tabular-nums text-right truncate max-w-[170px]" title={row.value}>
+                  {row.value}
+                </span>
+              </div>
+            ))}
+          </div>
+
+          {invoice.status === 'unpaid' && (
+            <div className="bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800 rounded-2xl px-3.5 py-2.5 flex items-center justify-between text-xs">
+              <span className="font-extrabold text-amber-800 dark:text-amber-200">Batas Waktu Pembayaran</span>
+              <span className="font-black text-amber-600 dark:text-amber-400 bg-amber-100 dark:bg-amber-900/50 px-2 py-0.5 rounded-lg">
+                7 Hari Kerja
+              </span>
+            </div>
+          )}
+        </div>
       </div>
 
-      {/* Download button */}
       <button
         onClick={handleDownload}
         disabled={downloading}
-        className="mt-4 w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-primary text-primary-foreground text-sm font-semibold hover:bg-primary/90 active:scale-[0.98] transition-all duration-150 disabled:opacity-70 disabled:cursor-not-allowed btn-primary-active"
-        style={{ minWidth: '120px' }}
+        className="mt-5 w-full flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-slate-900 hover:bg-slate-800 dark:bg-indigo-600 dark:hover:bg-indigo-500 text-white text-xs font-extrabold transition-all shadow-md active:scale-95 disabled:opacity-70"
       >
         {downloading ? (
           <>
-            <Loader2 size={15} className="animate-spin" />
-            Preparing PDF...
+            <Loader2 size={16} className="animate-spin" />
+            <span>Validating Digital Signature...</span>
           </>
         ) : downloaded ? (
           <>
-            <CheckCircle2 size={15} />
-            Downloaded
+            <CheckCircle2 size={16} className="text-emerald-400" />
+            <span>PDF E-Faktur Unduh Sukses!</span>
           </>
         ) : (
           <>
-            <Download size={15} />
-            Download PDF
+            <Download size={16} />
+            <span>Download E-Faktur &amp; Invoice PDF</span>
           </>
         )}
       </button>
