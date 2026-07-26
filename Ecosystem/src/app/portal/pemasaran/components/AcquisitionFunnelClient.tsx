@@ -1,58 +1,60 @@
 'use client';
 import React, { useState } from 'react';
-import { Users, PhoneCall, FileText, CheckCircle, ChevronRight } from 'lucide-react';
-import Icon from '@/components/ui/AppIcon';
-
+import { Users, PhoneCall, FileText, CheckCircle, ChevronRight, Zap } from 'lucide-react';
 
 // Backend integration point: GET /api/funnel/acquisition-stages
 const funnelStages = [
   {
     id: 'stage-leads',
-    stage: 'Leads',
+    stage: 'Inbound CNG Leads',
     count: 1240,
     percentage: 100,
     dropOff: null,
-    color: '#F59E0B',
-    bgColor: '#FFFBEB',
-    borderColor: '#FDE68A',
+    colorClass: 'text-amber-600 dark:text-amber-400',
+    bgClass: 'bg-amber-50 dark:bg-amber-950/40',
+    borderClass: 'border-amber-200 dark:border-amber-800/80',
+    barColor: 'from-amber-500 to-amber-600',
     icon: Users,
-    description: 'Total leads captured across all channels',
+    description: 'Prospek industri & Horeca dari web portal dan survei AE',
   },
   {
     id: 'stage-contacted',
-    stage: 'Contacted',
+    stage: 'Technical Survey & AE Contacted',
     count: 832,
     percentage: 67.1,
     dropOff: 32.9,
-    color: '#F97316',
-    bgColor: '#FFF7ED',
-    borderColor: '#FED7AA',
+    colorClass: 'text-orange-600 dark:text-orange-400',
+    bgClass: 'bg-orange-50 dark:bg-orange-950/40',
+    borderClass: 'border-orange-200 dark:border-orange-800/80',
+    barColor: 'from-orange-500 to-orange-600',
     icon: PhoneCall,
-    description: 'Leads reached via call, email, or WhatsApp',
+    description: 'Inspeksi lokasi PRMS & asesmen kebutuhan kuota Sm³/day',
   },
   {
     id: 'stage-proposal',
-    stage: 'Proposal',
+    stage: 'MMBTU Quota Proposal Submitted',
     count: 287,
     percentage: 23.1,
     dropOff: 65.5,
-    color: '#EA580C',
-    bgColor: '#FEF3C7',
-    borderColor: '#FDE68A',
+    colorClass: 'text-pink-600 dark:text-pink-400',
+    bgClass: 'bg-pink-50 dark:bg-pink-950/40',
+    borderClass: 'border-pink-200 dark:border-pink-800/80',
+    barColor: 'from-pink-500 to-pink-600',
     icon: FileText,
-    description: 'Formal proposals sent to qualified prospects',
+    description: 'Pengiriman proposal harga kontrak SLA & skema logistik Skid',
   },
   {
     id: 'stage-closed',
-    stage: 'Closed Won',
+    stage: 'Closed Won (SLA Active)',
     count: 94,
     percentage: 7.6,
     dropOff: 67.2,
-    color: '#C2410C',
-    bgColor: '#FEF2F2',
-    borderColor: '#FECACA',
+    colorClass: 'text-emerald-600 dark:text-emerald-400',
+    bgClass: 'bg-emerald-50 dark:bg-emerald-950/40',
+    borderClass: 'border-emerald-200 dark:border-emerald-800/80',
+    barColor: 'from-emerald-500 to-teal-600',
     icon: CheckCircle,
-    description: 'Deals closed and contracts signed',
+    description: 'Kontrak SLA ditandatangani dan pasokan Mother Station aktif',
   },
 ];
 
@@ -67,160 +69,108 @@ export default function AcquisitionFunnelClient() {
   const [hoveredStage, setHoveredStage] = useState<string | null>(null);
 
   return (
-    <div
-      className="rounded-2xl border p-6 h-full"
-      style={{
-        backgroundColor: 'var(--card)',
-        borderColor: 'var(--border)',
-        boxShadow: '0 1px 3px rgba(0,0,0,0.06)',
-      }}
-    >
+    <div className="rounded-3xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-6 shadow-xl flex flex-col justify-between h-full transition-all duration-300">
       {/* Header */}
-      <div className="mb-5">
-        <h2
-          className="text-base"
-          style={{ fontWeight: 700, color: 'var(--foreground)', fontSize: '1rem' }}
-        >
-          Acquisition Funnel
-        </h2>
-        <p className="text-xs mt-0.5" style={{ color: 'var(--muted-foreground)' }}>
-          Lead-to-close progression · Jul 2026
-        </p>
-      </div>
+      <div>
+        <div className="flex items-center justify-between mb-2">
+          <div className="flex items-center gap-2">
+            <h2 className="text-base font-extrabold text-slate-900 dark:text-white tracking-tight">
+              B2B Acquisition Funnel
+            </h2>
+            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-pink-100 dark:bg-pink-950/60 text-pink-700 dark:text-pink-300 border border-pink-200 dark:border-pink-800">
+              <Zap size={10} className="fill-current" />
+              <span>Q3 Pipeline</span>
+            </span>
+          </div>
+          <span className="text-xs font-bold text-slate-500 dark:text-slate-400">
+            MTD 2026
+          </span>
+        </div>
 
-      {/* Overall conversion badge */}
-      <div
-        className="flex items-center justify-between px-3 py-2 rounded-xl mb-5 text-xs"
-        style={{ backgroundColor: 'var(--muted)' }}
-      >
-        <span style={{ color: 'var(--muted-foreground)', fontWeight: 500 }}>
-          Overall Conversion
-        </span>
-        <span
-          className="tabular-nums"
-          style={{ fontWeight: 700, color: 'var(--accent)', fontSize: '0.875rem' }}
-        >
-          7.6%
-        </span>
-      </div>
+        {/* Overall conversion badge */}
+        <div className="flex items-center justify-between px-3.5 py-2.5 rounded-2xl bg-slate-100 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 mb-5 text-xs font-semibold text-slate-700 dark:text-slate-300">
+          <span>Overall Lead-to-SLA Conversion</span>
+          <span className="font-black text-pink-600 dark:text-pink-400 text-sm tabular-nums">
+            7.6%
+          </span>
+        </div>
 
-      {/* Funnel Stages */}
-      <div className="flex flex-col gap-2.5">
-        {funnelStages.map((stage, index) => {
-          const Icon = stage.icon;
-          const barWidth = getBarWidth(stage.percentage);
-          const isHovered = hoveredStage === stage.id;
+        {/* Funnel Stages */}
+        <div className="flex flex-col gap-3">
+          {funnelStages.map((stage, index) => {
+            const Icon = stage.icon;
+            const barWidth = getBarWidth(stage.percentage);
+            const isHovered = hoveredStage === stage.id;
 
-          return (
-            <div key={stage.id} className="relative">
-              {/* Connector arrow */}
-              {index > 0 && (
-                <div
-                  className="flex items-center justify-center mb-1"
-                  style={{ color: 'var(--muted-foreground)' }}
-                >
-                  <div className="flex flex-col items-center gap-0">
-                    <ChevronRight
-                      size={13}
-                      style={{
-                        transform: 'rotate(90deg)',
-                        color: 'var(--muted-foreground)',
-                        opacity: 0.5,
-                      }}
-                    />
-                    {stage.dropOff !== null && (
-                      <span
-                        className="text-xs tabular-nums"
-                        style={{ color: '#DC2626', fontWeight: 600, fontSize: '0.65rem' }}
-                      >
-                        −{stage.dropOff}%
-                      </span>
-                    )}
-                  </div>
-                </div>
-              )}
-
-              {/* Stage Bar */}
-              <button
-                className="w-full text-left transition-all duration-200 rounded-xl border"
-                style={{
-                  backgroundColor: isHovered ? stage.color + '18' : stage.bgColor,
-                  borderColor: isHovered ? stage.color + '80' : stage.borderColor,
-                  transform: isHovered ? 'scale(1.015)' : 'scale(1)',
-                  boxShadow: isHovered ? `0 4px 12px ${stage.color}22` : 'none',
-                  transition: 'all 0.18s ease',
-                }}
-                onMouseEnter={() => setHoveredStage(stage.id)}
-                onMouseLeave={() => setHoveredStage(null)}
-                aria-label={`${stage.stage}: ${stage.count} (${stage.percentage}%)`}
-              >
-                {/* Visual funnel bar width */}
-                <div
-                  className="overflow-hidden rounded-t-xl"
-                  style={{ width: '100%' }}
-                >
-                  <div
-                    className="h-1.5 rounded-full transition-all duration-500"
-                    style={{
-                      width: `${barWidth}%`,
-                      background: `linear-gradient(90deg, ${stage.color}, ${stage.color}AA)`,
-                      marginBottom: 0,
-                    }}
-                  />
-                </div>
-
-                <div className="flex items-center justify-between px-3 py-2.5">
-                  <div className="flex items-center gap-2.5">
-                    <div
-                      className="w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0"
-                      style={{ backgroundColor: stage.color + '22' }}
-                    >
-                      <Icon size={14} style={{ color: stage.color }} />
-                    </div>
-                    <div>
-                      <p
-                        className="text-sm"
-                        style={{ fontWeight: 600, color: 'var(--foreground)' }}
-                      >
-                        {stage.stage}
-                      </p>
-                      {isHovered && (
-                        <p
-                          className="text-xs animate-fade-in"
-                          style={{ color: 'var(--muted-foreground)', fontSize: '0.68rem' }}
-                        >
-                          {stage.description}
-                        </p>
+            return (
+              <div key={stage.id} className="relative">
+                {/* Connector arrow */}
+                {index > 0 && (
+                  <div className="flex items-center justify-center -my-1 relative z-10 text-slate-400 dark:text-slate-500">
+                    <div className="flex items-center gap-1.5 bg-white dark:bg-slate-900 px-2 py-0.5 rounded-full border border-slate-200 dark:border-slate-800 shadow-2xs">
+                      <ChevronRight size={12} className="rotate-90" />
+                      {stage.dropOff !== null && (
+                        <span className="text-[10px] font-extrabold text-rose-600 dark:text-rose-400 tabular-nums">
+                          −{stage.dropOff}% drop
+                        </span>
                       )}
                     </div>
                   </div>
-                  <div className="text-right">
-                    <p
-                      className="tabular-nums text-sm"
-                      style={{ fontWeight: 700, color: stage.color }}
-                    >
-                      {stage.count.toLocaleString('id-ID')}
-                    </p>
-                    <p
-                      className="tabular-nums text-xs"
-                      style={{ color: 'var(--muted-foreground)', fontWeight: 500 }}
-                    >
-                      {stage.percentage}%
-                    </p>
+                )}
+
+                {/* Stage Bar */}
+                <button
+                  className={`w-full text-left transition-all duration-200 rounded-2xl border p-0 overflow-hidden shadow-sm ${stage.bgClass} ${stage.borderClass} ${
+                    isHovered ? 'scale-[1.01] shadow-md' : ''
+                  }`}
+                  onMouseEnter={() => setHoveredStage(stage.id)}
+                  onMouseLeave={() => setHoveredStage(null)}
+                  aria-label={`${stage.stage}: ${stage.count} (${stage.percentage}%)`}
+                >
+                  {/* Visual funnel bar width */}
+                  <div className="w-full bg-slate-200/50 dark:bg-slate-800/50 h-1.5">
+                    <div
+                      className={`h-full bg-gradient-to-r ${stage.barColor} transition-all duration-500 rounded-r-full`}
+                      style={{ width: `${barWidth}%` }}
+                    />
                   </div>
-                </div>
-              </button>
-            </div>
-          );
-        })}
+
+                  <div className="flex items-center justify-between px-4 py-3">
+                    <div className="flex items-center gap-3">
+                      <div className={`w-8 h-8 rounded-xl flex items-center justify-center shrink-0 bg-white dark:bg-slate-900 border ${stage.borderClass} ${stage.colorClass}`}>
+                        <Icon size={16} />
+                      </div>
+                      <div>
+                        <p className="text-xs font-bold text-slate-900 dark:text-white leading-tight">
+                          {stage.stage}
+                        </p>
+                        <p className="text-[11px] text-slate-500 dark:text-slate-400 font-medium line-clamp-1 mt-0.5">
+                          {stage.description}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="text-right shrink-0 ml-2">
+                      <p className={`tabular-nums text-sm font-black ${stage.colorClass}`}>
+                        {stage.count.toLocaleString('id-ID')}
+                      </p>
+                      <p className="tabular-nums text-[10px] font-bold text-slate-500 dark:text-slate-400">
+                        {stage.percentage}%
+                      </p>
+                    </div>
+                  </div>
+                </button>
+              </div>
+            );
+          })}
+        </div>
       </div>
 
       {/* Footer insight */}
-      <div
-        className="mt-4 p-3 rounded-xl text-xs"
-        style={{ backgroundColor: '#FEF9C3', color: '#854D0E' }}
-      >
-        <strong>Bottleneck:</strong> Contacted → Proposal drop-off is 65.5% — highest friction point. Consider qualifying scripts.
+      <div className="mt-5 p-3.5 rounded-2xl bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800/80 text-xs font-medium text-amber-900 dark:text-amber-200 flex items-start gap-2.5">
+        <span className="text-base leading-none">💡</span>
+        <div>
+          <strong className="font-extrabold text-amber-950 dark:text-white">AE Pipeline Insight:</strong> Gesekan tertinggi pada tahap <span className="underline font-bold">Survei Teknis → Proposal MMBTU</span> (65.5% drop). Disarankan penambahan kalkulator ROI instalasi Skid otomatis untuk AE.
+        </div>
       </div>
     </div>
   );
