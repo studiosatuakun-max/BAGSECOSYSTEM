@@ -29,17 +29,17 @@ function CustomTooltip({ active, payload, label }: {
   if (!active || !payload || payload.length === 0) return null;
   return (
     <div
-      className="bg-white border border-border rounded-xl shadow-elevated px-3 py-2.5 min-w-[140px]"
-      style={{ boxShadow: '0 4px 16px rgba(0,0,0,0.08)' }}
+      className="bg-slate-900/95 border border-slate-700/80 backdrop-blur-md rounded-xl shadow-2xl px-3.5 py-3 min-w-[150px]"
+      style={{ boxShadow: '0 8px 24px rgba(0,0,0,0.3)' }}
     >
-      <p className="text-xs font-700 text-foreground mb-2 tabular-nums">{label}</p>
+      <p className="text-xs font-bold text-slate-300 mb-2 tabular-nums border-b border-slate-800 pb-1">{label}</p>
       {payload.map((entry) => (
         <div key={`tt-${entry.name}`} className="flex items-center justify-between gap-3 mb-1">
           <div className="flex items-center gap-1.5">
             <span className="w-2 h-2 rounded-full inline-block" style={{ backgroundColor: entry.color }} />
-            <span className="text-xs text-muted-foreground font-medium">{entry.name}</span>
+            <span className="text-xs text-slate-400 font-medium">{entry.name}</span>
           </div>
-          <span className="text-xs font-700 text-foreground tabular-nums">
+          <span className="text-xs font-bold text-white tabular-nums">
             {typeof entry.value === 'number' && entry.name === 'Pressure'
               ? entry.value.toFixed(2)
               : entry.value}

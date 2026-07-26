@@ -11,8 +11,8 @@ interface DataPoint {
 function CustomTooltip({ active, payload }: { active?: boolean; payload?: { value: number }[] }) {
   if (!active || !payload || payload.length === 0) return null;
   return (
-    <div className="bg-white border border-border rounded-lg shadow-card px-2 py-1.5">
-      <span className="text-xs font-700 text-blue-600 tabular-nums">{payload[0].value.toFixed(2)} Bar</span>
+    <div className="bg-slate-900/95 border border-slate-700/80 backdrop-blur-md rounded-lg shadow-2xl px-2.5 py-1.5">
+      <span className="text-xs font-bold text-blue-400 tabular-nums">{payload[0].value.toFixed(2)} Bar</span>
     </div>
   );
 }
