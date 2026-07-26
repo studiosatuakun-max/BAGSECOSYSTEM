@@ -85,11 +85,20 @@ To elevate BaGS Ecosystem into an autonomous, next-generation enterprise ERP, we
   - Replaced generic client placeholders with **B2B CNG Industrial & Horeca Custody Transfer Invoicing** (e.g. Toyota Boiler Plant, Mayora Manifold Header, Kopi Kenangan Cylinder Swapping), adding specific CNG volume metrics (`MMBTU/Sm³`) and HBA indexation rates (`$/MMBTU`).
   - Built interactive **CNG Custody Transfer Billing & E-Faktur Generator Modal** allowing financial controllers to issue new gas bills and record PPN 11% tax payments.
   - Applied strict **1-Line Slim Badge Rule (`whitespace-nowrap shrink-0 align-middle`)** across all status pills and verified zero build errors (`npm run build` generated 22.2 kB rich bundle).
+- [x] **Executive Hero Banner Standardization Across All Portals**:
+  - Standardized the Hero Banner layout, flex container (`items-start sm:items-center justify-between gap-6`), padding (`p-6 sm:p-8`), and responsive typography across all 5 executive modules (**Keuangan**, **Pusat**, **Industrial**, **Armada**, and **Horeca**) to precisely match the benchmark model in `/portal/stasiun`.
+  - Standardized all module favicon references across layout files to use `icon.png` in `/assets/image`.
+- [x] **Modul Pemasaran / Commercial CRM & AE Pipeline — Gold Benchmark Upgrade (`/portal/pemasaran`)**:
+  - **Executive CMO CRM & AE Pipeline Hero Banner**: Added standardized acrylic hero banner matching Stasiun layout and dimensions with live AE CRM synchronization trigger.
+  - **Full Dark / Light Mode Support**: Updated root styling (`bg-slate-50 dark:bg-slate-950`) and modernized all table/card components (`bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800`), eliminating light-yellow background glare in dark mode.
+  - **Authentic BASKARA CNG Terminology & Data**: Replaced generic agribusiness/landscaping data with Mother Station industrial accounts (PT Krakatau Baja Smelter, PT Unilever Foods & Beverages, PT Indocement, Grand Hyatt Hotel Jakarta, PT Pabrik Kertas Tjiwi Kimia) tracking MMBTU contract values and Sm³/day utilization.
+  - **Executive Bento Grid Integration**: Integrated previously disconnected components (`AcquisitionFunnelClient`, `CampaignROIChartInner`, `TopClientsTableClient`) into an executive 4-row bento layout with live CRUD modal for marketing campaign management.
+  - Verified 100% clean production compilation via `npm run build` (10.0s build time).
 
 ## Next Steps (Sequential Module Upgrade Plan)
 - [x] **Step 2**: Upgrade **Modul Stasiun (`/portal/stasiun`)** — Mother Station Production, Compression & ATEX Console (Completed & Verified).
 - [x] **Step 3**: Upgrade **Modul Keuangan (`/portal/keuangan`)** — Finance & Invoicing Engine (Completed & Verified).
-- [ ] **Step 4**: Upgrade **Modul Pemasaran (`/portal/pemasaran`)** — Commercial CRM & AE Pipeline Quotation.
+- [x] **Step 4**: Upgrade **Modul Pemasaran (`/portal/pemasaran`)** — Commercial CRM & AE Pipeline Quotation (Completed & Verified).
 - [ ] **Step 5**: Upgrade **Modul HR (`/portal/hr`)** — Enterprise Personnel, Organization & Payroll.
 - [ ] **Step 6**: Upgrade **Modul CS (`/portal/cs`)** — Customer Service Ticketing & Dispatch Assistance.
 - [ ] **Step 7**: Upgrade **Modul Skid (`/portal/skid`)** — B2B Industrial Client Portal & Custody Transfer.
