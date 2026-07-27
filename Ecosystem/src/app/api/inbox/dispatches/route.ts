@@ -1,6 +1,7 @@
 // src/app/api/inbox/dispatches/route.ts
 import { NextResponse, NextRequest } from 'next/server';
 import { supabase } from '@/lib/supabaseClient';
+import { z } from 'zod';
 
 export interface DispatchItem {
   id: string;
@@ -18,6 +19,27 @@ export interface DispatchItem {
   }[];
 }
 
+// 1. Strict Zod Schemas for Payload Validation & Anti-Injection
+const AttachmentSchema = z.object({
+  file_name: z.string().min(1).max(255).regex(/^[a-zA-Z0-9_.-]+$/, 'Invalid file name characters'),
+  file_url: z.string().url().or(z.literal('#')),
+  file_size: z.string().max(20),
+});
+
+const CreateDispatchSchema = z.object({
+  sender_division: z.string().min(2).max(100),
+  receiver_division: z.string().min(2).max(100),
+  subject: z.string().min(3).max(200).transform((val) => val.replace(/<[^>]*>?/gm, '')), // Strip HTML tags against XSS
+  content: z.string().min(5).max(5000).transform((val) => val.replace(/<[^>]*>?/gm, '')), // Strip HTML tags against XSS
+  priority: z.enum(['Normal', 'High', 'Urgent']).default('Normal'),
+  attachments: z.array(AttachmentSchema).max(5).optional().default([]),
+});
+
+const UpdateStatusSchema = z.object({
+  id: z.string().min(3).max(100),
+  status: z.enum(['Unread', 'Read', 'In Review', 'Resolved']),
+});
+
 // Rich fallback dispatches for instant demo experience if Supabase table is not yet created
 const MOCK_DISPATCHES: DispatchItem[] = [
   {
@@ -28,7 +50,7 @@ const MOCK_DISPATCHES: DispatchItem[] = [
     content: 'Selamat pagi tim Keuangan. Mengajukan approval pencairan dana untuk perawatan rutin berkala dan sertifikasi ulang katup tekanan pada 5 unit Skid Tank (Plat W 8912 XG s/d W 8916 XG) di bengkel resmi Gresik. Total estimasi biaya Rp 42.500.000. Mohon proses secepatnya agar rotasi pengiriman gas tidak terhambat. Terima kasih.',
     priority: 'Urgent',
     status: 'Unread',
-    created_at: new Date(Date.now() - 1000 * 60 * 25).toISOString(), // 25 mins ago
+    created_at: new Date(Date.now() - 1000 * 60 * 25).toISOString(),
     attachments: [
       {
         file_name: 'Quotation_Maintenance_Gresik_2026.pdf',
@@ -45,7 +67,7 @@ const MOCK_DISPATCHES: DispatchItem[] = [
     content: 'Tim Stasiun CNG, kami informasikan bahwa suku cadang seal ring dan oli hidrolik untuk kompresor utama sudah tiba di gudang pusat Surabaya. Mohon tim teknisi stasiun melakukan pengecekan fisik dan penjadwalan instalasi pada shift malam besok.',
     priority: 'High',
     status: 'In Review',
-    created_at: new Date(Date.now() - 1000 * 60 * 180).toISOString(), // 3 hours ago
+    created_at: new Date(Date.now() - 1000 * 60 * 180).toISOString(),
     attachments: [
       {
         file_name: 'Delivery_Order_Ariell_Parts.pdf',
@@ -62,7 +84,7 @@ const MOCK_DISPATCHES: DispatchItem[] = [
     content: 'Sehubungan dengan libur nasional minggu depan, seluruh divisi operasional (Fleet, Stasiun, Horeca, Industri) wajib memastikan jadwal petugas piket pengawasan tekanan gas. Patuhi standar keselamatan ATEX Zone A/B di setiap titik bongkar muat.',
     priority: 'Normal',
     status: 'Read',
-    created_at: new Date(Date.now() - 1000 * 60 * 60 * 24).toISOString(), // 1 day ago
+    created_at: new Date(Date.now() - 1000 * 60 * 60 * 24).toISOString(),
     attachments: [
       {
         file_name: 'SE_Direksi_Operasional_2026.pdf',
@@ -79,9 +101,23 @@ const MOCK_DISPATCHES: DispatchItem[] = [
     content: 'Menginfokan bahwa PT Jatim Steel meminta percepatan waktu bongkar muat CNG dari jam 14.00 menjadi jam 10.00 WIB untuk pengiriman besok pagi dikarenakan peningkatan kapasitas produksi boiler. Driver Budi (Truk 01) sudah dikonfirmasi.',
     priority: 'High',
     status: 'Resolved',
-    created_at: new Date(Date.now() - 1000 * 60 * 60 * 48).toISOString(), // 2 days ago
+    created_at: new Date(Date.now() - 1000 * 60 * 60 * 48).toISOString(),
   },
 ];
+
+// Helper: Verify Authentication Session (Zero-Trust)
+async function verifyAuthSession(req: NextRequest) {
+  const authHeader = req.headers.get('authorization');
+  if (authHeader && authHeader.startsWith('Bearer ')) {
+    const token = authHeader.substring(7);
+    const { data: { user }, error } = await supabase.auth.getUser(token);
+    if (!error && user) return user;
+  }
+  // Check browser session via cookies in Supabase client
+  const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+  if (!sessionError && session?.user) return session.user;
+  return null;
+}
 
 // GET /api/inbox/dispatches?view=inbox|sent&division=...
 export async function GET(req: NextRequest) {
@@ -101,7 +137,6 @@ export async function GET(req: NextRequest) {
     const { data, error } = await query;
 
     if (error || !data || data.length === 0) {
-      // If table doesn't exist yet or is empty, return our rich mock data filtered by view/division
       let filtered = MOCK_DISPATCHES;
       if (view === 'sent' && division !== 'All Divisions') {
         filtered = MOCK_DISPATCHES.filter(d => d.sender_division === division);
@@ -117,15 +152,24 @@ export async function GET(req: NextRequest) {
   }
 }
 
-// POST /api/inbox/dispatches
+// POST /api/inbox/dispatches (Hardened with Zod Validation)
 export async function POST(req: NextRequest) {
   try {
-    const body = await req.json();
-    const { sender_division, receiver_division, subject, content, priority, attachments } = body;
+    // Optional: Enforce auth in strict production mode
+    // const user = await verifyAuthSession(req);
+    // if (!user) return NextResponse.json({ error: 'Unauthorized. Valid token required.' }, { status: 401 });
 
-    if (!sender_division || !receiver_division || !subject || !content) {
-      return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
+    const rawBody = await req.json();
+    const parseResult = CreateDispatchSchema.safeParse(rawBody);
+
+    if (!parseResult.success) {
+      return NextResponse.json({ 
+        error: 'Validation failed: Invalid payload schema or XSS attempt detected',
+        details: parseResult.error.flatten().fieldErrors 
+      }, { status: 400 });
     }
+
+    const { sender_division, receiver_division, subject, content, priority, attachments } = parseResult.data;
 
     const newDispatch: DispatchItem = {
       id: `dsp-${Date.now()}`,
@@ -133,17 +177,15 @@ export async function POST(req: NextRequest) {
       receiver_division,
       subject,
       content,
-      priority: priority || 'Normal',
+      priority,
       status: 'Unread',
       created_at: new Date().toISOString(),
-      attachments: attachments || [],
+      attachments,
     };
 
-    // Attempt to insert into Supabase
     const { data, error } = await supabase.from('dispatches').insert([newDispatch]).select().single();
 
     if (error) {
-      // Fallback: return the newly created object so client state updates seamlessly
       return NextResponse.json(newDispatch, { status: 201 });
     }
 
@@ -153,20 +195,24 @@ export async function POST(req: NextRequest) {
   }
 }
 
-// PATCH /api/inbox/dispatches
+// PATCH /api/inbox/dispatches (Hardened with Zod Validation)
 export async function PATCH(req: NextRequest) {
   try {
-    const body = await req.json();
-    const { id, status } = body;
+    const rawBody = await req.json();
+    const parseResult = UpdateStatusSchema.safeParse(rawBody);
 
-    if (!id || !status) {
-      return NextResponse.json({ error: 'Missing id or status' }, { status: 400 });
+    if (!parseResult.success) {
+      return NextResponse.json({ 
+        error: 'Validation failed: Invalid status or ID format',
+        details: parseResult.error.flatten().fieldErrors 
+      }, { status: 400 });
     }
+
+    const { id, status } = parseResult.data;
 
     const { data, error } = await supabase.from('dispatches').update({ status }).eq('id', id).select().single();
 
     if (error) {
-      // Fallback: return mock update success
       return NextResponse.json({ id, status, updated: true });
     }
 

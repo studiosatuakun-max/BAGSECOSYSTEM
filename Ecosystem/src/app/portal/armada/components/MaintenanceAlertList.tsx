@@ -13,16 +13,16 @@ function getMileagePercent(truck: Truck): number {
 
 export default function MaintenanceAlertList() {
   const alertTrucks = trucks
-    .filter((t) => t.maintenanceStatus !== 'OK')
-    .sort((a, b) => {
-      const order = { Overdue: 0, 'Due Soon': 1, OK: 2 };
+    .filter((t: Truck) => t.maintenanceStatus !== 'OK')
+    .sort((a: Truck, b: Truck) => {
+      const order: Record<string, number> = { Overdue: 0, 'Due Soon': 1, OK: 2 };
       return order[a.maintenanceStatus] - order[b.maintenanceStatus];
     })
     .slice(0, 5);
 
   return (
     <div className="space-y-3">
-      {alertTrucks.map((truck) => {
+      {alertTrucks.map((truck: Truck) => {
         const kmLeft = getKmUntilService(truck);
         const pct = getMileagePercent(truck);
         const isOverdue = truck.maintenanceStatus === 'Overdue';

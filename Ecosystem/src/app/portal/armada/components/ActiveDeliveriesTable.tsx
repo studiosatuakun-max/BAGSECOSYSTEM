@@ -55,7 +55,7 @@ export default function ActiveDeliveriesTable({ deliveries }: ActiveDeliveriesTa
           </tr>
         </thead>
         <tbody>
-          {deliveries.map((delivery, i) => (
+          {deliveries.map((delivery: ActiveDelivery, i: number) => (
             <tr
               key={delivery.id}
               className={`border-b border-border hover:bg-muted/40 transition-colors duration-100 ${
@@ -66,7 +66,7 @@ export default function ActiveDeliveriesTable({ deliveries }: ActiveDeliveriesTa
                 <div className="flex items-center gap-2">
                   <div className="w-7 h-7 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
                     <span className="text-[10px] font-700 text-primary">
-                      {delivery.driverName.split(' ').map((n) => n[0]).join('')}
+                      {delivery.driverName.split(' ').map((n: string) => n[0]).join('')}
                     </span>
                   </div>
                   <span className="font-500 text-foreground">{delivery.driverName}</span>
