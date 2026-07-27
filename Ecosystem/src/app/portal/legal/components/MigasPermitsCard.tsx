@@ -14,22 +14,22 @@ export default function MigasPermitsCard() {
   return (
     <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl shadow-xl p-6 transition-all duration-300 h-full flex flex-col justify-between group hover:border-purple-500/50">
       <div>
-        <div className="flex items-start justify-between mb-4 border-b border-slate-100 dark:border-slate-800 pb-3.5">
-          <div className="flex items-center gap-2.5">
-            <div className="w-9 h-9 rounded-xl bg-purple-100 dark:bg-purple-950/60 border border-purple-200 dark:border-purple-800 flex items-center justify-center text-purple-600 dark:text-purple-400 font-bold">
+        <div className="flex items-start justify-between mb-4 border-b border-slate-100 dark:border-slate-800 pb-3.5 gap-2">
+          <div className="flex items-center gap-2.5 min-w-0">
+            <div className="w-9 h-9 rounded-xl bg-purple-100 dark:bg-purple-950/60 border border-purple-200 dark:border-purple-800 flex items-center justify-center text-purple-600 dark:text-purple-400 font-bold shrink-0">
               <ShieldCheckIcon className="w-5 h-5" />
             </div>
-            <div>
-              <p className="text-xs font-extrabold text-purple-600 dark:text-purple-400 uppercase tracking-wider">
+            <div className="min-w-0 pr-1">
+              <p className="text-xs font-extrabold text-purple-600 dark:text-purple-400 uppercase tracking-wider truncate">
                 Government Compliance
               </p>
-              <h3 className="text-sm font-black text-slate-900 dark:text-white mt-0.5">
+              <h3 className="text-sm font-black text-slate-900 dark:text-white mt-0.5 truncate">
                 MIGAS, Metrologi &amp; ESDM Permits
               </h3>
             </div>
           </div>
-          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-purple-100 dark:bg-purple-950/60 text-purple-700 dark:text-purple-300 border border-purple-200 dark:border-purple-800 uppercase tracking-wider">
-            18 Active Permits
+          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-purple-100 dark:bg-purple-950/60 text-purple-700 dark:text-purple-300 border border-purple-200 dark:border-purple-800 uppercase tracking-wider whitespace-nowrap shrink-0 align-middle">
+            18 Permits Active
           </span>
         </div>
 

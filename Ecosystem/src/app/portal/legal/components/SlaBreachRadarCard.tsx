@@ -14,22 +14,22 @@ export default function SlaBreachRadarCard() {
   return (
     <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl shadow-xl p-6 transition-all duration-300 h-full flex flex-col justify-between group hover:border-amber-500/50">
       <div>
-        <div className="flex items-start justify-between mb-4 border-b border-slate-100 dark:border-slate-800 pb-3.5">
-          <div className="flex items-center gap-2.5">
-            <div className="w-9 h-9 rounded-xl bg-amber-100 dark:bg-amber-950/60 border border-amber-200 dark:border-amber-800 flex items-center justify-center text-amber-600 dark:text-amber-400 font-bold">
+        <div className="flex items-start justify-between mb-4 border-b border-slate-100 dark:border-slate-800 pb-3.5 gap-2">
+          <div className="flex items-center gap-2.5 min-w-0">
+            <div className="w-9 h-9 rounded-xl bg-amber-100 dark:bg-amber-950/60 border border-amber-200 dark:border-amber-800 flex items-center justify-center text-amber-600 dark:text-amber-400 font-bold shrink-0">
               <ChartBarIcon className="w-5 h-5" />
             </div>
-            <div>
-              <p className="text-xs font-extrabold text-amber-600 dark:text-amber-400 uppercase tracking-wider">
+            <div className="min-w-0 pr-1">
+              <p className="text-xs font-extrabold text-amber-600 dark:text-amber-400 uppercase tracking-wider truncate">
                 SLA Breach Radar
               </p>
-              <h3 className="text-sm font-black text-slate-900 dark:text-white mt-0.5">
+              <h3 className="text-sm font-black text-slate-900 dark:text-white mt-0.5 truncate">
                 B2B Client Guarantee &amp; Penalty Monitor
               </h3>
             </div>
           </div>
-          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-emerald-100 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800 uppercase tracking-wider">
-            0 Breach Event
+          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-emerald-100 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800 uppercase tracking-wider whitespace-nowrap shrink-0 align-middle">
+            0 Breach
           </span>
         </div>
 

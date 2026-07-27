@@ -31,22 +31,22 @@ export default function LegalCounselAdviceCard() {
   return (
     <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl shadow-xl p-6 transition-all duration-300 h-full flex flex-col justify-between group hover:border-indigo-500/50">
       <div>
-        <div className="flex items-start justify-between mb-4 border-b border-slate-100 dark:border-slate-800 pb-3.5">
-          <div className="flex items-center gap-2.5">
-            <div className="w-9 h-9 rounded-xl bg-indigo-100 dark:bg-indigo-950/60 border border-indigo-200 dark:border-indigo-800 flex items-center justify-center text-indigo-600 dark:text-indigo-400 font-bold">
+        <div className="flex items-start justify-between mb-4 border-b border-slate-100 dark:border-slate-800 pb-3.5 gap-2">
+          <div className="flex items-center gap-2.5 min-w-0">
+            <div className="w-9 h-9 rounded-xl bg-indigo-100 dark:bg-indigo-950/60 border border-indigo-200 dark:border-indigo-800 flex items-center justify-center text-indigo-600 dark:text-indigo-400 font-bold shrink-0">
               <ChatBubbleBottomCenterTextIcon className="w-5 h-5" />
             </div>
-            <div>
-              <p className="text-xs font-extrabold text-indigo-600 dark:text-indigo-400 uppercase tracking-wider">
+            <div className="min-w-0 pr-1">
+              <p className="text-xs font-extrabold text-indigo-600 dark:text-indigo-400 uppercase tracking-wider truncate">
                 Corporate Counsel Notes
               </p>
-              <h3 className="text-sm font-black text-slate-900 dark:text-white mt-0.5">
+              <h3 className="text-sm font-black text-slate-900 dark:text-white mt-0.5 truncate">
                 Legal Advisory &amp; Regulatory Feed
               </h3>
             </div>
           </div>
-          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-indigo-100 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-800 uppercase tracking-wider">
-            3 Live Advisory
+          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-indigo-100 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-800 uppercase tracking-wider whitespace-nowrap shrink-0 align-middle">
+            3 Live Notes
           </span>
         </div>
 
