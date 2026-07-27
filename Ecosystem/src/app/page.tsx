@@ -17,9 +17,12 @@ export default function LoginPage() {
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
+  const [selectedRole, setSelectedRole] = useState('Super Admin');
+
   const handleAutoFill = (acc: any) => {
     setEmail(acc.email);
     setPassword(acc.pwd);
+    setSelectedRole(acc.role);
   };
 
   const handleLogin = async (e: React.FormEvent) => {
@@ -43,7 +46,11 @@ export default function LoginPage() {
       console.log('Supabase Auth Success!', data);
     }
 
-    // Redirect to dashboard (fallback logic for demo if users aren't created yet)
+    // Set demo authentication cookies for RBAC middleware support
+    document.cookie = `sb-access-token=demo-authenticated-token; path=/; max-age=86400; SameSite=Lax`;
+    document.cookie = `user_role_claim=${encodeURIComponent(selectedRole)}; path=/; max-age=86400; SameSite=Lax`;
+
+    // Redirect to dashboard
     window.location.href = '/dashboard';
   };
 

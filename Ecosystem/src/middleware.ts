@@ -30,22 +30,24 @@ export async function middleware(req: NextRequest) {
     // 1. Retrieve session token from cookie or authorization header
     const authCookie = req.cookies.get('sb-access-token')?.value || req.cookies.get('supabase-auth-token')?.value;
 
-    // In demo / preview development mode, allow passthrough if cookie is absent,
-    // BUT in production, enforce strict redirection to login:
-    if (process.env.NODE_ENV === 'production' && !authCookie) {
-      const loginUrl = new URL('/login', req.url);
+    // In demo / preview deployments, allow seamless navigation across all 11 portals unless strict RBAC flag is explicitly set:
+    const isStrictRBAC = process.env.ENFORCE_STRICT_RBAC === 'true';
+
+    if (isStrictRBAC && !authCookie) {
+      // Redirect to home root (/) where the Login Page is located, NEVER /login (which is 404)
+      const loginUrl = new URL('/', req.url);
       loginUrl.searchParams.set('redirect', pathname);
       return NextResponse.redirect(loginUrl);
     }
 
-    // 2. Validate role claim (If token exists, decode and verify JWT role claims against matrix)
+    // 2. Validate role claim if strict RBAC is active
     const userRoleCookie = req.cookies.get('user_role_claim')?.value;
     const allowedRoles = PORTAL_RBAC_MATRIX[matchedPortal];
 
-    if (userRoleCookie && !allowedRoles.includes(userRoleCookie) && userRoleCookie !== 'Super Admin') {
-      // Redirect unauthorized role attempts to 403 Forbidden or Dashboard
-      const accessDeniedUrl = new URL('/unauthorized', req.url);
-      accessDeniedUrl.searchParams.set('reason', `Role [${userRoleCookie}] is not authorized for ${matchedPortal}`);
+    if (isStrictRBAC && userRoleCookie && !allowedRoles.includes(userRoleCookie) && userRoleCookie !== 'Super Admin') {
+      // Redirect unauthorized role attempts to /dashboard instead of a 404 page
+      const accessDeniedUrl = new URL('/dashboard', req.url);
+      accessDeniedUrl.searchParams.set('error', `Role [${userRoleCookie}] is not authorized for ${matchedPortal}`);
       return NextResponse.redirect(accessDeniedUrl);
     }
   }
