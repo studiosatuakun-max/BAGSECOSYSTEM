@@ -3,7 +3,7 @@
 **Document Version:** v1.0.0 (Gold Benchmark DevSecOps Edition)  
 **Security Authority:** **BASKARA-SEC (Lead Cyber Security Auditor & DevSecOps Engineer)**  
 **Date of Implementation:** July 27, 2026  
-**Reference Report:** [SECURITY_AUDIT_REPORT.md](file:///Users/mac/Documents/BagsEcosystem/SECURITY_AUDIT_REPORT.md)
+**Reference Report:** [SECURITY_AUDIT_REPORT.md](file:///Users/mac/Documents/BagsEcosystem/docs/SECURITY_AUDIT_REPORT.md)
 
 ---
 
