@@ -31,6 +31,10 @@ To elevate BaGS Ecosystem into an autonomous, next-generation enterprise ERP, we
   - Updated branding on login page to use `logo.png` (white text version) with increased height over the title.
   - Standardized all module 'Back' buttons to navigate cleanly to `/dashboard`.
   - Updated portal titles: Renamed "Customer Portal" ➔ **Customer App** and "Preview PWA" ➔ **Driver App**.
+- [x] **DevSecOps & Cybersecurity AI Role Specialization (`BASKARA-SEC`)**:
+  - Engineered custom AI agent specialization model in `.agents/skills/security-auditor/` and workspace rules in `.agents/AGENTS.md`.
+  - Documented complete role manual and security policy in root-level `SECURITY_AUDITOR_ROLE.md`.
+  - Created automated vulnerability scanner script `.agents/skills/security-auditor/scripts/scan_security.sh` for Next.js, Supabase RLS, and SCADA telemetry auditing.
 - [x] **Enterprise Inter-Division Inbox & Memo Dispatch System (System Inbox Antar Divisi)**:
   - Replaced informal chat bubbles with an enterprise-grade inter-division memo and dispatch inbox system (`InboxWidget.tsx` & `InboxDrawer.tsx`).
   - Built dedicated API routes (`/api/inbox/dispatches` and `/api/inbox/files`) supporting priority tagging (`Normal`, `High`, `Urgent`), status workflows (`Unread`, `Read`, `In Review`, `Resolved`), and file attachments up to **25 MB**.
