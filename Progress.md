@@ -126,7 +126,18 @@ To elevate BaGS Ecosystem into an autonomous, next-generation enterprise ERP, we
 - [x] **Step 6**: Upgrade **Modul CS (`/portal/cs`)** — Customer Service Ticketing & Dispatch Assistance (Completed & Verified).
 - [x] **Step 7**: Upgrade **Modul Skid (`/portal/skid`)** — B2B Industrial Client Portal & Custody Transfer (Completed & Verified).
 - [x] **Step 8**: Upgrade **Modul Purchasing (`/portal/purchasing`)** — Procurement, Parts & Vendor Management (Completed & Verified).
-- [ ] **Step 9**: Upgrade **Modul Legal (`/portal/legal`)** — Contracts, SLAs, MIGAS Compliance & Permits.
+- [x] **Step 9**: Upgrade **Modul Legal (`/portal/legal`)** — Contracts, SLAs, MIGAS Compliance & Permits (Completed & Verified).
+  - **Gold Benchmark Width & Spacing**: Enforced full width container (`max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 xl:px-10 2xl:px-12 pt-10 pb-12 space-y-8 flex-1 w-full`).
+  - **Standardized Executive Acrylic Hero Banner**: Designed deep dark acrylic gradient banner (`from-indigo-950 via-slate-900 to-purple-950`) with live MIGAS NIAGA BUMI COMPLIANT & ATEX ZONE 1 telemetry tag, animated pulse dot, and action buttons (*Sync MIGAS & ESDM Portal* + *New Contract / SLA*).
+  - **Row 1 (4 Key Metrics Cards with Deep Dark Acrylic Gradients matching HR & Purchasing)**: Added acrylic cards for Active Contracts (85 SLAs), MIGAS Gov Permits Valid (18 Permits), QHSE Safety Audit Compliance (100% Passed Grade A+), and Urgent Expiry (< 30 Days Alert).
+  - **Row 2 & 3 (Asymmetric 2:1 Bento Grid & 3-Column Details)**: Built and integrated 5 modular client components in `/portal/legal/components/`:
+    - `ContractStatusChart` + `ContractStatusChartInner` (`col-span-2`): Recharts donut chart for B2B contracts, Custody SLAs, and MIGAS permits distribution with dynamic SSR wrapper and glassmorphic tooltip.
+    - `MigasPermitsCard` (`col-span-1`): Telemetry & status for critical MIGAS, ESDM, Metrology, and ATEX Zone 1 government certifications.
+    - `HseComplianceScoreCard` (`col-span-1`): QHSE safety audit scores (100% Zero LTI 840 Days) with interactive PDF export trigger.
+    - `SlaBreachRadarCard` (`col-span-1`): B2B client guarantee monitoring (Gas purity ≥ 97.5% CH4, 250 Bar delivery pressure, SLA lead times) and penalty cap tracking.
+    - `LegalCounselAdviceCard` (`col-span-1`): Real-time corporate counsel advisory notes and regulatory feed from retained legal advisors.
+  - **Master B2B Contract, SLA & MIGAS Permit Directory Table (CRUD Modal)**: Created comprehensive legal directory with real entities (PT Unilever Indonesia, ESDM Ditjen Migas, PT Pertamina Gas Negara, SUCOFINDO), 1-line slim status badges, search, status filter, and full CRUD modal.
+  - **Clean Footer Rule**: Removed redundant attribution text line right above `<Footer />`.
 - [ ] Connect and configure live Supabase tables (`dispatches` and `dispatch_files` storage bucket) for permanent production persistence.
 - [ ] Implement end-to-end user authentication and role-based access control (RBAC) linking login credentials to specific division inbox filters.
 
