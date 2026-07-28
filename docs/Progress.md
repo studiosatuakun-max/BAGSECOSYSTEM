@@ -159,3 +159,8 @@ To elevate BaGS Ecosystem into an autonomous, next-generation enterprise ERP, we
 - [x] Implementasi UI Modul Legal (MIGAS Permits & B2B Contracts).
 - [x] Implementasi UI Modul Pemasaran (CRM Pipeline & Horeca Strategy).
 - [x] Implementasi UI Modul HR (Dynamic Shifts & ATEX Certification).
+- [x] **Cleanup & Optimization**: Menghapus modul CS, Purchasing, dan Pusat yang tidak masuk *scope* Kuesioner SOP, serta mengoptimalkan Dashboard *Internal Portals* ke *layout Bento Grid 3x3*.
+
+## Phase 4: Backend & System Architecture (Upcoming)
+- [ ] **Live Database Integration**: Menghubungkan *mock data* di 7 modul operasional ke *real tables* di Supabase (beserta konversi Supabase Storage untuk upload *file*).
+- [ ] **RBAC Authentication**: Menerapkan *Role-Based Access Control* (RBAC) agar *login* tersinkronisasi otomatis dengan hak akses masing-masing modul divisi.
