@@ -40,6 +40,11 @@ export default function DispatchFleetModal({ isOpen, onClose }: DispatchFleetMod
       <div className="absolute inset-0 bg-slate-950/80 backdrop-blur-sm" onClick={onClose} />
       
       <div className="relative w-full max-w-2xl bg-slate-900 border border-slate-700 rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
+        {/* Absolute Close Button */}
+        <button onClick={onClose} className="absolute top-4 right-4 z-[100] p-2 bg-slate-800/80 hover:bg-rose-500 hover:text-white border border-slate-600 rounded-full text-slate-300 transition-all shadow-lg cursor-pointer">
+          <X size={20} />
+        </button>
+
         {/* Header */}
         <div className="p-6 border-b border-slate-800 bg-slate-900/50 flex justify-between items-center relative overflow-hidden">
           <div className="absolute top-0 right-0 w-64 h-64 bg-cyan-500/10 rounded-full blur-[80px] pointer-events-none" />
@@ -50,9 +55,6 @@ export default function DispatchFleetModal({ isOpen, onClose }: DispatchFleetMod
             </h2>
             <p className="text-sm text-slate-400 mt-1">Issue official delivery documents</p>
           </div>
-          <button onClick={onClose} className="p-2 hover:bg-slate-800 rounded-full text-slate-400 transition-colors z-10">
-            <X size={20} />
-          </button>
         </div>
 
         {/* Auth Overlay */}

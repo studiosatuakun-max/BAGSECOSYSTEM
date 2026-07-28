@@ -30,6 +30,11 @@ export default function LiveGPSTrackerModal({ isOpen, onClose, truckData }: Live
       
       <div className="relative w-full max-w-4xl bg-slate-900 border border-slate-700 rounded-3xl shadow-2xl overflow-hidden flex flex-col h-[80vh]">
         
+        {/* Absolute Close Button */}
+        <button onClick={onClose} className="absolute top-6 right-6 z-[100] p-3 bg-slate-800 hover:bg-rose-500 hover:text-white border border-slate-600 rounded-full text-slate-300 transition-all shadow-xl cursor-pointer">
+          <X size={24} />
+        </button>
+
         {/* Header Overlay */}
         <div className="absolute top-0 left-0 right-0 p-6 z-20 flex justify-between items-start bg-gradient-to-b from-slate-900/90 to-transparent pointer-events-none">
           <div className="pointer-events-auto">
@@ -46,9 +51,6 @@ export default function LiveGPSTrackerModal({ isOpen, onClose, truckData }: Live
               </div>
             </div>
           </div>
-          <button onClick={onClose} className="p-2 bg-slate-800/80 hover:bg-slate-700 border border-slate-600 rounded-full text-slate-300 transition-colors pointer-events-auto backdrop-blur">
-            <X size={20} />
-          </button>
         </div>
 
         {/* MAP SIMULATION BACKGROUND */}
