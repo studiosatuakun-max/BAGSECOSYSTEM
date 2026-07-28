@@ -180,8 +180,8 @@ export default function InternalPortalsSection() {
           </div>
         </div>
 
-        {/* BENTO GRID: 4 cols × 2 rows (Frosted Glass Bento Grid) */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        {/* BENTO GRID: 3 cols × 3 rows (Frosted Glass Bento Grid) */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
           {divisions.map((div, idx) => (
             <div
               key={div.id}
