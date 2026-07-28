@@ -140,6 +140,22 @@ To elevate BaGS Ecosystem into an autonomous, next-generation enterprise ERP, we
   - **Clean Footer Rule**: Removed redundant attribution text line right above `<Footer />`.
 - [ ] Connect and configure live Supabase tables (`dispatches` and `dispatch_files` storage bucket) for permanent production persistence.
 - [ ] Implement end-to-end user authentication and role-based access control (RBAC) linking login credentials to specific division inbox filters.
+## Phase 2: SOP Integration (Data Real)
+- [x] Menganalisis Kuesioner Discovery Workflow PT BaGS.
+- [x] Menginisiasi blueprint integrasi untuk 14 modul operasional.
+- [x] **Sprint 1**: Integrasi SOP Modul Stasiun (Master Fueling Record Form 101).
+- [x] **Sprint 1**: Integrasi SOP Modul Armada (Surat Jalan CNF & DO Horeca).
+- [x] **Sprint 1**: Integrasi SOP Modul Skid (Slip Bukti Serah Terima Custody).
+- [x] **Sprint 2**: Integrasi Modul Keuangan (Format Invoice MMBTU/USD & HORECA IDR).
+- [x] **Sprint 2**: Integrasi Modul Legal (Izin Migas & Kontrak FOB Liability).
+- [x] **Sprint 3**: Integrasi Modul Pemasaran & CRM (Pipeline Industri & Strategi Horeca).
+- [x] **Sprint 4**: Integrasi Modul HR (Sertifikasi Training & Dynamic Shift).
 
-
-
+## Phase 3: Frontend UI Refactoring
+- [x] Implementasi UI Modul Stasiun (Master Fueling Table & ATEX Modals).
+- [x] Implementasi UI Modul Keuangan (Dual-Schema Billing & Invoicing Engine).
+- [x] Implementasi UI Modul Armada (Fleet & Logistics Control CNF/Horeca).
+- [x] Implementasi UI Modul Skid (Custody Transfer Slip & Mass Balance).
+- [x] Implementasi UI Modul Legal (MIGAS Permits & B2B Contracts).
+- [x] Implementasi UI Modul Pemasaran (CRM Pipeline & Horeca Strategy).
+- [x] Implementasi UI Modul HR (Dynamic Shifts & ATEX Certification).

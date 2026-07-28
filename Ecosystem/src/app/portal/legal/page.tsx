@@ -4,6 +4,7 @@ import React, { useState, useMemo } from 'react';
 import PortalHeader from '@/components/PortalHeader';
 import Footer from '@/components/Footer';
 import Icon from '@/components/ui/AppIcon';
+import LegalComplianceTableCard from './components/LegalComplianceTableCard';
 import { toast } from 'sonner';
 
 // Import our 5 new B2B Legal, MIGAS & SLA bento components
@@ -72,22 +73,14 @@ const initialContracts: LegalContract[] = [
 ];
 
 export default function LegalDashboardPage() {
-  const [contracts, setContracts] = useState<LegalContract[]>(initialContracts);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [statusFilter, setStatusFilter] = useState<string>('ALL');
+  
+  
+  
 
   // Modal State
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [modalMode, setModalMode] = useState<'create' | 'edit'>('create');
-  const [formData, setFormData] = useState<LegalContract>({
-    id: '',
-    party: 'PT Unilever Indonesia Tbk',
-    type: 'Custody Transfer SLA',
-    val: 'Rp 10.000.000.000 / thn',
-    expiry: 'Aug 30, 2027 · Valid',
-    stat: 'Active',
-    counsel: 'Dr. Hendra Gunawan, SH',
-  });
+  
+  
+  
 
   const handleOpenModal = (mode: 'create' | 'edit', contract?: LegalContract) => {
     setModalMode(mode);
@@ -147,17 +140,7 @@ export default function LegalDashboardPage() {
   };
 
   // Filtered Contracts
-  const filteredContracts = useMemo(() => {
-    return contracts.filter((c) => {
-      const matchSearch =
-        c.id.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        c.party.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        c.type.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        c.counsel.toLowerCase().includes(searchQuery.toLowerCase());
-      const matchStatus = statusFilter === 'ALL' || c.stat === statusFilter;
-      return matchSearch && matchStatus;
-    });
-  }, [contracts, searchQuery, statusFilter]);
+  
 
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-slate-950 font-sans text-slate-900 dark:text-slate-100 transition-colors duration-300 flex flex-col">
@@ -335,298 +318,11 @@ export default function LegalDashboardPage() {
           </div>
         </div>
 
-        {/* MASTER B2B CONTRACT, SLA & MIGAS PERMIT DIRECTORY TABLE (CRUD) */}
-        <div className="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-xl overflow-hidden p-6 sm:p-8 space-y-6">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-100 dark:border-slate-800 pb-5">
-            <div>
-              <div className="flex items-center gap-2">
-                <h2 className="text-lg font-black text-slate-900 dark:text-white">
-                  B2B Contract, Custody SLA &amp; MIGAS Permit Directory
-                </h2>
-                <span className="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-indigo-100 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-800 uppercase tracking-wider whitespace-nowrap shrink-0 align-middle">
-                  Legal Archive
-                </span>
-              </div>
-              <p className="text-xs font-bold text-slate-500 dark:text-slate-400 mt-1">
-                Jadwal perpanjangan kontrak suplai gas Industri, sertifikasi alat ukur Metrologi, dan kepatuhan hukum MIGAS/ESDM.
-              </p>
-            </div>
-
-            <div className="flex flex-wrap sm:flex-nowrap items-center gap-3">
-              <div className="relative min-w-[220px] flex-1 sm:flex-initial">
-                <input
-                  type="text"
-                  placeholder="Cari Kontrak, Mitra, Tipe, atau Counsel..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full pl-9 pr-4 py-2 bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-xl text-xs font-bold text-slate-900 dark:text-white placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all"
-                />
-                <div className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">
-                  <Icon name="MagnifyingGlassIcon" size={14} />
-                </div>
-              </div>
-
-              <select
-                value={statusFilter}
-                onChange={(e) => setStatusFilter(e.target.value)}
-                className="px-3.5 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs font-bold text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all cursor-pointer"
-              >
-                <option value="ALL">Semua Status</option>
-                <option value="Active">Active (Berlaku Legal)</option>
-                <option value="Expiring Soon">Expiring Soon (&lt; 30 Hari)</option>
-                <option value="Under Legal Review">Under Legal Review (Adendum)</option>
-                <option value="Expired">Expired (Kadaluwarsa / Arsip)</option>
-              </select>
-
-              <button
-                onClick={() => handleOpenModal('create')}
-                className="flex items-center justify-center gap-1.5 px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl text-xs font-extrabold transition-all shadow-sm active:scale-95 whitespace-nowrap shrink-0 cursor-pointer"
-              >
-                <Icon name="PlusIcon" size={14} />
-                <span>New Contract</span>
-              </button>
-            </div>
-          </div>
-
-          {/* Table */}
-          <div className="overflow-x-auto">
-            <table className="w-full text-left border-collapse">
-              <thead>
-                <tr className="border-b border-slate-200 dark:border-slate-800 text-[11px] font-extrabold uppercase tracking-wider text-slate-400 dark:text-slate-500 bg-slate-50/50 dark:bg-slate-800/30">
-                  <th className="py-3.5 px-4 whitespace-nowrap">Contract / Permit ID</th>
-                  <th className="py-3.5 px-4 whitespace-nowrap">Party &amp; Client Name</th>
-                  <th className="py-3.5 px-4 whitespace-nowrap">Agreement Type &amp; Value</th>
-                  <th className="py-3.5 px-4 whitespace-nowrap">Expiry &amp; Legal Counsel</th>
-                  <th className="py-3.5 px-4 whitespace-nowrap text-center">Status</th>
-                  <th className="py-3.5 px-4 whitespace-nowrap text-right">Actions</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-100 dark:divide-slate-800/60 text-xs font-medium">
-                {filteredContracts.length > 0 ? (
-                  filteredContracts.map((row) => (
-                    <tr key={row.id} className="hover:bg-slate-50/80 dark:hover:bg-slate-800/40 transition-colors group">
-                      <td className="py-4 px-4 font-black text-indigo-600 dark:text-indigo-400 whitespace-nowrap">
-                        {row.id}
-                      </td>
-                      <td className="py-4 px-4">
-                        <div className="font-extrabold text-slate-900 dark:text-white max-w-[250px] truncate" title={row.party}>
-                          {row.party}
-                        </div>
-                        <div className="text-[11px] font-bold text-slate-500 dark:text-slate-400 mt-0.5">
-                          MIGAS Verified Entity
-                        </div>
-                      </td>
-                      <td className="py-4 px-4">
-                        <div className="font-bold text-slate-800 dark:text-slate-200 max-w-[220px] truncate" title={row.type}>
-                          {row.type}
-                        </div>
-                        <div className="text-[11px] font-bold text-purple-600 dark:text-purple-400 mt-0.5">
-                          Nilai / Kuota: {row.val}
-                        </div>
-                      </td>
-                      <td className="py-4 px-4 whitespace-nowrap">
-                        <div className="font-extrabold text-slate-900 dark:text-white">{row.expiry}</div>
-                        <div className="text-[11px] font-medium text-slate-400 dark:text-slate-500 mt-0.5 truncate max-w-[180px]" title={row.counsel}>
-                          Counsel: {row.counsel}
-                        </div>
-                      </td>
-                      <td className="py-4 px-4 text-center whitespace-nowrap align-middle">
-                        <span
-                          className={`inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-extrabold uppercase tracking-wider border whitespace-nowrap shrink-0 align-middle ${
-                            row.stat === 'Active'
-                              ? 'bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 border-emerald-200 dark:border-emerald-800'
-                              : row.stat === 'Expiring Soon'
-                              ? 'bg-amber-50 dark:bg-amber-950/60 text-amber-700 dark:text-amber-300 border-amber-200 dark:border-amber-800 animate-pulse'
-                              : row.stat === 'Under Legal Review'
-                              ? 'bg-blue-50 dark:bg-blue-950/60 text-blue-700 dark:text-blue-300 border-blue-200 dark:border-blue-800'
-                              : 'bg-rose-50 dark:bg-rose-950/60 text-rose-700 dark:text-rose-300 border-rose-200 dark:border-rose-800'
-                          }`}
-                        >
-                          <span
-                            className={`w-1.5 h-1.5 rounded-full mr-1.5 ${
-                              row.stat === 'Active'
-                                ? 'bg-emerald-500'
-                                : row.stat === 'Expiring Soon'
-                                ? 'bg-amber-500'
-                                : row.stat === 'Under Legal Review'
-                                ? 'bg-blue-500'
-                                : 'bg-rose-500'
-                            }`}
-                          />
-                          {row.stat}
-                        </span>
-                      </td>
-                      <td className="py-4 px-4 text-right whitespace-nowrap">
-                        <div className="flex items-center justify-end gap-2 opacity-80 group-hover:opacity-100 transition-opacity">
-                          <button
-                            onClick={() => handleOpenModal('edit', row)}
-                            className="p-1.5 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-indigo-50 dark:hover:bg-indigo-950/60 text-slate-600 dark:text-slate-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors"
-                            title="Edit Kontrak"
-                          >
-                            <Icon name="PencilSquareIcon" size={15} />
-                          </button>
-                          <button
-                            onClick={() => handleDelete(row.id)}
-                            className="p-1.5 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-rose-50 dark:hover:bg-rose-950/60 text-slate-600 dark:text-slate-300 hover:text-rose-600 dark:hover:text-rose-400 transition-colors"
-                            title="Hapus Kontrak"
-                          >
-                            <Icon name="TrashIcon" size={15} />
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
-                  ))
-                ) : (
-                  <tr>
-                    <td colSpan={6} className="py-10 text-center text-slate-500 dark:text-slate-400 font-medium">
-                      Tidak ada arsip kontrak hukum atau izin MIGAS yang sesuai dengan kriteria pencarian.
-                    </td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
-          </div>
+                <div className="animate-in fade-in slide-in-from-bottom-6 duration-700 delay-300 fill-mode-both">
+          <LegalComplianceTableCard />
         </div>
+
       </main>
-
-      {/* CRUD MODAL FOR LEGAL CONTRACT / PERMIT */}
-      {isModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-in fade-in duration-200">
-          <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl shadow-2xl w-full max-w-lg overflow-hidden animate-in zoom-in-95 duration-200">
-            <div className="px-6 py-5 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between">
-              <div>
-                <h3 className="font-extrabold text-base text-slate-900 dark:text-white">
-                  {modalMode === 'create' ? 'Daftarkan Kontrak / Izin Baru' : 'Edit Kontrak / Izin Legal'}
-                </h3>
-                <p className="text-xs text-slate-500 dark:text-slate-400 font-medium mt-0.5">
-                  Atur mitra hukum, nilai SLA Custody Transfer, dan verifikasi konsultan legal.
-                </p>
-              </div>
-              <button
-                onClick={handleCloseModal}
-                className="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors"
-              >
-                <Icon name="XMarkIcon" size={18} />
-              </button>
-            </div>
-
-            <div className="p-6 space-y-4 max-h-[80vh] overflow-y-auto">
-              <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <label className="block text-xs font-extrabold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1.5">
-                    Contract / Permit ID
-                  </label>
-                  <input
-                    type="text"
-                    value={formData.id}
-                    disabled
-                    className="w-full px-3 py-2 bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs font-bold text-slate-500 dark:text-slate-400 focus:outline-none"
-                  />
-                </div>
-                <div>
-                  <label className="block text-xs font-extrabold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1.5">
-                    Status Legal
-                  </label>
-                  <select
-                    value={formData.stat}
-                    onChange={(e) => setFormData({ ...formData, stat: e.target.value as any })}
-                    className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs font-bold text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                  >
-                    <option value="Active">Active (Berlaku Legal)</option>
-                    <option value="Expiring Soon">Expiring Soon (&lt; 30 Hari)</option>
-                    <option value="Under Legal Review">Under Legal Review (Adendum)</option>
-                    <option value="Expired">Expired (Kadaluwarsa / Arsip)</option>
-                  </select>
-                </div>
-              </div>
-
-              <div>
-                <label className="block text-xs font-extrabold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1.5">
-                  Party &amp; Client Name (MIGAS Entity)
-                </label>
-                <input
-                  type="text"
-                  value={formData.party}
-                  onChange={(e) => setFormData({ ...formData, party: e.target.value })}
-                  placeholder="e.g. PT Unilever Indonesia Tbk"
-                  className="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs font-bold text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                />
-              </div>
-
-              <div>
-                <label className="block text-xs font-extrabold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1.5">
-                  Agreement Type &amp; Legal Category
-                </label>
-                <select
-                  value={formData.type}
-                  onChange={(e) => setFormData({ ...formData, type: e.target.value as any })}
-                  className="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs font-bold text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                >
-                  <option value="Custody Transfer SLA">Custody Transfer SLA</option>
-                  <option value="MIGAS Government Permit">MIGAS Government Permit</option>
-                  <option value="Vendor Supply Agreement">Vendor Supply Agreement</option>
-                  <option value="QHSE Safety Audit Cert">QHSE Safety Audit Cert</option>
-                </select>
-              </div>
-
-              <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <label className="block text-xs font-extrabold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1.5">
-                    Nilai Kontrak / Kuota
-                  </label>
-                  <input
-                    type="text"
-                    value={formData.val}
-                    onChange={(e) => setFormData({ ...formData, val: e.target.value })}
-                    placeholder="e.g. Rp 15.000.000.000 / thn"
-                    className="w-full px-3 py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs font-bold text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                  />
-                </div>
-                <div>
-                  <label className="block text-xs font-extrabold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1.5">
-                    Tanggal Kadaluwarsa
-                  </label>
-                  <input
-                    type="text"
-                    value={formData.expiry}
-                    onChange={(e) => setFormData({ ...formData, expiry: e.target.value })}
-                    placeholder="e.g. Aug 30, 2028 · Valid"
-                    className="w-full px-3 py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs font-bold text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label className="block text-xs font-extrabold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1.5">
-                  Assigned Legal Counsel / Advisor
-                </label>
-                <input
-                  type="text"
-                  value={formData.counsel}
-                  onChange={(e) => setFormData({ ...formData, counsel: e.target.value })}
-                  placeholder="e.g. Dr. Hendra Gunawan, SH (Lead Legal)"
-                  className="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs font-bold text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                />
-              </div>
-            </div>
-
-            <div className="px-6 py-4 bg-slate-50 dark:bg-slate-800/50 border-t border-slate-100 dark:border-slate-800 flex items-center justify-end gap-3">
-              <button
-                onClick={handleCloseModal}
-                className="px-4 py-2 text-xs font-extrabold text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors"
-              >
-                Batal
-              </button>
-              <button
-                onClick={handleSave}
-                className="px-5 py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl text-xs font-extrabold transition-all shadow-md active:scale-95"
-              >
-                {modalMode === 'create' ? 'Daftarkan Kontrak Hukum' : 'Simpan Perubahan Legal'}
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
 
       <Footer />
     </div>

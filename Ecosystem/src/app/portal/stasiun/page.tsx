@@ -6,7 +6,7 @@ import Footer from '@/components/Footer';
 import TelemetryChartCard from './components/TelemetryChartCard';
 import LelAlertCard from './components/LelAlertCard';
 import GroundingInterlockCard from './components/GroundingInterlockCard';
-import CylinderNfcLogCard from './components/CylinderNfcLogCard';
+import MasterFuelingTableCard from './components/MasterFuelingTableCard';
 import PressureDetailCard from './components/PressureDetailCard';
 import FlowRateGaugeCard from './components/FlowRateGaugeCard';
 import Icon from '@/components/ui/AppIcon';
@@ -153,9 +153,9 @@ export default function OpsHsseDashboard() {
           </div>
 
           {/* Row 2 */}
-          {/* Cylinder NFC Log — spans 2 columns */}
-          <div className="col-span-1 md:col-span-2 animate-in fade-in slide-in-from-bottom-6 duration-700" style={{ animationDelay: '450ms' }}>
-            <CylinderNfcLogCard />
+          {/* Master Fueling Record Table — spans full width */}
+          <div className="col-span-1 md:col-span-4 animate-in fade-in slide-in-from-bottom-6 duration-700" style={{ animationDelay: '450ms' }}>
+            <MasterFuelingTableCard />
           </div>
 
           {/* Pressure Detail Card */}
