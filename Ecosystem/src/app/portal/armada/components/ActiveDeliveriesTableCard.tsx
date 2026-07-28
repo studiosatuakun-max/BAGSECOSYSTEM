@@ -5,10 +5,22 @@ import { MOCK_SURAT_JALAN_CNF, MOCK_DO_HORECA } from '../data/mockArmadaData';
 import { SuratJalanCNF, DeliveryOrderHoreca } from '../_integration/types';
 import Icon from '@/components/ui/AppIcon';
 import { Truck, Search, Plus, MapPin, Clock, FileCheck, CheckCircle2, AlertTriangle, ArrowRight, Package } from 'lucide-react';
+import DispatchFleetModal from './DispatchFleetModal';
+import LiveGPSTrackerModal from './LiveGPSTrackerModal';
 
 export default function ActiveDeliveriesTableCard() {
   const [activeTab, setActiveTab] = useState<'CNF' | 'Horeca'>('CNF');
   const [searchTerm, setSearchTerm] = useState('');
+  
+  // Modal States
+  const [isDispatchModalOpen, setIsDispatchModalOpen] = useState(false);
+  const [isGPSModalOpen, setIsGPSModalOpen] = useState(false);
+  const [selectedTruck, setSelectedTruck] = useState<any>(null);
+
+  const openGPS = (plat: string, driver: string, type: 'CNF'|'Horeca') => {
+    setSelectedTruck({ plat, driver, type });
+    setIsGPSModalOpen(true);
+  };
 
   const filteredCNF = MOCK_SURAT_JALAN_CNF.filter(sj => 
     sj.no_pengiriman.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -48,7 +60,7 @@ export default function ActiveDeliveriesTableCard() {
               className="w-full bg-slate-800/50 border border-slate-700/50 text-white placeholder:text-slate-500 rounded-xl pl-10 pr-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-cyan-500/50 transition-all"
             />
           </div>
-          <button className="flex items-center gap-2 px-4 py-2 bg-cyan-500 hover:bg-cyan-600 text-slate-900 rounded-xl text-sm font-bold transition-all shadow-[0_0_20px_rgba(6,182,212,0.3)] whitespace-nowrap shrink-0">
+          <button onClick={() => setIsDispatchModalOpen(true)} className="flex items-center gap-2 px-4 py-2 bg-cyan-500 hover:bg-cyan-600 text-slate-900 rounded-xl text-sm font-bold transition-all shadow-[0_0_20px_rgba(6,182,212,0.3)] whitespace-nowrap shrink-0">
             <Plus size={18} />
             <span className="hidden sm:inline">Dispatch New</span>
           </button>
@@ -108,6 +120,9 @@ export default function ActiveDeliveriesTableCard() {
                     {sj.status === 'Dispatched' && <span>En Route to Client</span>}
                     {sj.status === 'Discharging' && <span>Discharging @ {new Date(sj.prs_start_time!).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</span>}
                     {sj.status === 'Returning' && <span>Returning to MS</span>}
+                    <button onClick={() => openGPS(sj.no_head, sj.driver_id, 'CNF')} className="ml-2 px-2 py-0.5 bg-slate-800 hover:bg-cyan-500/20 hover:text-cyan-400 text-slate-400 rounded text-xs border border-slate-700 transition-colors">
+                      <MapPin size={10} className="inline mr-1"/> GPS
+                    </button>
                   </td>
                   <td className="p-4">
                     <div className="flex gap-1">
@@ -154,6 +169,9 @@ export default function ActiveDeliveriesTableCard() {
                   <td className="p-4">
                     <div className="text-sm font-bold text-white">{do_.vehicle_plate}</div>
                     <div className="text-xs text-slate-400 mt-0.5">{do_.vehicle_type} • {do_.driver_id}</div>
+                    <button onClick={() => openGPS(do_.vehicle_plate, do_.driver_id, 'Horeca')} className="mt-1 px-2 py-0.5 bg-slate-800 hover:bg-cyan-500/20 hover:text-cyan-400 text-slate-400 rounded text-xs border border-slate-700 transition-colors">
+                      <MapPin size={10} className="inline mr-1"/> GPS
+                    </button>
                   </td>
                   <td className="p-4">
                     <div className="flex items-center gap-3 text-sm">
@@ -180,6 +198,17 @@ export default function ActiveDeliveriesTableCard() {
           </table>
         )}
       </div>
+
+      <DispatchFleetModal 
+        isOpen={isDispatchModalOpen} 
+        onClose={() => setIsDispatchModalOpen(false)} 
+      />
+
+      <LiveGPSTrackerModal 
+        isOpen={isGPSModalOpen}
+        onClose={() => setIsGPSModalOpen(false)}
+        truckData={selectedTruck}
+      />
     </div>
   );
 }

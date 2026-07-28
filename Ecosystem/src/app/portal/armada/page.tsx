@@ -60,75 +60,7 @@ const routeZoneDistribution = [
   { name: 'Mojokerto - Pasuruan Zone', volume: '950 MMBTU', value: 12, color: '#06b6d4' },
 ];
 
-// --- INITIAL MASTER FLEET & TUBE-SKID RECORDS ---
-const initialFleetRecords = [
-  {
-    id: 'TRK-01',
-    plat: 'B 9123 GAH',
-    driver: 'Dian Prasetyo',
-    sioStatus: 'SIO ATEX-2027',
-    skidId: 'Skid 40ft-08',
-    capacitySm3: 3200,
-    pressureBar: 248,
-    route: 'Surabaya ➔ PT Unilever (Gresik)',
-    status: 'En Route (60 km/h)',
-  },
-  {
-    id: 'TRK-02',
-    plat: 'L 8452 TX',
-    driver: 'Budi Santoso',
-    sioStatus: 'SIO ATEX-2026',
-    skidId: 'Skid 40ft-12',
-    capacitySm3: 3200,
-    pressureBar: 205,
-    route: 'Mother Station ➔ SIER Zone',
-    status: 'Discharging Gas',
-  },
-  {
-    id: 'TRK-03',
-    plat: 'W 9101 BRS',
-    driver: 'Andi Wijaya',
-    sioStatus: 'SIO ATEX-2028',
-    skidId: 'Skid 20ft-04',
-    capacitySm3: 1600,
-    pressureBar: 250,
-    route: 'Standby @ Gresik Mother Station',
-    status: 'Standby Mother Stn',
-  },
-  {
-    id: 'TRK-04',
-    plat: 'L 1122 PO',
-    driver: 'Joko Anwar',
-    sioStatus: 'SIO ATEX-2025 (Exp Near)',
-    skidId: 'Skid 40ft-03',
-    capacitySm3: 3200,
-    pressureBar: 142,
-    route: 'Workshop Karawang (Tyre Check)',
-    status: 'ATEX Maintenance',
-  },
-  {
-    id: 'TRK-05',
-    plat: 'B 7788 MXZ',
-    driver: 'Hendra Setiawan',
-    sioStatus: 'SIO ATEX-2027',
-    skidId: 'Skid 40ft-15',
-    capacitySm3: 3200,
-    pressureBar: 246,
-    route: 'Sidoarjo ➔ JW Marriott Surabaya',
-    status: 'En Route (45 km/h)',
-  },
-  {
-    id: 'TRK-06',
-    plat: 'W 5544 KJD',
-    driver: 'Rachmat Hidayat',
-    sioStatus: 'SIO ATEX-2026',
-    skidId: 'Skid 20ft-09',
-    capacitySm3: 1600,
-    pressureBar: 251,
-    route: 'Pasuruan ➔ PT Gajah Tunggal',
-    status: 'Discharging Gas',
-  },
-];
+
 
 export default function ArmadaDashboardPage() {
   
@@ -136,58 +68,7 @@ export default function ArmadaDashboardPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState('ALL');
 
-  // Modal CRUD State
-  
-  
-  
 
-  // Filtered Records
-  
-
-  const handleOpenModal = (mode: 'create' | 'edit', record: any = null) => {
-    setModalMode(mode);
-    if (mode === 'edit' && record) {
-      setFormData(record);
-    } else {
-      setFormData({
-        id: `TRK-0${Math.floor(7 + Math.random() * 9)}`,
-        plat: '',
-        driver: '',
-        sioStatus: 'SIO ATEX-2027',
-        skidId: `Skid ${Math.random() > 0.5 ? '40ft' : '20ft'}-${Math.floor(10 + Math.random() * 89)}`,
-        capacitySm3: 3200,
-        pressureBar: 250,
-        route: 'Mother Station ➔ Client Zone',
-        status: 'Standby Mother Stn',
-      });
-    }
-    setIsModalOpen(true);
-  };
-
-  const handleCloseModal = () => setIsModalOpen(false);
-
-  const handleSave = () => {
-    if (!formData.plat || !formData.driver) {
-      alert('Plat Nomor dan Nama Driver wajib diisi!');
-      return;
-    }
-    if (modalMode === 'create') {
-      setFleet([formData, ...fleet]);
-    } else {
-      setFleet(fleet.map((v) => (v.id === formData.id ? formData : v)));
-    }
-    handleCloseModal();
-  };
-
-  const handleDelete = (id: string) => {
-    if (confirm('Apakah Anda yakin ingin menghapus data armada & Skid ini?')) {
-      setFleet(fleet.filter((v) => v.id !== id));
-    }
-  };
-
-  const handleDispatchEmergency = (plat: string, skidId: string) => {
-    alert(`⚡ INSTRUKSI EMERGENCY DISPATCH:\nTim teknis ATEX & Mother Station telah dikerahkan untuk pemeriksaan tekanan pada armada ${plat} (${skidId}).`);
-  };
 
   const [isSyncingFleet, setIsSyncingFleet] = useState(false);
   const [fleetSyncSuccess, setFleetSyncSuccess] = useState(false);
