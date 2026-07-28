@@ -28,15 +28,15 @@ export default function LiveGPSTrackerModal({ isOpen, onClose, truckData }: Live
     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
       <div className="absolute inset-0 bg-slate-950/90 backdrop-blur-md" onClick={onClose} />
       
-      <div className="relative w-full max-w-4xl bg-slate-900 border border-slate-700 rounded-3xl shadow-2xl overflow-hidden flex flex-col h-[80vh]">
-        
-        {/* Absolute Close Button */}
-        <button onClick={onClose} className="absolute top-6 right-6 z-[100] p-3 bg-slate-800 hover:bg-rose-500 hover:text-white border border-slate-600 rounded-full text-slate-300 transition-all shadow-xl cursor-pointer">
-          <X size={24} />
-        </button>
+      {/* Floating Global Close Button */}
+      <button onClick={onClose} className="absolute top-6 right-6 md:top-8 md:right-8 z-[200] p-3 bg-slate-800/80 hover:bg-rose-600 hover:text-white border border-slate-600 rounded-full text-slate-200 transition-all shadow-2xl cursor-pointer">
+        <X size={24} />
+      </button>
 
+      <div className="relative w-full max-w-5xl bg-slate-900 border border-slate-700 rounded-3xl shadow-2xl overflow-hidden flex flex-col h-[85vh]">
+        
         {/* Header Overlay */}
-        <div className="absolute top-0 left-0 right-0 p-6 z-20 flex justify-between items-start bg-gradient-to-b from-slate-900/90 to-transparent pointer-events-none">
+        <div className="absolute top-0 left-0 right-0 p-6 z-[50] flex justify-between items-start bg-gradient-to-b from-slate-900 via-slate-900/80 to-transparent pointer-events-none">
           <div className="pointer-events-auto">
             <h2 className="text-2xl font-bold text-white flex items-center gap-2 drop-shadow-md">
               <Navigation2 className="text-cyan-400" />

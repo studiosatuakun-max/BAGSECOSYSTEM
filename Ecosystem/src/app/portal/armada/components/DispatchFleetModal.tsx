@@ -38,15 +38,15 @@ export default function DispatchFleetModal({ isOpen, onClose }: DispatchFleetMod
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
       <div className="absolute inset-0 bg-slate-950/80 backdrop-blur-sm" onClick={onClose} />
+      {/* Floating Global Close Button */}
+      <button onClick={onClose} className="absolute top-6 right-6 md:top-8 md:right-8 z-[200] p-3 bg-slate-800/80 hover:bg-rose-600 hover:text-white border border-slate-600 rounded-full text-slate-200 transition-all shadow-2xl cursor-pointer">
+        <X size={24} />
+      </button>
       
-      <div className="relative w-full max-w-2xl bg-slate-900 border border-slate-700 rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
-        {/* Absolute Close Button */}
-        <button onClick={onClose} className="absolute top-4 right-4 z-[100] p-2 bg-slate-800/80 hover:bg-rose-500 hover:text-white border border-slate-600 rounded-full text-slate-300 transition-all shadow-lg cursor-pointer">
-          <X size={20} />
-        </button>
+      <div className="relative w-full max-w-2xl bg-slate-900 border border-slate-700 rounded-2xl shadow-2xl flex flex-col max-h-[90vh] overflow-hidden">
 
         {/* Header */}
-        <div className="p-6 border-b border-slate-800 bg-slate-900/50 flex justify-between items-center relative overflow-hidden">
+        <div className="p-6 border-b border-slate-800 bg-slate-900/50 flex justify-between items-center relative overflow-hidden shrink-0">
           <div className="absolute top-0 right-0 w-64 h-64 bg-cyan-500/10 rounded-full blur-[80px] pointer-events-none" />
           <div>
             <h2 className="text-xl font-bold text-white flex items-center gap-2">
@@ -224,7 +224,7 @@ export default function DispatchFleetModal({ isOpen, onClose }: DispatchFleetMod
         </div>
 
         {/* Footer */}
-        <div className="p-6 border-t border-slate-800 bg-slate-900/50 flex justify-end gap-3">
+        <div className="p-6 border-t border-slate-800 bg-slate-900/50 flex justify-end gap-3 shrink-0">
           <button 
             onClick={onClose}
             className="px-4 py-2 rounded-xl text-sm font-semibold text-slate-400 hover:text-white hover:bg-slate-800 transition-colors"
