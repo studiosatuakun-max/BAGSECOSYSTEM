@@ -1,4 +1,8 @@
-# Progress Report - BaGS Ecosystem
+# 📋 Progress Report - BaGS Ecosystem
+
+> [!NOTE]
+> **Modular Tracking Update**: Progress detail spesifik dan teknis per modul (*Micro-Level Tracking*) kini telah didistribusikan ke masing-masing folder modul di `Ecosystem/src/app/portal/[nama_modul]/_integration/PROGRESS.md`. Dokumen ini berfungsi sebagai *Executive Master Overview*.
+
 
 ## Planned Architecture: Autonomous AI Co-Pilots & Security Sentinel
 To elevate BaGS Ecosystem into an autonomous, next-generation enterprise ERP, we have designed two specialized AI Agents to be integrated into the platform:
