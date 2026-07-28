@@ -5,10 +5,12 @@ import { MOCK_MASTER_FUELING_RECORDS } from '../data/mockStasiunData';
 import { MasterFuelingRecord } from '../_integration/types';
 import Icon from '@/components/ui/AppIcon';
 import { ClipboardCheck, PlayCircle, Plus, Search, CheckCircle2, AlertTriangle, AlertCircle } from 'lucide-react';
+import Form101Modal from './Form101Modal';
 
 export default function MasterFuelingTableCard() {
   const [records, setRecords] = useState<MasterFuelingRecord[]>(MOCK_MASTER_FUELING_RECORDS);
   const [searchTerm, setSearchTerm] = useState('');
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const filteredRecords = records.filter(record => 
     record.customer_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -16,40 +18,44 @@ export default function MasterFuelingTableCard() {
   );
 
   return (
-    <div className="col-span-full rounded-2xl border border-white/10 bg-slate-900/60 backdrop-blur-md p-6 shadow-xl flex flex-col h-full relative overflow-hidden group">
-      {/* Background Gradients */}
-      <div className="absolute top-0 right-0 w-96 h-96 bg-indigo-500/10 rounded-full blur-[100px] pointer-events-none" />
-      <div className="absolute bottom-0 left-0 w-96 h-96 bg-cyan-500/10 rounded-full blur-[100px] pointer-events-none" />
+    <>
+      <div className="col-span-full rounded-2xl border border-white/10 bg-slate-900/60 backdrop-blur-md p-6 shadow-xl flex flex-col h-full relative overflow-hidden group">
+        {/* Background Gradients */}
+        <div className="absolute top-0 right-0 w-96 h-96 bg-indigo-500/10 rounded-full blur-[100px] pointer-events-none" />
+        <div className="absolute bottom-0 left-0 w-96 h-96 bg-cyan-500/10 rounded-full blur-[100px] pointer-events-none" />
 
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 gap-4 relative z-10">
-        <div className="flex items-center gap-3">
-          <div className="p-2.5 rounded-xl bg-indigo-500/20 text-indigo-400 border border-indigo-500/30">
-            <ClipboardCheck size={24} />
+        {/* Header */}
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 gap-4 relative z-10">
+          <div className="flex items-center gap-3">
+            <div className="p-2.5 rounded-xl bg-indigo-500/20 text-indigo-400 border border-indigo-500/30">
+              <ClipboardCheck size={24} />
+            </div>
+            <div>
+              <h2 className="text-xl font-semibold text-white tracking-tight">Master Fueling Log (Form 101)</h2>
+              <p className="text-sm text-slate-400 mt-0.5">Real-time Tubeskid charging records & ATEX Inspections</p>
+            </div>
           </div>
-          <div>
-            <h2 className="text-xl font-semibold text-white tracking-tight">Master Fueling Log (Form 101)</h2>
-            <p className="text-sm text-slate-400 mt-0.5">Real-time Tubeskid charging records & ATEX Inspections</p>
+          
+          <div className="flex items-center gap-3 w-full sm:w-auto">
+            <div className="relative w-full sm:w-64">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
+              <input
+                type="text"
+                placeholder="Search by customer or tube..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="w-full bg-slate-800/50 border border-slate-700/50 text-white placeholder:text-slate-500 rounded-xl pl-10 pr-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/50 transition-all"
+              />
+            </div>
+            <button 
+              onClick={() => setIsModalOpen(true)}
+              className="flex items-center gap-2 px-4 py-2 bg-indigo-500 hover:bg-indigo-600 text-white rounded-xl text-sm font-medium transition-all shadow-[0_0_20px_rgba(99,102,241,0.3)] whitespace-nowrap shrink-0"
+            >
+              <Plus size={18} />
+              <span className="hidden sm:inline">New Record</span>
+            </button>
           </div>
         </div>
-        
-        <div className="flex items-center gap-3 w-full sm:w-auto">
-          <div className="relative w-full sm:w-64">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
-            <input
-              type="text"
-              placeholder="Search by customer or tube..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full bg-slate-800/50 border border-slate-700/50 text-white placeholder:text-slate-500 rounded-xl pl-10 pr-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/50 transition-all"
-            />
-          </div>
-          <button className="flex items-center gap-2 px-4 py-2 bg-indigo-500 hover:bg-indigo-600 text-white rounded-xl text-sm font-medium transition-all shadow-[0_0_20px_rgba(99,102,241,0.3)] whitespace-nowrap shrink-0">
-            <Plus size={18} />
-            <span className="hidden sm:inline">New Record</span>
-          </button>
-        </div>
-      </div>
 
       {/* Table */}
       <div className="overflow-x-auto rounded-xl border border-slate-800/60 bg-slate-900/40 relative z-10">
@@ -138,6 +144,15 @@ export default function MasterFuelingTableCard() {
           </tbody>
         </table>
       </div>
-    </div>
+      </div>
+      {/* Form 101 Modal */}
+      <Form101Modal 
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onSave={(data) => {
+          console.log('Saved Form 101 Data:', data);
+        }}
+      />
+    </>
   );
 }

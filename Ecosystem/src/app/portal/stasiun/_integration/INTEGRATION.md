@@ -1,38 +1,38 @@
-# Modul Stasiun (Mother Station) — Integration Manual
+# Modul Stasiun (Mother Station) — IoT Integration & Workflow Manual
 
-## 1. Sumber Dokumen PT BaGS
-Blueprint ini didasarkan pada dokumen nyata PT BaGS:
-- **Kuesioner Discovery Workflow** (Bagian 1: Produksi/Stasiun Pengisian)
-- **Form. No. 101 Rev.0**: *MASTER FUELING RECORD - IMW 50*
-- **Form. No. 102/BaGS-SDA**: *Machine Performance Record - IMW 50 COMPRESSOR*
+## 1. Sumber Dokumen PT BaGS & Hardware Demo
+Blueprint ini didasarkan pada dokumen nyata PT BaGS dan arsitektur IoT terbaru:
+- **Dokumen SOP**: Kuesioner Discovery Workflow (Stasiun Pengisian), Form 101 (Master Fueling Record), Form 102 (Machine Performance Record).
+- **Perangkat IoT (Hardware Demo)**: 
+  - **UHF Reader CT-i607 (Cardteck)**: Jarak baca 7 meter, IP54, 7dBi Antenna, TCP/IP Interface.
+  - **UHF Metal Tag Alien H3**: Pasif, tahan suhu tinggi, dipasang pada fisik tabung 12Kg dan Tubeskid.
+  - **RFID Card Alien H9**: Kapasitas memory besar (1024-Bits NVM), dipakai untuk ID Card Teknisi & Operator.
 
-## 2. Entitas Bisnis Utama
-Berdasarkan dokumen fisik, proses di stasiun dibagi menjadi 3 entitas utama:
-1. **Master Fueling Record**: Mencatat proses pengisian Tubeskid dari awal hingga akhir.
-2. **Compressor Hour Running**: Mencatat waktu nyala mesin IMW-01, IMW-02, dan AGIRA.
-3. **ATEX Safety Inspection**: Checklist keselamatan sebelum dan sesudah pengisian (Quick connect, Grounding, Tyre stopper, Sign).
+## 2. Arsitektur Otomatisasi (IoT Efficiency Design)
+Untuk memangkas proses manual kertas dan mengurangi fraud, sistem mengimplementasikan otomatisasi berikut:
 
-## 3. SOP & Business Rules (Terekstraksi dari Form 101)
-- **Standard Pressure**: Pengisian standar (Full) Tubeskid adalah **240 Bar** atau **3600 Psi** (Batas aman maksimum 250 Bar). 
-- **Volume & Massa**: Pengisian dicatat dalam 2 satuan: **Nm³** (Normal Cubic Meter) dan **Kg** (Massa).
-- **Inspeksi Keselamatan (ATEX)**: Wajib melakukan *Pre-fill* dan *Post-fill* checklist. 
-  - Item: 1) Quick connect & safety rope, 2) Grounding cable & tyre stopper, 3) Sign of filling process.
-- **HORECA 12kg**:
-  - Menggunakan line kompresi yang sama.
-  - Kapasitas direncanakan 300 tabung/hari.
-  - Saat ini pengisian manual (belum RFID).
+### A. Skema HORECA (12Kg) — Batch UHF Scanning
+SOP fisik menyebutkan pengisian 300 tabung/hari secara manual. Dengan integrasi IoT:
+- Tabung 12Kg dilas dengan *UHF Metal Tag Alien H3*.
+- Saat truk pembawa tabung kosong melewati *Fillpost*, **Reader CT-i607** otomatis membaca seluruh tabung (misal: 27 tabung untuk 1 armada gurita) dalam sekali *scan* berkat fitur anti-collision EPC Gen2.
+- Data tabung langsung dirender di tabel **UHF Cylinder RFID Log** dengan status *Ready to Fill*.
 
-## 4. Field Mapping (Form 101 -> Database)
+### B. Form 101 & 102 — Otorisasi Operator Anti-Fraud
+SOP mewajibkan pencatatan parameter tekanan 250 Bar (Form 101) dan suhu mesin kompresor (Form 102).
+- Di sistem, operator tidak bisa sembarang klik tombol "Start Fueling".
+- Operator **wajib melakukan "Tap" menggunakan Kartu RFID Alien H9** ke reader. Sistem membaca *User Memory* dari chip H9 untuk memastikan sertifikasi SIO dan wewenang operator.
+- Setelah *Auth* sukses, operator dapat memasukkan angka telemetri atau sistem menarik data langsung dari SCADA (Micromotion Flow Meter).
 
-| Field di Form 101 | Column di Tabel SQL | Tipe Data | Validasi Zod |
-|---|---|---|---|
-| Queue No | `queue_no` | Integer | Wajib, positif |
-| Date | `date` | Date | Otomatis |
-| Tube Trailer No | `tube_trailer_no` | String | Format plat unit |
-| Start/Finish Time | `start_time`, `finish_time` | Time | - |
-| Pressure (Initial, Full) | `pressure_initial_bar`, `pressure_full_bar` | Numeric | Maks 250 Bar |
-| Temp (Start, Finish) | `temp_start_c`, `temp_finish_c` | Numeric | - |
-| Volume Delivery Nm3 | `volume_nm3` | Numeric | Wajib |
-| Volume Delivery Kg | `volume_kg` | Numeric | Wajib |
-| Hour Running (Start/Finish) | `hour_start`, `hour_finish` | Numeric | Per kompresor |
-| LWC & No. Pol | `lwc`, `no_pol` | String | - |
+## 3. Entitas Form SOP (Mapping Data Zod)
+Data yang direkam melalui form digital di Modul Stasiun:
+
+**Form 101 (Master Fueling Record):**
+- `queue_no`, `tube_trailer_no` (Otomatis terkait dengan RFID Tubeskid).
+- `pressure_initial_bar`, `pressure_full_bar` (Maks 250 Bar).
+- `volume_nm3`, `volume_kg` (Sinkronisasi Flow Meter).
+- Divalidasi dengan pre-fill/post-fill ATEX safety checklist.
+
+**Form 102 (Machine Performance Record):**
+- Parameter *Gas Engine* (Inlet, Engine RPM).
+- Parameter *IMW 50 Compressor* (Hour Running, Interstage Pressure St.1, St.2, St.3).
+- Data ini menghasilkan *Alert Preventive Maintenance* jika mesin mendekati batas jam kerja.

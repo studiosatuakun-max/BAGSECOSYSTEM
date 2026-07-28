@@ -9,6 +9,7 @@ import GroundingInterlockCard from './components/GroundingInterlockCard';
 import MasterFuelingTableCard from './components/MasterFuelingTableCard';
 import PressureDetailCard from './components/PressureDetailCard';
 import FlowRateGaugeCard from './components/FlowRateGaugeCard';
+import UHFCylinderRfidLogCard from './components/UHFCylinderRfidLogCard';
 import Icon from '@/components/ui/AppIcon';
 
 interface InspectionLog {
@@ -158,13 +159,18 @@ export default function OpsHsseDashboard() {
             <MasterFuelingTableCard />
           </div>
 
+          {/* Row 3: HORECA RFID & Gauges */}
+          <div className="col-span-1 md:col-span-2 animate-in fade-in slide-in-from-bottom-6 duration-700" style={{ animationDelay: '600ms' }}>
+            <UHFCylinderRfidLogCard />
+          </div>
+
           {/* Pressure Detail Card */}
-          <div className="col-span-1 md:col-span-1 animate-in fade-in slide-in-from-bottom-6 duration-700" style={{ animationDelay: '600ms' }}>
+          <div className="col-span-1 md:col-span-1 animate-in fade-in slide-in-from-bottom-6 duration-700" style={{ animationDelay: '750ms' }}>
             <PressureDetailCard />
           </div>
 
           {/* Flow Rate Gauge Card */}
-          <div className="col-span-1 md:col-span-1 animate-in fade-in slide-in-from-bottom-6 duration-700" style={{ animationDelay: '750ms' }}>
+          <div className="col-span-1 md:col-span-1 animate-in fade-in slide-in-from-bottom-6 duration-700" style={{ animationDelay: '900ms' }}>
             <FlowRateGaugeCard />
           </div>
 
