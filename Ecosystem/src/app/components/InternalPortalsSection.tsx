@@ -19,18 +19,6 @@ interface DivisionCard {
 
 const divisions: DivisionCard[] = [
   {
-    id: 'pusat',
-    title: 'Pusat',
-    subtitle: 'Super Admin · System-Wide',
-    iconName: 'ShieldCheckIcon',
-    description: 'Full system oversight with user permission management, audit logging, and cross-division configuration control.',
-    features: ['User & Role Management', 'Audit Trail', 'System Config', 'Global Reports'],
-    accentColor: 'var(--indigo)',
-    bgLight: 'var(--indigo-light)',
-    borderColor: 'rgba(99,102,241,0.2)',
-    ctaLabel: 'Admin Console',
-  },
-  {
     id: 'stasiun',
     title: 'Stasiun',
     subtitle: 'Operations · Mother Station',
@@ -115,18 +103,6 @@ const divisions: DivisionCard[] = [
     ctaLabel: 'Driver App',
   },
   {
-    id: 'cs',
-    title: 'Customer Service',
-    subtitle: 'Support & CRM',
-    iconName: 'ChatBubbleLeftRightIcon',
-    description: 'Dedicated ticketing system and live chat support for rapid resolution of customer complaints.',
-    features: ['Ticketing System', 'Live Chat', 'Complaint Resolution', 'NPS Scoring'],
-    accentColor: 'var(--amber-dark)',
-    bgLight: 'var(--amber-light)',
-    borderColor: 'rgba(217,119,6,0.2)',
-    ctaLabel: 'CS Dashboard',
-  },
-  {
     id: 'skid',
     title: 'SkidPortal (B2B)',
     subtitle: 'Industrial Client App',
@@ -137,18 +113,6 @@ const divisions: DivisionCard[] = [
     bgLight: 'var(--industrial-light)',
     borderColor: 'rgba(30,58,95,0.2)',
     ctaLabel: 'B2B Portal',
-  },
-  {
-    id: 'purchasing',
-    title: 'Purchasing',
-    subtitle: 'Procurement & SCM',
-    iconName: 'ShoppingCartIcon',
-    description: 'Manage vendor relations, purchase orders for operational assets, and CNG raw material sourcing.',
-    features: ['Purchase Orders', 'Vendor Management', 'Asset Sourcing', 'Inventory Approval'],
-    accentColor: 'var(--finance-green)',
-    bgLight: 'var(--finance-green-light)',
-    borderColor: 'rgba(5,150,105,0.2)',
-    ctaLabel: 'Procurement Hub',
   },
   {
     id: 'legal',
