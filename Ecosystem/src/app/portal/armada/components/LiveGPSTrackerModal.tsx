@@ -25,7 +25,7 @@ export default function LiveGPSTrackerModal({ isOpen, onClose, truckData }: Live
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+    <div className="fixed inset-0 z-[100] flex">
       <div className="absolute inset-0 bg-slate-950/90 backdrop-blur-md" onClick={onClose} />
       
       {/* Floating Global Close Button */}
@@ -33,7 +33,7 @@ export default function LiveGPSTrackerModal({ isOpen, onClose, truckData }: Live
         <X size={24} />
       </button>
 
-      <div className="relative w-full max-w-5xl bg-slate-900 border border-slate-700 rounded-3xl shadow-2xl overflow-hidden flex flex-col h-[85vh]">
+      <div className="relative w-full h-full bg-slate-900 shadow-2xl overflow-hidden flex flex-col">
         
         {/* Header Overlay */}
         <div className="absolute top-0 left-0 right-0 p-6 z-[50] flex justify-between items-start bg-gradient-to-b from-slate-900 via-slate-900/80 to-transparent pointer-events-none">

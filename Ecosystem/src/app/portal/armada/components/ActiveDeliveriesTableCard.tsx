@@ -84,11 +84,11 @@ export default function ActiveDeliveriesTableCard() {
       </div>
 
       {/* Tables */}
-      <div className="overflow-x-auto rounded-xl border border-slate-800/60 bg-slate-900/40 relative z-10">
+      <div className="overflow-x-auto overflow-y-auto max-h-[600px] custom-scrollbar rounded-xl border border-slate-800/60 bg-slate-900/40 relative z-10">
         {activeTab === 'CNF' ? (
           <table className="w-full text-left border-collapse">
-            <thead>
-              <tr className="bg-slate-800/80 text-xs uppercase tracking-wider text-slate-400 border-b border-slate-700/50">
+            <thead className="sticky top-0 z-20">
+              <tr className="bg-slate-900 text-xs uppercase tracking-wider text-slate-400 border-b border-slate-700/50 shadow-sm">
                 <th className="p-4 font-medium">Surat Jalan</th>
                 <th className="p-4 font-medium">Destination</th>
                 <th className="p-4 font-medium">Fleet Unit</th>
@@ -147,8 +147,8 @@ export default function ActiveDeliveriesTableCard() {
           </table>
         ) : (
           <table className="w-full text-left border-collapse">
-            <thead>
-              <tr className="bg-slate-800/80 text-xs uppercase tracking-wider text-slate-400 border-b border-slate-700/50">
+            <thead className="sticky top-0 z-20">
+              <tr className="bg-slate-900 text-xs uppercase tracking-wider text-slate-400 border-b border-slate-700/50 shadow-sm">
                 <th className="p-4 font-medium">Delivery Order</th>
                 <th className="p-4 font-medium">Destination</th>
                 <th className="p-4 font-medium">Vehicle</th>

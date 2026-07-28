@@ -36,14 +36,14 @@ export default function DispatchFleetModal({ isOpen, onClose }: DispatchFleetMod
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+    <div className="fixed inset-0 z-[100] flex">
       <div className="absolute inset-0 bg-slate-950/80 backdrop-blur-sm" onClick={onClose} />
       {/* Floating Global Close Button */}
       <button onClick={onClose} className="absolute top-6 right-6 md:top-8 md:right-8 z-[200] p-3 bg-slate-800/80 hover:bg-rose-600 hover:text-white border border-slate-600 rounded-full text-slate-200 transition-all shadow-2xl cursor-pointer">
         <X size={24} />
       </button>
       
-      <div className="relative w-full max-w-2xl bg-slate-900 border border-slate-700 rounded-2xl shadow-2xl flex flex-col max-h-[90vh] overflow-hidden">
+      <div className="relative w-full h-full bg-slate-900 shadow-2xl flex flex-col overflow-hidden">
 
         {/* Header */}
         <div className="p-6 border-b border-slate-800 bg-slate-900/50 flex justify-between items-center relative overflow-hidden shrink-0">
