@@ -84,7 +84,7 @@ export default function ActiveDeliveriesTableCard() {
       </div>
 
       {/* Tables */}
-      <div className="overflow-x-auto overflow-y-auto max-h-[600px] custom-scrollbar rounded-xl border border-slate-800/60 bg-slate-900/40 relative z-10">
+      <div className="overflow-x-auto overflow-y-auto h-[350px] custom-scrollbar rounded-xl border border-slate-800/60 bg-slate-900/40 relative z-10">
         {activeTab === 'CNF' ? (
           <table className="w-full text-left border-collapse">
             <thead className="sticky top-0 z-20">
