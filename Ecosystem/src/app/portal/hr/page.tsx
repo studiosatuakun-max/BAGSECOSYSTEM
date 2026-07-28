@@ -21,10 +21,18 @@ const initialEmployees = [
 ];
 
 export default function HRDashboardPage() {
-  
-  
-  
-  
+  const [isAuditing, setIsAuditing] = useState(false);
+  const [auditSuccess, setAuditSuccess] = useState(false);
+
+  const handleTriggerAudit = () => {
+    setIsAuditing(true);
+    setAuditSuccess(false);
+    setTimeout(() => {
+      setIsAuditing(false);
+      setAuditSuccess(true);
+      setTimeout(() => setAuditSuccess(false), 4000);
+    }, 2000);
+  };
 
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-slate-950 font-sans relative flex flex-col justify-between selection:bg-purple-500 selection:text-white">
