@@ -29,16 +29,13 @@ When this skill is activated, you must evaluate, audit, and harden code across f
 
 ### 4. RBAC (Role-Based Access Control) Across 11 Enterprise Portals
 Ensure strict separation of duties and boundary isolation across our 11 modular portals:
-1. `/portal/cs` — Customer Service & Ticketing
-2. `/portal/purchasing` — Procurement & Vendor POs
-3. `/portal/legal` — Contracts, MIGAS SLA & Permits
+1. `/portal/legal` — Contracts, MIGAS SLA & Permits
 4. `/portal/pemasaran` — Commercial CRM & Quotations
 5. `/portal/keuangan` — Invoices, Tax & Treasury
 6. `/portal/hr` — Payroll, Personnel & Organization
 7. `/portal/armada` — Fleet Maintenance & GPS SCADA
 8. `/portal/skid` — Skid Tank ISO 11120 & Custody Transfer
-9. `/portal/pusat` — Central Admin & User Governance
-10. `/portal/direksi` (B2B / B2C) — Executive Board Telemetry
+8. `/portal/direksi` (B2B / B2C) — Executive Board Telemetry
 
 ---
 

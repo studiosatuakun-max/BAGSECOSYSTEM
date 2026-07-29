@@ -43,7 +43,7 @@ These remediations transition our 11 enterprise portals, SCADA telemetry pipelin
 ### 3. Next.js 11-Portal RBAC Route Isolation Middleware (`FIX-03`)
 - **File Created:** [Ecosystem/src/middleware.ts](file:///Users/mac/Documents/BagsEcosystem/Ecosystem/src/middleware.ts)
 - **Technical Improvements:**
-  - Configured the **Portal RBAC Matrix** mapping 14 route prefixes (`/portal/cs`, `/portal/purchasing`, `/portal/keuangan`, `/portal/hr`, `/portal/armada`, `/portal/skid`, `/portal/pusat`, `/portal/direksi`, etc.) to specific authorized enterprise roles.
+  - Configured the **Portal RBAC Matrix** mapping 11 route prefixes (`/portal/legal`, `/portal/pemasaran`, `/portal/keuangan`, `/portal/hr`, `/portal/armada`, `/portal/skid`, `/portal/direksi`, `/portal/stasiun`, `/portal/industrial`, `/portal/horeca`, `/portal/pwa`) to specific authorized enterprise roles.
   - Implemented interception logic verifying `user_role_claim` cookies and `sb-access-token` session cookies before rendering portal pages. Unauthorized role navigation attempts are redirected to `/unauthorized` or `/login`.
   - Injected global OWASP HTTP security headers on all responses:
     - `X-Frame-Options: DENY` (Prevent Clickjacking)
@@ -86,7 +86,7 @@ To verify these security controls in your local development or staging environme
 3. **Verify RBAC Middleware**:
    - Open browser incognito / without role cookies and navigate to `http://localhost:3000/portal/keuangan`.
    - In production mode (`NODE_ENV=production`), verify automatic redirection to `/login`.
-   - If logged in with `user_role_claim=Driver`, verify redirection to `/unauthorized` when attempting to access `/portal/keuangan` or `/portal/pusat`.
+   - If logged in with `user_role_claim=Driver`, verify redirection to `/unauthorized` when attempting to access `/portal/keuangan` or `/portal/legal`.
 
 4. **Verify Database RLS in Supabase**:
    - Copy and execute the contents of `Ecosystem/supabase/migrations/20260727_enable_rls_and_policies.sql` in the Supabase SQL Editor.

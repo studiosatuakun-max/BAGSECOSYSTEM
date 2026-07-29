@@ -82,7 +82,7 @@ export default function PortalHeader({
   const isTabActive = (itemHref: string) => {
     if (!pathname) return false;
     if (pathname === itemHref) return true;
-    if (itemHref !== backUrl && pathname.startsWith(itemHref) && itemHref !== '/portal/pusat' && itemHref !== '/portal/skid') {
+    if (itemHref !== backUrl && pathname.startsWith(itemHref) && itemHref !== '/portal/skid') {
       return true;
     }
     return false;

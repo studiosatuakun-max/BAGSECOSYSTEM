@@ -12,12 +12,10 @@
     "Driver",
     "Horeca",
     "SkidPortal",
-    "cs",
-    "purchasing",
     "legal"
   ],
   "scripts": {
-    "dev": "concurrently \"npm run dev -w Ecosystem\" \"npm run dev -w Finance\" \"npm run dev -w HR\" \"npm run dev -w Marketing\" \"npm run dev -w Operations\" \"npm run dev -w Armada\" \"npm run dev -w Driver\" \"npm run dev -w Horeca\" \"npm run dev -w SkidPortal\" \"npm run dev -w cs\" \"npm run dev -w purchasing\" \"npm run dev -w legal\"",
+    "dev": "concurrently \"npm run dev -w Ecosystem\" \"npm run dev -w Finance\" \"npm run dev -w HR\" \"npm run dev -w Marketing\" \"npm run dev -w Operations\" \"npm run dev -w Armada\" \"npm run dev -w Driver\" \"npm run dev -w Horeca\" \"npm run dev -w SkidPortal\" \"npm run dev -w legal\"",
     "build": "npm run build --workspaces",
     "lint": "npm run lint --workspaces"
   },

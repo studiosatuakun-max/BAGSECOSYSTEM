@@ -16,7 +16,7 @@ The evaluation followed our **4-Step Executive Audit Methodology**, benchmarking
 ### Scope of Audit:
 1. **Automated Scanner Analysis**: Static analysis of environment variables, client bundles, and secret exposure using `scan_security.sh`.
 2. **Backend API Endpoints**: Deep-dive code review of `app/api/inbox/dispatches` and `app/api/inbox/files`.
-3. **Portal RBAC Isolation**: Architecture verification of Role-Based Access Control across all 11 modular portals (`/portal/cs`, `/portal/purchasing`, `/portal/keuangan`, `/portal/hr`, `/portal/armada`, `/portal/skid`, `/portal/pusat`, `/portal/legal`, `/portal/pemasaran`, `/portal/direksi`, and `/portal/pwa`).
+3. **Portal RBAC Isolation**: Architecture verification of Role-Based Access Control across all 8 modular portals (`/portal/legal`, `/portal/keuangan`, `/portal/hr`, `/portal/armada`, `/portal/skid`, `/portal/pemasaran`, `/portal/direksi`, and `/portal/pwa`).
 4. **Database & Storage Zero-Trust**: Supabase Row-Level Security (RLS) and storage bucket access policies.
 
 ---
@@ -67,18 +67,15 @@ The automated scanner script (`./.agents/skills/security-auditor/scripts/scan_se
 
 #### 1. Absence of Server-Side Route RBAC Middleware (OWASP A01:2021 - Broken Access Control)
 - **Location**: Entire portal ecosystem (`Ecosystem/src/app/portal/*`).
-- **Finding**: A review of `app/layout.tsx`, `portal/pusat/layout.tsx`, and individual module pages (`/keuangan`, `/skid`, `/cs`, `/purchasing`, etc.) reveals that **role badges (e.g., `roleBadge="Chief Financial Officer (CFO)"`) are currently decorative UI props** passed to `<PortalHeader />`. There is no Next.js `middleware.ts` or layout-level security barrier intercepting requests to verify JWT role claims (`auth.uid()` / `user_metadata.role`).
-- **Risk**: Any authenticated user (or unauthenticated visitor if RLS is lax) can navigate directly to sensitive portal URLs (e.g., `/portal/keuangan`, `/portal/pusat`, `/portal/direksi`) and access executive financial dashboards, SSO registries, and SCADA monitoring interfaces.
+- **Finding**: A review of `app/layout.tsx` and individual module pages (`/keuangan`, `/skid`, `/legal`, `/pemasaran`, etc.) reveals that **role badges (e.g., `roleBadge="Chief Financial Officer (CFO)"`) are currently decorative UI props** passed to `<PortalHeader />`. There is no Next.js `middleware.ts` or layout-level security barrier intercepting requests to verify JWT role claims (`auth.uid()` / `user_metadata.role`).
+- **Risk**: Any authenticated user (or unauthenticated visitor if RLS is lax) can navigate directly to sensitive portal URLs (e.g., `/portal/keuangan`, `/portal/legal`) and access executive financial dashboards and SCADA monitoring interfaces.
 - **Affected Portals**:
-  1. `/portal/cs` — Customer Service & Dispatch Ticketing
-  2. `/portal/purchasing` — Procurement, Parts & Vendor POs
-  3. `/portal/legal` — Contracts, SLAs & MIGAS Permits
+  1. `/portal/legal` — Contracts, SLAs & MIGAS Permits
   4. `/portal/pemasaran` — Commercial CRM & AE Quotations
   5. `/portal/keuangan` — Invoices, Tax & Treasury Cash Flow
   6. `/portal/hr` — Enterprise Personnel, Org & Payroll
   7. `/portal/armada` — Fleet Maintenance & GPS Telemetry
   8. `/portal/skid` — Skid Tank ISO 11120 & Custody Transfer
-  9. `/portal/pusat` — Central Admin & User Governance
   10. `/portal/direksi` — Executive Board Monitoring
   11. `/portal/pwa` / `/portal/stasiun` / `/portal/industrial` / `/portal/horeca` — Operational Modules
 
@@ -176,10 +173,10 @@ const MOCK_DISPATCHES: DispatchItem[] = [
   },
   {
     id: 'dsp-2',
-    sender_division: 'Purchasing',
+    sender_division: 'Fleet & Transport',
     receiver_division: 'Stasiun CNG (Mother Station)',
-    subject: 'Konfirm Jadwal Kedatangan Sparepart Kompresor Ariell',
-    content: 'Tim Stasiun CNG, kami informasikan bahwa suku cadang seal ring dan oli hidrolik untuk kompresor utama sudah tiba di gudang pusat Surabaya. Mohon tim teknisi stasiun melakukan pengecekan fisik dan penjadwalan instalasi pada shift malam besok.',
+    subject: 'Konfirmasi Jadwal Maintenance Rutin 5 Skid Tank CNG',
+    content: 'Tim Stasiun CNG, kami informasikan bahwa perawatan rutin berkala dan sertifikasi ulang katup tekanan pada 5 unit Skid Tank (Plat W 8912 XG s/d W 8916 XG) dijadwalkan di bengkel resmi Gresik. Mohon tim teknisi stasiun melakukan pengecekan fisik.',
     priority: 'High',
     status: 'In Review',
     created_at: new Date(Date.now() - 1000 * 60 * 180).toISOString(),
@@ -210,8 +207,8 @@ const MOCK_DISPATCHES: DispatchItem[] = [
   },
   {
     id: 'dsp-4',
-    sender_division: 'Customer Service',
-    receiver_division: 'Fleet & Transport',
+    sender_division: 'Fleet & Transport',
+    receiver_division: 'Industrial Operations',
     subject: 'Laporan Pelanggan: Penyesuaian Waktu Bongkar PT Jatim Steel',
     content: 'Menginfokan bahwa PT Jatim Steel meminta percepatan waktu bongkar muat CNG dari jam 14.00 menjadi jam 10.00 WIB untuk pengiriman besok pagi dikarenakan peningkatan kapasitas produksi boiler. Driver Budi (Truk 01) sudah dikonfirmasi.',
     priority: 'High',
@@ -434,17 +431,14 @@ export async function POST(req: NextRequest) {
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
-// Define Role-to-Portal Access Control Matrix (11 Modular Portals)
+// Define Role-to-Portal Access Control Matrix
 const PORTAL_RBAC_MATRIX: Record<string, string[]> = {
-  '/portal/cs': ['Customer Service', 'Super Admin', 'Direksi'],
-  '/portal/purchasing': ['VP Procurement', 'Purchasing Officer', 'Super Admin', 'Direksi'],
   '/portal/legal': ['Legal Counsel', 'QHSE Officer', 'Super Admin', 'Direksi'],
   '/portal/pemasaran': ['Commercial VP', 'Account Executive', 'Super Admin', 'Direksi'],
   '/portal/keuangan': ['Chief Financial Officer', 'Treasury Manager', 'Tax Accountant', 'Super Admin', 'Direksi'],
   '/portal/hr': ['HR VP', 'Payroll Specialist', 'Super Admin', 'Direksi'],
   '/portal/armada': ['Fleet Manager', 'Dispatcher', 'Super Admin', 'Direksi'],
   '/portal/skid': ['Skid Tank Logistics Lead', 'QHSE Officer', 'Super Admin', 'Direksi'],
-  '/portal/pusat': ['Super Admin', 'Global Root Authority', 'Direksi'],
   '/portal/direksi': ['Direksi', 'Executive Board', 'Super Admin'],
   '/portal/stasiun': ['Mother Station Engineer', 'SCADA Operator', 'Super Admin', 'Direksi'],
   '/portal/industrial': ['Industrial Operations Lead', 'Super Admin', 'Direksi'],
@@ -569,7 +563,7 @@ FOR INSERT WITH CHECK (
 ## 🚀 6. Next Steps & DevSecOps Roadmap
 
 1. **Deploy API Hardening**: Apply **Fix 1** and **Fix 2** into `Ecosystem/src/app/api/inbox/` to immediately protect against XSS and unrestricted script file uploads.
-2. **Activate RBAC Middleware**: Place **Fix 3** (`src/middleware.ts`) into the Next.js root to establish boundary enforcement across all 11 enterprise portals.
+2. **Activate RBAC Middleware**: Place **Fix 3** (`src/middleware.ts`) into the Next.js root to establish boundary enforcement across 8 enterprise portals.
 3. **Execute SQL Hardening**: Run **Fix 4** in the Supabase production SQL console to lock down RLS and custody transfer billing immutability.
 4. **CI/CD Integration**: Integrate `./.agents/skills/security-auditor/scripts/scan_security.sh` as a mandatory pre-commit or GitHub Actions CI step to prevent future secret leaks.
 

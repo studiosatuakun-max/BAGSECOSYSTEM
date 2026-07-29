@@ -15,7 +15,7 @@ export const MOCK_SALES_LEADS_INDUSTRI: SalesLead[] = [
   {
     id: 'lead-002',
     company_name: 'PT DEF Chemical',
-    contact_person: 'Ibu Siti (Purchasing)',
+    contact_person: 'Ibu Siti (Procurement)',
     phone_number: '0813-9876-5432',
     segment: 'Industri',
     pipeline_stage: 'Dealing_Closed_Won',

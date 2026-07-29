@@ -162,7 +162,7 @@ export default function LegalDashboardPage() {
         }
       />
 
-      {/* Gold Benchmark Spacing & Width matching /portal/purchasing & /portal/hr */}
+      {/* Gold Benchmark Spacing & Width matching /portal/hr */}
       <main className="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 xl:px-10 2xl:px-12 pt-10 pb-12 space-y-8 flex-1 w-full">
         {/* EXECUTIVE ACRYLIC HERO BANNER */}
         <div className="bg-gradient-to-r from-indigo-950 via-slate-900 to-purple-950 rounded-3xl p-6 sm:p-8 text-white shadow-xl relative overflow-hidden border border-indigo-500/30 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 animate-in fade-in slide-in-from-top-4 duration-500">

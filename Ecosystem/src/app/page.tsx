@@ -1,9 +1,9 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, Suspense } from 'react';
 import Link from 'next/link';
+import { useRouter, useSearchParams } from 'next/navigation';
 import Icon from '@/components/ui/AppIcon';
-import { supabase } from '@/lib/supabaseClient';
 
 const demoAccounts = [
   { role: 'Super Admin', email: 'admin@baskara.id', pwd: 'password123', icon: 'ShieldCheckIcon', color: 'bg-white/20 hover:bg-white/35 text-white border-white/40 backdrop-blur-md shadow-md hover:scale-[1.02]' },
@@ -12,46 +12,56 @@ const demoAccounts = [
   { role: 'HR Manager', email: 'hr@baskara.id', pwd: 'password123', icon: 'UsersIcon', color: 'bg-white/20 hover:bg-white/35 text-white border-white/40 backdrop-blur-md shadow-md hover:scale-[1.02]' },
 ];
 
-export default function LoginPage() {
+// LoginForm harus dipisah agar useSearchParams bisa dibungkus Suspense
+function LoginForm() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
-  const [selectedRole, setSelectedRole] = useState('Super Admin');
-
-  const handleAutoFill = (acc: any) => {
+  const handleAutoFill = (acc: { email: string; pwd: string }) => {
     setEmail(acc.email);
     setPassword(acc.pwd);
-    setSelectedRole(acc.role);
+    setErrorMsg(null);
   };
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!email || !password) return alert('Please enter email and password');
-    
-    setIsLoading(true);
-    
-    // Attempt Supabase Authentication
-    const { data, error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
+    setErrorMsg(null);
 
-    setIsLoading(false);
-
-    if (error) {
-      console.warn('Supabase Auth Error:', error.message);
-      // Suppress alert for a seamless demo experience
-    } else {
-      console.log('Supabase Auth Success!', data);
+    if (!email || !password) {
+      setErrorMsg('Email dan password wajib diisi.');
+      return;
     }
 
-    // Set demo authentication cookies for RBAC middleware support
-    document.cookie = `sb-access-token=demo-authenticated-token; path=/; max-age=86400; SameSite=Lax`;
-    document.cookie = `user_role_claim=${encodeURIComponent(selectedRole)}; path=/; max-age=86400; SameSite=Lax`;
+    setIsLoading(true);
 
-    // Redirect to dashboard
-    window.location.href = '/dashboard';
+    try {
+      // Call server-side API route (Zod validated + sets httpOnly cookies)
+      const res = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password }),
+      });
+
+      const json = await res.json();
+
+      if (!res.ok || !json.success) {
+        setErrorMsg(json.error ?? 'Login gagal. Periksa kembali kredensial Anda.');
+        setIsLoading(false);
+        return;
+      }
+
+      // Redirect ke portal sesuai role, atau ke redirect param jika ada
+      const redirectTo = searchParams.get('redirect') ?? json.redirectTo ?? '/dashboard';
+      router.push(redirectTo);
+      router.refresh(); // Force middleware re-check dengan session baru
+    } catch {
+      setErrorMsg('Koneksi gagal. Periksa jaringan dan coba lagi.');
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -158,6 +168,14 @@ export default function LoginPage() {
               </div>
             </div>
 
+            {/* Error Message Display */}
+            {errorMsg && (
+              <div className="flex items-start gap-2.5 p-3.5 rounded-xl bg-red-500/15 border border-red-400/40 backdrop-blur-md">
+                <Icon name="ExclamationCircleIcon" size={18} className="text-red-400 shrink-0 mt-0.5" />
+                <p className="text-xs font-semibold text-red-300 leading-relaxed">{errorMsg}</p>
+              </div>
+            )}
+
             <button 
               type="submit"
               disabled={isLoading}
@@ -202,5 +220,21 @@ export default function LoginPage() {
         &copy; {new Date().getFullYear()} PT Baskara Asri Ghas. All rights reserved.
       </div>
     </div>
+  );
+}
+
+// Wrapper dengan Suspense boundary — wajib di Next.js 15 App Router
+// karena useSearchParams() menyebabkan CSR bailout tanpa Suspense
+export default function LoginPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-screen flex items-center justify-center bg-slate-950">
+          <div className="w-6 h-6 border-2 border-indigo-400/30 border-t-indigo-400 rounded-full animate-spin" />
+        </div>
+      }
+    >
+      <LoginForm />
+    </Suspense>
   );
 }

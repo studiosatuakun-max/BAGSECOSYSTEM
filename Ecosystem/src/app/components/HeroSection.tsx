@@ -93,7 +93,6 @@ export default function HeroSection() {
 
             <p className="text-white font-normal mb-8 max-w-xl leading-relaxed" style={{ fontSize: '15px', opacity: 0.78 }}>
               Unified operational command for CNG distribution, fleet management,
-              customer service, and financial control across all BaGS divisions.
             </p>
 
             {/* Stats row */}

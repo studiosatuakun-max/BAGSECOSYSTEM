@@ -47,19 +47,16 @@ BagsEcosystem/
 
 ---
 
-## 🌟 Daftar 11 Modul Portal Operasional (BASKARA Gold Benchmark)
+## 🌟 Daftar 9 Modul Portal Operasional (BASKARA Gold Benchmark)
 
 1. **`/portal/stasiun`** — Mother Station Production, Compression & ATEX Zone 1 Console.
 2. **`/portal/skid`** — B2B Industrial Client Portal & Custody Transfer Manifold 250 Bar.
 3. **`/portal/armada`** — GPS Fleet Dispatch, Prime Mover & Hazard Tracking.
-4. **`/portal/purchasing`** — Procurement, Parts Criticality & Vendor Management.
-5. **`/portal/legal`** — Contracts, SLAs, MIGAS Niaga Bumi & Metrologi Permits.
-6. **`/portal/keuangan`** — Finance, Invoicing Engine & DJP E-Faktur Integration.
-7. **`/portal/hr`** — Enterprise Personnel, Organization & Payroll.
-8. **`/portal/cs`** — Customer Service Ticketing & Dispatch Assistance.
-9. **`/portal/pemasaran`** — Commercial CRM & AE Pipeline Quotation.
-10. **`/portal/pusat`** — Super Admin Console, Global Pricing & Tenant Management.
-11. **`/portal/direksi`** — Executive BI Dashboard (B2B & B2C Analytics).
+4. **`/portal/legal`** — Contracts, SLAs, MIGAS Niaga Bumi & Metrologi Permits.
+5. **`/portal/keuangan`** — Finance, Invoicing Engine & DJP E-Faktur Integration.
+6. **`/portal/hr`** — Enterprise Personnel, Organization & Payroll.
+7. **`/portal/pemasaran`** — Commercial CRM & AE Pipeline Quotation.
+8. **`/portal/direksi`** — Executive BI Dashboard (B2B & B2C Analytics).
 
 ---
 *© 2026 BASKARA CNG Ecosystem — All Rights Reserved.*

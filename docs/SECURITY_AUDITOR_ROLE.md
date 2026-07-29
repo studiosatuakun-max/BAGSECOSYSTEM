@@ -69,16 +69,13 @@ The security customization role is modularly organized in the `.agents/` directo
 
 ### Domain D: Role-Based Access Control (RBAC) Across 11 Portals
 Enforcing strict separation of duties across all modular portals:
-1. `/portal/cs` — Customer Service & Dispatch Ticketing
-2. `/portal/purchasing` — Procurement, Parts & Vendor POs
-3. `/portal/legal` — Contracts, SLAs & MIGAS Permits
-4. `/portal/pemasaran` — Commercial CRM & AE Quotations
-5. `/portal/keuangan` — Invoices, Tax & Treasury Cash Flow
-6. `/portal/hr` — Enterprise Personnel, Org & Payroll
-7. `/portal/armada` — Fleet Maintenance & GPS Telemetry
-8. `/portal/skid` — Skid Tank ISO 11120 & Custody Transfer
-9. `/portal/pusat` — Central Admin & User Governance
-10. `/portal/direksi` (B2B / B2C) — Executive Board Monitoring
+1. `/portal/legal` — Contracts, MIGAS SLA & Permits
+2. `/portal/pemasaran` — Commercial CRM & AE Quotations
+3. `/portal/keuangan` — Invoices, Tax & Treasury Cash Flow
+4. `/portal/hr` — Enterprise Personnel, Org & Payroll
+5. `/portal/armada` — Fleet Maintenance & GPS Telemetry
+6. `/portal/skid` — Skid Tank ISO 11120 & Custody Transfer
+7. `/portal/direksi` (B2B / B2C) — Executive Board Telemetry
 
 ---
 

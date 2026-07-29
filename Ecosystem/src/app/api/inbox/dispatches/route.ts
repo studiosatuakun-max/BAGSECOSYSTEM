@@ -61,10 +61,7 @@ const MOCK_DISPATCHES: DispatchItem[] = [
   },
   {
     id: 'dsp-2',
-    sender_division: 'Purchasing',
-    receiver_division: 'Stasiun CNG (Mother Station)',
-    subject: 'Konfirm Jadwal Kedatangan Sparepart Kompresor Ariell',
-    content: 'Tim Stasiun CNG, kami informasikan bahwa suku cadang seal ring dan oli hidrolik untuk kompresor utama sudah tiba di gudang pusat Surabaya. Mohon tim teknisi stasiun melakukan pengecekan fisik dan penjadwalan instalasi pada shift malam besok.',
+    sender_division: 'Stasiun CNG (Mother Station)',
     priority: 'High',
     status: 'In Review',
     created_at: new Date(Date.now() - 1000 * 60 * 180).toISOString(),
@@ -95,9 +92,7 @@ const MOCK_DISPATCHES: DispatchItem[] = [
   },
   {
     id: 'dsp-4',
-    sender_division: 'Customer Service',
-    receiver_division: 'Fleet & Transport',
-    subject: 'Laporan Pelanggan: Penyesuaian Waktu Bongkar PT Jatim Steel',
+    sender_division: 'Fleet & Transport',
     content: 'Menginfokan bahwa PT Jatim Steel meminta percepatan waktu bongkar muat CNG dari jam 14.00 menjadi jam 10.00 WIB untuk pengiriman besok pagi dikarenakan peningkatan kapasitas produksi boiler. Driver Budi (Truk 01) sudah dikonfirmasi.',
     priority: 'High',
     status: 'Resolved',

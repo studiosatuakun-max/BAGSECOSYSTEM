@@ -10,7 +10,7 @@ When generating or modifying source code, all agents MUST adhere to the followin
 - **SCADA & Telemetry Integrity**: Any telemetry simulation or ingestion for Mother Station manifold pressure (250 Bar CNG), Custody Transfer E-Faktur billing, or fleet GPS tracking must enforce strict type safety and boundary validation.
 
 ## 👑 2. UI/UX Gold Benchmark Aesthetics
-- Maintain the **BASKARA Gold Benchmark** across all 11 modular portals (`/portal/cs`, `/portal/purchasing`, `/portal/legal`, `/portal/pemasaran`, `/portal/keuangan`, `/portal/hr`, `/portal/armada`, `/portal/skid`, `/portal/pusat`, `/portal/direksi` B2B/B2C).
+- Maintain the **BASKARA Gold Benchmark** across all 8 modular portals (`/portal/legal`, `/portal/pemasaran`, `/portal/keuangan`, `/portal/hr`, `/portal/armada`, `/portal/skid`, `/portal/direksi` B2B/B2C, `/portal/stasiun`, `/portal/industrial`, `/portal/horeca`, `/portal/pwa`).
 - Use **Deep Dark Acrylic Gradients**, frosted glassmorphism (`backdrop-blur-md`), responsive 2:1 bento grid ratios, and interactive micro-animations.
 - Enforce full screen container width: `max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 xl:px-10 2xl:px-12 pt-10 pb-12 space-y-8 flex-1 w-full`.
 - **Clean Footer Rule**: Never add redundant attribution text lines right above `<Footer />`.
