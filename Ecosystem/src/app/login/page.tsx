@@ -74,7 +74,7 @@ function LoginContent() {
   };
 
   return (
-    <div className="min-h-screen bg-background relative flex flex-col items-center justify-center p-6 md:p-12 overflow-hidden">
+    <div className="min-h-screen bg-slate-950 relative flex flex-col items-center justify-center p-6 md:p-12 overflow-hidden">
       {/* Background Ambience */}
       <div className="absolute inset-0 pointer-events-none z-0">
         <div className="grain-overlay" aria-hidden="true" />

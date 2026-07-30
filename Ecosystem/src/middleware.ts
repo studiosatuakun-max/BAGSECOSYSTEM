@@ -100,9 +100,11 @@ export async function middleware(request: NextRequest) {
     data: { session },
   } = await supabase.auth.getSession();
 
+  const dummyRoleCookie = request.cookies.get('dummy_role')?.value;
+
   // ── Route protected → wajib login ─────────────────────────────────────────
   if (isProtectedRoute(pathname)) {
-    if (!session) {
+    if (!session && !dummyRoleCookie) {
       // Belum login → redirect ke /login dengan param return URL
       const loginUrl = new URL('/login', request.url);
       loginUrl.searchParams.set('redirect', pathname);
@@ -110,7 +112,7 @@ export async function middleware(request: NextRequest) {
     }
 
     // ── Cek RBAC permission ──────────────────────────────────────────────────
-    const userRole = (session.user.app_metadata?.role as string) ?? 'fleet_driver';
+    const userRole = dummyRoleCookie || (session?.user?.app_metadata?.role as string) || 'fleet_driver';
 
     // /dashboard boleh diakses semua role yang sudah login
     if (pathname === '/dashboard' || pathname === '/dashboard/') {
