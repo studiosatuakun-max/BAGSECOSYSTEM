@@ -8,9 +8,10 @@ Dokumen ini melacak status integrasi SOP, UI/UX, dan implementasi fitur khusus u
 - [x] Fase 3: Implementasi UI (Bento Grid, Tabel, Modal)
 - [x] Fase 4: Integrasi Form (Anti-Fraud / Hardware IoT)
 - [x] Fase 5: Final Review & Build Test
+- [x] Phase 4B: Supabase Migration (Server Components + Server Actions)
 
 ## 📝 Catatan Harian / Blokir
-* (Semua fase sudah lengkap — modul siap presentasi ke Direksi. Tidak ada blokir.)
+- [x] 2026-07-30 — Phase 4B: Migrated to async Server Components + `'use server'` Server Actions. `horeca_clients` table with extended columns (`supply_type`, `mtd_revenue_idr`, `utilized_sm3`). recharts extracted to `HorecaChartsClient` (`'use client'`). `HorecaTableClient` with inline mock fallback. `createSupabaseServerClient()` awaited. `npm run build` 0 errors.
 
 ---
 

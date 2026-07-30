@@ -1,101 +1,30 @@
-'use client';
-
-import React, { useState, useMemo } from 'react';
+import { getCustodyTransfers } from './_integration/actions';
+import { toast } from 'sonner';
 import PortalHeader from '@/components/PortalHeader';
 import Footer from '@/components/Footer';
 import Icon from '@/components/ui/AppIcon';
 import CustodyTransferTableCard from './components/CustodyTransferTableCard';
-import { toast } from 'sonner';
-
-// Import our upgraded B2B Skid & Custody Transfer client components
 import TankInfoCard from './components/TankInfoCard';
 import PressureGaugeCard from './components/PressureGaugeCard';
 import ConsumptionTrendCard from './components/ConsumptionTrendCard';
 import LatestInvoiceCard from './components/LatestInvoiceCard';
 import EmergencyRefillCard from './components/EmergencyRefillCard';
+import { CustodyTransferSlip } from './_integration/types';
 
-
-
-
-
-export default function SkidPortalDashboardPage() {
-  
-  
-  
-
-  // Modal State
-  
-  
-  
-
-  const handleOpenModal = (mode: 'create' | 'edit', order?: CustodyOrder) => {
-    setModalMode(mode);
-    if (mode === 'edit' && order) {
-      setFormData(order);
-    } else {
-      setFormData({
-        id: `PO-CNG-2026-0${Math.floor(10 + Math.random() * 89)}`,
-        client: 'PT Krakatau Baja Smelter',
-        fleet: 'Skid B 9120 VGL (Tube 40ft)',
-        driver: 'Ahmad Fauzi (ATEX SIO)',
-        volume: '3,500 Sm³ (125 MMBTU)',
-        pressure: '240 Bar',
-        date: 'Jul 28, 2026 · 10:00',
-        stat: 'Processing',
-        verifier: 'Rina Wulandari (QHSE)',
-      });
-    }
-    setIsModalOpen(true);
-  };
-
-  const handleCloseModal = () => setIsModalOpen(false);
-
-  const handleSave = () => {
-    if (!formData.date || !formData.client) {
-      toast.error('Gagal Menyimpan', { description: 'Nama Klien dan Tanggal Pengiriman wajib diisi.' });
-      return;
-    }
-    if (modalMode === 'create') {
-      setOrders([formData, ...orders]);
-      toast.success('Order Pengiriman Skid Dibuat', {
-        description: `${formData.id} untuk ${formData.client} berhasil dijadwalkan.`,
-      });
-    } else {
-      setOrders(orders.map((o) => (o.id === formData.id ? formData : o)));
-      toast.success('Order Pengiriman Diperbarui', {
-        description: `Perubahan jadwal dan telemetri ${formData.id} berhasil disimpan.`,
-      });
-    }
-    handleCloseModal();
-  };
-
-  const handleDelete = (id: string) => {
-    if (confirm('Apakah Anda yakin ingin menghapus catatan pengantaran Skid ini?')) {
-      setOrders(orders.filter((o) => o.id !== id));
-      toast.info('Order Dihapus', { description: `Nomor PO ${id} telah dihapus dari log Custody Transfer.` });
-    }
-  };
-
-  const handleSyncTelemetry = () => {
-    toast.promise(
-      new Promise((resolve) => setTimeout(resolve, 1500)),
-      {
-        loading: 'Menghubungkan ke Mother Station SCADA & Manifold PRMS...',
-        success: 'Telemetri Tekanan, Volume Sm³, & E-Faktur berhasil disinkronkan 100%!',
-        error: 'Gagal menyinkronkan telemetri.',
-      }
-    );
-  };
-
-  // Filtered Orders
-  
+export default async function SkidPortalDashboardPage() {
+  let slips: CustodyTransferSlip[] = [];
+  try {
+    const result = await getCustodyTransfers();
+    slips = result.data as unknown as CustodyTransferSlip[];
+  } catch {
+    slips = [];
+  }
 
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-slate-950 font-sans text-slate-900 dark:text-slate-100 transition-colors duration-300 flex flex-col">
-      {/* Top Header */}
       <PortalHeader
         title="SkidPortal B2B"
-        subtitle="Industrial Client Portal & Custody Transfer"
+        subtitle="Industrial Client Portal &amp; Custody Transfer"
         roleBadge="B2B Client & SCADA Access"
         roleColor="indigo"
         showInbox={true}
@@ -110,9 +39,8 @@ export default function SkidPortalDashboardPage() {
         }
       />
 
-      {/* Gold Benchmark Spacing & Width matching /portal/hr */}
       <main className="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 xl:px-10 2xl:px-12 pt-10 pb-12 space-y-8 flex-1 w-full">
-        {/* EXECUTIVE ACRYLIC HERO BANNER (Standardized 100% with HR & Stasiun) */}
+        {/* EXECUTIVE ACRYLIC HERO BANNER */}
         <div className="bg-gradient-to-r from-indigo-950 via-slate-900 to-blue-950 rounded-3xl p-6 sm:p-8 text-white shadow-xl relative overflow-hidden border border-indigo-500/30 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 animate-in fade-in slide-in-from-top-4 duration-500">
           <div className="absolute -right-10 -bottom-10 w-60 h-60 bg-blue-500/15 rounded-full blur-3xl pointer-events-none" />
           <div className="absolute right-1/3 -top-12 w-48 h-48 bg-indigo-500/15 rounded-full blur-2xl pointer-events-none" />
@@ -120,35 +48,29 @@ export default function SkidPortalDashboardPage() {
           <div className="space-y-2 max-w-3xl z-10">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-500/20 backdrop-blur-md border border-indigo-500/30 text-xs font-bold text-indigo-300 whitespace-nowrap shrink-0 align-middle shadow-2xs">
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-              <span>ISO 11120 Tube Manifold Monitoring · Custody Transfer Billing Active</span>
+              <span>ISO 11120 Tube Manifold Monitoring &middot; Custody Transfer Billing Active</span>
             </div>
             <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-white drop-shadow-md">
               Skid Tank &amp; Custody Transfer Control Center
             </h1>
             <p className="text-xs sm:text-sm text-slate-300 leading-relaxed font-medium">
-              Pusat kendali telemetri tekanan manifold 250 Bar, laju pembakaran Sm³/hari, serta verifikasi bongkar muat (Custody Transfer) dan otomatisasi E-Faktur penagihan gas CNG industri B2B secara terintegrasi.
+              Pusat kendali telemetri tekanan manifold 250 Bar, laju pembakaran Sm&sup3;/hari, serta verifikasi bongkar muat (Custody Transfer) dan otomatisasi E-Faktur penagihan gas CNG industri B2B secara terintegrasi.
             </p>
           </div>
 
           <div className="flex flex-wrap sm:flex-nowrap items-center gap-3 shrink-0 z-10 self-stretch sm:self-auto justify-center">
-            <button
-              onClick={handleSyncTelemetry}
-              className="px-5 py-3 font-extrabold rounded-2xl text-xs sm:text-sm bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-500 hover:to-blue-500 text-white shadow-lg shadow-indigo-500/30 transition-all flex items-center justify-center gap-2.5 active:scale-95 whitespace-nowrap cursor-pointer"
-            >
-              <Icon name="ArrowPathIcon" size={18} className="animate-spin-hover text-white" />
+            <button className="px-5 py-3 font-extrabold rounded-2xl text-xs sm:text-sm bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-500 hover:to-blue-500 text-white shadow-lg shadow-indigo-500/30 transition-all flex items-center justify-center gap-2.5 active:scale-95 whitespace-nowrap cursor-pointer">
+              <Icon name="ArrowPathIcon" size={18} />
               <span>Sync SCADA &amp; E-Faktur</span>
             </button>
-            <button
-              onClick={() => handleOpenModal('create')}
-              className="px-5 py-3 font-extrabold rounded-2xl text-xs sm:text-sm bg-white/10 hover:bg-white/20 text-white border border-white/20 backdrop-blur-md shadow-lg transition-all flex items-center justify-center gap-2 active:scale-95 whitespace-nowrap cursor-pointer"
-            >
-              <Icon name="PlusIcon" size={18} className="text-indigo-300" />
+            <button className="px-5 py-3 font-extrabold rounded-2xl text-xs sm:text-sm bg-white/10 hover:bg-white/20 text-white border border-white/20 backdrop-blur-md shadow-lg transition-all flex items-center justify-center gap-2 active:scale-95 whitespace-nowrap cursor-pointer">
+              <Icon name="PlusIcon" size={18} />
               <span>New Delivery PO</span>
             </button>
           </div>
         </div>
 
-        {/* ROW 1: EXECUTIVE HERO METRICS (4 CARDS) WITH DEEP DARK ACRYLIC GRADIENTS MATCHING HR */}
+        {/* ROW 1: EXECUTIVE HERO METRICS */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-5">
           {/* Card 1: Total Delivery Volume */}
           <div className="bg-gradient-to-br from-purple-900 via-purple-950 to-slate-950 text-white p-6 rounded-3xl border border-purple-800/60 shadow-xl relative overflow-hidden flex flex-col justify-between group hover:border-purple-500 hover:-translate-y-1.5 hover:shadow-2xl hover:shadow-purple-950/50 transition-all duration-300 animate-in fade-in slide-in-from-bottom-6 duration-700">
@@ -160,11 +82,11 @@ export default function SkidPortalDashboardPage() {
                   <span>Total Delivery Volume</span>
                 </span>
                 <span className="inline-flex items-center px-2 py-0.5 rounded-md text-[10px] font-black bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 whitespace-nowrap">
-                  ↑ 8.4% Q3
+                  &uarr; 8.4% Q3
                 </span>
               </div>
               <div className="text-3xl sm:text-4xl font-black text-white tracking-tight tabular-nums my-1">
-                12,450 <span className="text-sm font-bold text-purple-400 uppercase">Sm³/day</span>
+                12,450 <span className="text-sm font-bold text-purple-400 uppercase">Sm&sup3;/day</span>
               </div>
             </div>
             <div className="mt-4 pt-3 border-t border-purple-800/60 flex items-center justify-between text-xs text-slate-300 font-medium">
@@ -243,7 +165,7 @@ export default function SkidPortalDashboardPage() {
           </div>
         </div>
 
-        {/* ROW 2: ASYMMETRIC 2:1 BENTO GRID (Breathing Room Matching HR) */}
+        {/* ROW 2: ASYMMETRIC 2:1 BENTO GRID */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <div className="col-span-1 lg:col-span-2">
             <ConsumptionTrendCard />
@@ -266,10 +188,10 @@ export default function SkidPortalDashboardPage() {
           </div>
         </div>
 
-                <div className="animate-in fade-in slide-in-from-bottom-6 duration-700 delay-300 fill-mode-both">
-          <CustodyTransferTableCard />
+        {/* ROW 4: CUSTODY TRANSFER TABLE */}
+        <div className="animate-in fade-in slide-in-from-bottom-6 duration-700 delay-300 fill-mode-both">
+          <CustodyTransferTableCard initialSlips={slips} />
         </div>
-
       </main>
 
       <Footer />

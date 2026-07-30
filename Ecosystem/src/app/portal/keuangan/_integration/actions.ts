@@ -9,7 +9,7 @@ export async function getInvoicesIndustri(): Promise<{
   data: Record<string, unknown>[] | null;
   error: string | null;
 }> {
-  const supabase = createSupabaseServerClient();
+  const supabase = await createSupabaseServerClient();
   const { data, error } = await supabase
     .from('invoices_industri')
     .select('*, invoice_items_industri(*)')
@@ -23,7 +23,7 @@ export async function getInvoiceIndustriById(id: string): Promise<{
   data: Record<string, unknown> | null;
   error: string | null;
 }> {
-  const supabase = createSupabaseServerClient();
+  const supabase = await createSupabaseServerClient();
   const { data, error } = await supabase
     .from('invoices_industri')
     .select('*, invoice_items_industri(*)')
@@ -53,7 +53,7 @@ export async function createInvoiceIndustri(payload: {
   status: 'Draft' | 'Issued' | 'Paid' | 'Overdue' | 'Cancelled';
   items: { description: string; volume_mmbtu: number; unit_price_usd: number; subtotal_usd: number }[];
 }): Promise<{ data: Record<string, unknown> | null; error: string | null }> {
-  const supabase = createSupabaseServerClient();
+  const supabase = await createSupabaseServerClient();
 
   const { data: invoice, error: invError } = await supabase
     .from('invoices_industri')
@@ -103,7 +103,7 @@ export async function updateInvoiceIndustriStatus(
   id: string,
   status: 'Draft' | 'Issued' | 'Paid' | 'Overdue' | 'Cancelled'
 ): Promise<{ error: string | null }> {
-  const supabase = createSupabaseServerClient();
+  const supabase = await createSupabaseServerClient();
   const payload: Record<string, unknown> = { status };
   if (status === 'Paid') {
     payload.paid_at = new Date().toISOString();
@@ -119,7 +119,7 @@ export async function updateInvoiceIndustriStatus(
 }
 
 export async function deleteInvoiceIndustri(id: string): Promise<{ error: string | null }> {
-  const supabase = createSupabaseServerClient();
+  const supabase = await createSupabaseServerClient();
   const { error } = await supabase.from('invoices_industri').delete().eq('id', id);
   if (!error) revalidatePath('/portal/keuangan');
   return { error: error?.message ?? null };
@@ -131,7 +131,7 @@ export async function getInvoicesHoreca(): Promise<{
   data: Record<string, unknown>[] | null;
   error: string | null;
 }> {
-  const supabase = createSupabaseServerClient();
+  const supabase = await createSupabaseServerClient();
   const { data, error } = await supabase
     .from('invoices_horeca')
     .select('*')
@@ -156,7 +156,7 @@ export async function createInvoiceHoreca(payload: {
   payment_term: 'COD' | 'Termin' | 'Cash_Deposit';
   status: 'Draft' | 'Issued' | 'Paid' | 'Overdue' | 'Cancelled';
 }): Promise<{ data: Record<string, unknown> | null; error: string | null }> {
-  const supabase = createSupabaseServerClient();
+  const supabase = await createSupabaseServerClient();
   const { data, error } = await supabase
     .from('invoices_horeca')
     .insert(payload)
@@ -171,7 +171,7 @@ export async function updateInvoiceHorecaStatus(
   id: string,
   status: 'Draft' | 'Issued' | 'Paid' | 'Overdue' | 'Cancelled'
 ): Promise<{ error: string | null }> {
-  const supabase = createSupabaseServerClient();
+  const supabase = await createSupabaseServerClient();
   const payload: Record<string, unknown> = { status };
   if (status === 'Paid') {
     payload.paid_at = new Date().toISOString();
@@ -196,7 +196,7 @@ export async function getKeuanganSummary(): Promise<{
   paidCount: number;
   overdueCount: number;
 }> {
-  const supabase = createSupabaseServerClient();
+  const supabase = await createSupabaseServerClient();
 
   const { data: invInd } = await supabase
     .from('invoices_industri')

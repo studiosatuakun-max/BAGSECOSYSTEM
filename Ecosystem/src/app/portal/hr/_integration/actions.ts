@@ -9,7 +9,7 @@ export async function getEmployees(): Promise<{
   data: Record<string, unknown>[] | null;
   error: string | null;
 }> {
-  const supabase = createSupabaseServerClient();
+  const supabase = await createSupabaseServerClient();
   const { data, error } = await supabase
     .from('employees')
     .select('*')
@@ -27,7 +27,7 @@ export async function createEmployee(payload: {
   hire_date?: string;
   employment_status?: string;
 }): Promise<{ data: Record<string, unknown> | null; error: string | null }> {
-  const supabase = createSupabaseServerClient();
+  const supabase = await createSupabaseServerClient();
   const { data, error } = await supabase
     .from('employees')
     .insert(payload)
@@ -42,7 +42,7 @@ export async function updateEmployee(
   id: string,
   payload: Record<string, unknown>
 ): Promise<{ error: string | null }> {
-  const supabase = createSupabaseServerClient();
+  const supabase = await createSupabaseServerClient();
   const { error } = await supabase
     .from('employees')
     .update(payload)
@@ -58,7 +58,7 @@ export async function getEmployeeTrainings(): Promise<{
   data: Record<string, unknown>[] | null;
   error: string | null;
 }> {
-  const supabase = createSupabaseServerClient();
+  const supabase = await createSupabaseServerClient();
   const { data, error } = await supabase
     .from('employee_trainings')
     .select('*')
@@ -79,7 +79,7 @@ export async function createTraining(payload: {
   material_doc_url?: string;
   notes?: string;
 }): Promise<{ data: Record<string, unknown> | null; error: string | null }> {
-  const supabase = createSupabaseServerClient();
+  const supabase = await createSupabaseServerClient();
   const { data, error } = await supabase
     .from('employee_trainings')
     .insert(payload)
@@ -96,7 +96,7 @@ export async function getShiftSchedules(): Promise<{
   data: Record<string, unknown>[] | null;
   error: string | null;
 }> {
-  const supabase = createSupabaseServerClient();
+  const supabase = await createSupabaseServerClient();
   const { data, error } = await supabase
     .from('shift_schedules')
     .select('*')
@@ -113,7 +113,7 @@ export async function createShiftSchedule(payload: {
   station_location?: string;
   notes?: string;
 }): Promise<{ data: Record<string, unknown> | null; error: string | null }> {
-  const supabase = createSupabaseServerClient();
+  const supabase = await createSupabaseServerClient();
   const { data, error } = await supabase
     .from('shift_schedules')
     .insert(payload)
@@ -128,7 +128,7 @@ export async function updateShiftSchedule(
   id: string,
   payload: Record<string, unknown>
 ): Promise<{ error: string | null }> {
-  const supabase = createSupabaseServerClient();
+  const supabase = await createSupabaseServerClient();
   const { error } = await supabase
     .from('shift_schedules')
     .update(payload)

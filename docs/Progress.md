@@ -153,6 +153,11 @@ To elevate BaGS Ecosystem into an autonomous, next-generation enterprise ERP, we
   - [x] **Pemasaran** (`/portal/pemasaran`) — `actions.ts` Server Actions, `CRMPipelineTableCard` + `MarketingClientUI` migrated to Supabase (`sales_leads`, `marketing_campaigns`), page → Server Component
   - [x] **Legal** (`/portal/legal`) — `actions.ts` Server Actions, `LegalComplianceTableCard` migrated to Supabase (`legal_contracts`, `legal_permits`), page → Server Component
   - [x] **HR** (`/portal/hr`) — `actions.ts` Server Actions, `HRShiftTableCard` migrated to Supabase (`shift_schedules`, `employee_trainings`), `useSocket` WebSocket preserved, page → Server Component
+  - [x] **Armada** (`/portal/armada`) — `actions.ts` Server Actions, `ActiveDeliveriesTableCard` migrated to Supabase (`surat_jalan_cnf`, `delivery_orders_horeca`), charts extracted to `FleetChartsClient` (recharts SSR fix), page → Server Component, `mockData.ts` + `mockArmadaData.ts` deleted
+  - [x] **Stasiun** (`/portal/stasiun`) — `actions.ts` Server Actions, `MasterFuelingTableCard` migrated to Supabase (`master_fueling_records`, `atex_inspections`, `compressor_hour_running`), `Form101Modal` with Alien H9 RFID auth, recharts already in `'use client'` wrappers (`TelemetryChartCard`, `ConsumptionTrendCard`), page → Server Component, `mockStasiunData.ts` deleted
+  - [x] **Skid** (`/portal/skid`) — `actions.ts` Server Actions, `CustodyTransferTableCard` migrated to Supabase (`custody_transfers`), `signCustodyTransfer` action, recharts already in `'use client'` wrappers, page → Server Component, `mockSkidData.ts` deleted
+  - [x] **Industrial** (`/portal/industrial`) — `migration.sql` (extended `industrial_clients`), `actions.ts` Server Actions, recharts extracted to `IndustrialChartsClient` (`'use client'`), `IndustrialTableClient` with inline mock fallback, page → Server Component
+  - [x] **Horeca** (`/portal/horeca`) — `migration.sql` (extended `horeca_clients`), `actions.ts` Server Actions, recharts extracted to `HorecaChartsClient` (`'use client'`), `HorecaTableClient` with inline mock fallback, page → Server Component
 - [ ] **Storage Integration**: Implementasi upload & manajemen file (Bucket `dispatch-attachments`, dokumen kontrak legal, SIO, dll).
 
 ## Phase 5: IoT & Hardware Integration (Edge Computing)

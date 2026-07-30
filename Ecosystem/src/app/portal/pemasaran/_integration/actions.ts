@@ -9,7 +9,7 @@ export async function getSalesLeads(): Promise<{
   data: Record<string, unknown>[] | null;
   error: string | null;
 }> {
-  const supabase = createSupabaseServerClient();
+  const supabase = await createSupabaseServerClient();
   const { data, error } = await supabase
     .from('sales_leads')
     .select('*')
@@ -32,7 +32,7 @@ export async function createSalesLead(payload: {
   competitor_contract_end_date?: string;
   notes?: string;
 }): Promise<{ data: Record<string, unknown> | null; error: string | null }> {
-  const supabase = createSupabaseServerClient();
+  const supabase = await createSupabaseServerClient();
   const { data, error } = await supabase
     .from('sales_leads')
     .insert({ ...payload, pipeline_stage: payload.pipeline_stage ?? 'Perkenalan_Awal' })
@@ -47,7 +47,7 @@ export async function updateLeadStage(
   id: string,
   pipeline_stage: string
 ): Promise<{ error: string | null }> {
-  const supabase = createSupabaseServerClient();
+  const supabase = await createSupabaseServerClient();
   const { error } = await supabase
     .from('sales_leads')
     .update({ pipeline_stage, updated_at: new Date().toISOString() })
@@ -58,7 +58,7 @@ export async function updateLeadStage(
 }
 
 export async function deleteSalesLead(id: string): Promise<{ error: string | null }> {
-  const supabase = createSupabaseServerClient();
+  const supabase = await createSupabaseServerClient();
   const { error } = await supabase.from('sales_leads').delete().eq('id', id);
   if (!error) revalidatePath('/portal/pemasaran');
   return { error: error?.message ?? null };
@@ -70,7 +70,7 @@ export async function getMarketingCampaigns(): Promise<{
   data: Record<string, unknown>[] | null;
   error: string | null;
 }> {
-  const supabase = createSupabaseServerClient();
+  const supabase = await createSupabaseServerClient();
   const { data, error } = await supabase
     .from('marketing_campaigns')
     .select('*')
@@ -89,7 +89,7 @@ export async function createMarketingCampaign(payload: {
   budget_idr: number;
   notes?: string;
 }): Promise<{ data: Record<string, unknown> | null; error: string | null }> {
-  const supabase = createSupabaseServerClient();
+  const supabase = await createSupabaseServerClient();
   const { data, error } = await supabase
     .from('marketing_campaigns')
     .insert(payload)
@@ -104,7 +104,7 @@ export async function updateCampaignStatus(
   id: string,
   status: string
 ): Promise<{ error: string | null }> {
-  const supabase = createSupabaseServerClient();
+  const supabase = await createSupabaseServerClient();
   const { error } = await supabase
     .from('marketing_campaigns')
     .update({ status })

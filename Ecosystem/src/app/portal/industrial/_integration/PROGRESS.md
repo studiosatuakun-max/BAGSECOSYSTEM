@@ -10,7 +10,7 @@ Dokumen ini melacak status integrasi SOP, UI/UX, dan implementasi fitur khusus u
 - [x] Fase 5: Final Review & Build Test
 
 ## 📝 Catatan Harian / Blokir
-* (Semua fase sudah lengkap — modul siap presentasi ke Direksi B2B. Tidak ada blokir.)
+- [x] 2026-07-30 — Phase 4B: Migrated to async Server Components + `'use server'` Server Actions. `industrial_clients` table with extended columns (`supply_method`, `mtd_revenue_idr`, `utilized_quota_mmbtu`). recharts extracted to `IndustrialChartsClient` (`'use client'`). `IndustrialTableClient` with inline mock fallback. `createSupabaseServerClient()` awaited. `npm run build` 0 errors.
 
 ---
 

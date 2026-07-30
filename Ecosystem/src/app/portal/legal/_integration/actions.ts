@@ -9,7 +9,7 @@ export async function getLegalContracts(): Promise<{
   data: Record<string, unknown>[] | null;
   error: string | null;
 }> {
-  const supabase = createSupabaseServerClient();
+  const supabase = await createSupabaseServerClient();
   const { data, error } = await supabase
     .from('legal_contracts')
     .select('*')
@@ -36,7 +36,7 @@ export async function createLegalContract(payload: {
   status?: string;
   notes?: string;
 }): Promise<{ data: Record<string, unknown> | null; error: string | null }> {
-  const supabase = createSupabaseServerClient();
+  const supabase = await createSupabaseServerClient();
   const { data, error } = await supabase
     .from('legal_contracts')
     .insert(payload)
@@ -51,7 +51,7 @@ export async function updateContractStatus(
   id: string,
   status: string
 ): Promise<{ error: string | null }> {
-  const supabase = createSupabaseServerClient();
+  const supabase = await createSupabaseServerClient();
   const { error } = await supabase
     .from('legal_contracts')
     .update({ status })
@@ -62,7 +62,7 @@ export async function updateContractStatus(
 }
 
 export async function deleteLegalContract(id: string): Promise<{ error: string | null }> {
-  const supabase = createSupabaseServerClient();
+  const supabase = await createSupabaseServerClient();
   const { error } = await supabase.from('legal_contracts').delete().eq('id', id);
   if (!error) revalidatePath('/portal/legal');
   return { error: error?.message ?? null };
@@ -74,7 +74,7 @@ export async function getLegalPermits(): Promise<{
   data: Record<string, unknown>[] | null;
   error: string | null;
 }> {
-  const supabase = createSupabaseServerClient();
+  const supabase = await createSupabaseServerClient();
   const { data, error } = await supabase
     .from('legal_permits')
     .select('*')
@@ -94,7 +94,7 @@ export async function createLegalPermit(payload: {
   status?: string;
   renewal_notes?: string;
 }): Promise<{ data: Record<string, unknown> | null; error: string | null }> {
-  const supabase = createSupabaseServerClient();
+  const supabase = await createSupabaseServerClient();
   const { data, error } = await supabase
     .from('legal_permits')
     .insert(payload)
@@ -109,7 +109,7 @@ export async function updatePermitStatus(
   id: string,
   status: string
 ): Promise<{ error: string | null }> {
-  const supabase = createSupabaseServerClient();
+  const supabase = await createSupabaseServerClient();
   const { error } = await supabase
     .from('legal_permits')
     .update({ status })

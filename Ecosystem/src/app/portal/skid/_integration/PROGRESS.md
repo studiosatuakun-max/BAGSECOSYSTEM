@@ -10,7 +10,7 @@ Dokumen ini meltrack status integrasi SOP, UI/UX, dan implementasi fitur khusus 
 - [x] Fase 5: Final Review & Build Test
 
 ## 📝 Catatan Harian / Blokir
-* (Semua fase sudah lengkap — modul siap presentasi ke B2B Client & Direksi. Tidak ada blokir.)
+- [x] 2026-07-30 — Phase 4B: Migrated to async Server Components + `'use server'` Server Actions. `custody_transfers` table with CRUD + `signCustodyTransfer`. recharts already extracted to `'use client'` wrappers. `createSupabaseServerClient()` awaited. `revalidatePath('/portal/skid')` after mutations. `npm run build` 0 errors.
 
 ---
 
