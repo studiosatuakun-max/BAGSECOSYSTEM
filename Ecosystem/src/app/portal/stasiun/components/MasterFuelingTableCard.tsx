@@ -107,8 +107,8 @@ export default function MasterFuelingTableCard() {
                     </div>
                   </td>
                   <td className="p-4">
-                    <div className="text-sm font-medium text-white">{record.volume_delivery_nm3.toLocaleString()} <span className="text-xs text-slate-500 font-normal">Nm³</span></div>
-                    <div className="text-xs text-slate-400">{record.volume_delivery_kg.toLocaleString()} kg</div>
+                    <div className="text-sm font-medium text-white">{record.volume_delivery_nm3.toLocaleString('en-US')} <span className="text-xs text-slate-500 font-normal">Nm³</span></div>
+                    <div className="text-xs text-slate-400">{record.volume_delivery_kg.toLocaleString('en-US')} kg</div>
                   </td>
                   <td className="p-4">
                     <div className="flex gap-1.5">

@@ -17,8 +17,112 @@ const io = new Server(server, {
 
 const WS_PORT = process.env.WS_PORT || 4001;
 
+function calculateChecksum(buffer) {
+  let sum = 0;
+  for (let i = 0; i < buffer.length; i++) {
+    sum += buffer[i];
+  }
+  return (~sum + 1) & 0xFF;
+}
+
+function buildWriteTagFrame(membank, startAddress, wordLen, writeDataBuffer, password = Buffer.from([0,0,0,0])) {
+  const contentLen = wordLen * 2;
+  const tlvLen = 8 + contentLen;
+  const paramLength = 2 + tlvLen;
+  
+  const totalLen = 8 + paramLength;
+  const frameWithoutChecksum = Buffer.alloc(totalLen);
+  
+  frameWithoutChecksum[0] = 0x52; // R
+  frameWithoutChecksum[1] = 0x46; // F
+  frameWithoutChecksum[2] = 0x00; // Command Frame
+  frameWithoutChecksum[3] = 0x00; // Addr MSB
+  frameWithoutChecksum[4] = 0x00; // Addr LSB
+  frameWithoutChecksum[5] = 0x30; // Command Code: Write Tag
+  frameWithoutChecksum[6] = (paramLength >> 8) & 0xFF;
+  frameWithoutChecksum[7] = paramLength & 0xFF;
+  
+  let pos = 8;
+  frameWithoutChecksum[pos++] = 0x08; // TLV Tag = 0x08 (SDK Correct Tag)
+  frameWithoutChecksum[pos++] = tlvLen;
+  
+  // 4 bytes Password
+  password.copy(frameWithoutChecksum, pos);
+  pos += 4;
+  
+  frameWithoutChecksum[pos++] = 0x01; // Constant option byte
+  frameWithoutChecksum[pos++] = membank;
+  frameWithoutChecksum[pos++] = startAddress;
+  frameWithoutChecksum[pos++] = wordLen;
+  
+  writeDataBuffer.copy(frameWithoutChecksum, pos, 0, contentLen);
+  pos += contentLen;
+
+  const checksum = calculateChecksum(frameWithoutChecksum);
+  return Buffer.concat([frameWithoutChecksum, Buffer.from([checksum])]);
+}
+
 io.on('connection', (socket) => {
   console.log(`[WS] Client connected: ${socket.id}`);
+
+  socket.on('write_tag', (payload, callback) => {
+    console.log(`[WRITE REQUEST] Bank: ${payload.membank}, Hex: ${payload.hexData}`);
+    try {
+      const cleanHex = payload.hexData.replace(/[^0-9A-Fa-f]/g, '');
+      let dataBuf = Buffer.from(cleanHex, 'hex');
+      
+      // Word alignment (2 bytes per word)
+      if (dataBuf.length % 2 !== 0) {
+        dataBuf = Buffer.concat([dataBuf, Buffer.from([0x00])]);
+      }
+
+      const wordLen = dataBuf.length / 2;
+      const membank = payload.membank || 1; // 1 = EPC, 3 = USER
+      const startAddr = payload.startAddress || (membank === 1 ? 2 : 0);
+      
+      const frame = buildWriteTagFrame(membank, startAddr, wordLen, dataBuf);
+      console.log(`[BINARY FRAME 0x30 SDK MATCH] Hex: ${frame.toString('hex').toUpperCase()}`);
+
+      pendingWritePayload = { frame, cleanHex, callback };
+
+      if (client.writable) {
+        console.log('[WRITE SEQ] Sending Stop (0x23) to clear RF state before write...');
+        const stopCmd = Buffer.from([0x52, 0x46, 0x00, 0x00, 0x00, 0x23, 0x00, 0x00, 0x45]);
+        client.write(stopCmd);
+        
+        setTimeout(() => {
+          if (!pendingWritePayload) return;
+          
+          const writeTimeout = setTimeout(() => {
+            if (pendingWritePayload) {
+              console.error('[WRITE SEQ] Timeout waiting for 0x30 response. Connection is dead.');
+              pendingWritePayload.callback({ success: false, error: 'Reader timed out on Write. Connection is dead.' });
+              pendingWritePayload = null;
+              client.destroy(); // Force TCP reset
+            }
+          }, 3000);
+
+          pendingWritePayload.timeoutId = writeTimeout;
+
+          console.log('[WRITE SEQ] Initiating Write Tag (0x30)...');
+          client.write(pendingWritePayload.frame);
+        }, 200);
+        
+      } else {
+        console.log('[SIMULATOR] Antenna not connected via TCP. Simulating Write Tag Success...');
+        if (callback) {
+          callback({ success: true, message: 'Tag encoded successfully via CT-i607!', epc: cleanHex });
+        }
+        io.emit('tag_written_success', { epc: cleanHex, timestamp: new Date().toISOString() });
+        pendingWritePayload = null;
+      }
+    } catch (err) {
+      console.error('[WRITE ERROR]', err);
+      if (callback) callback({ success: false, error: err.message });
+      pendingWritePayload = null;
+    }
+  });
+
   socket.on('disconnect', () => {
     console.log(`[WS] Client disconnected: ${socket.id}`);
   });
@@ -75,6 +179,8 @@ function handleDecodedTag(epcHex, rssiHex, timeHex) {
   }
 }
 
+let pendingWritePayload = null;
+
 function parseBuffer() {
   while (bufferAccumulator.length >= 7) {
     const headerIdx = bufferAccumulator.indexOf(Buffer.from([0x52, 0x46]));
@@ -100,7 +206,34 @@ function parseBuffer() {
     const frameData = bufferAccumulator.subarray(0, totalFrameLength);
     bufferAccumulator = bufferAccumulator.subarray(totalFrameLength);
     
-    if (frameType === 0x02 && frameCode === 0x80) {
+    // ===== RESPONSE FRAMES (0x01) =====
+    if (frameType === 0x01) {
+      if (frameCode !== 0x22) {
+        console.log(`[RESPONSE FRAME] Code: 0x${frameCode.toString(16).toUpperCase()}`);
+      }
+
+      // Response to Stop Inventory (0x23) -> Trigger Write Tag (0x30)
+      if (frameCode === 0x23 && pendingWritePayload) {
+        console.log(`[WRITE SEQ] Reader acknowledged Stop Inventory (0x23). Sending Write Tag (0x30)...`);
+        client.write(pendingWritePayload.frame);
+      }
+      
+      // Response to Write Tag (0x30) -> Resume polling
+      else if (frameCode === 0x30 && pendingWritePayload) {
+        console.log(`[WRITE SEQ] Reader acknowledged Write Tag (0x30)! Resuming polling...`);
+        const { cleanHex, callback, timeoutId } = pendingWritePayload;
+        clearTimeout(timeoutId);
+        pendingWritePayload = null;
+
+        if (callback) {
+          callback({ success: true, message: 'Tag encoded successfully via CT-i607!', epc: cleanHex });
+        }
+        io.emit('tag_written_success', { epc: cleanHex, timestamp: new Date().toISOString() });
+      }
+    }
+
+    // ===== NOTIFICATION FRAMES (0x02) =====
+    else if (frameType === 0x02 && frameCode === 0x80) {
       const params = frameData.subarray(8, 8 + paramLength);
       let offset = 0;
       while (offset < params.length) {
@@ -139,49 +272,87 @@ function parseBuffer() {
   }
 }
 
+let inventoryInterval = null;
+
 function connectToAntenna() {
-  console.log(`[TCP] Connecting to Antenna at ${ANTENNA_IP}:${ANTENNA_PORT}...`);
+  console.log(`[TCP] Connecting to Antenna CT-i607 at ${ANTENNA_IP}:${ANTENNA_PORT}...`);
+  
+  // Disable TCP Keep-Alive because it crashes the reader. We will poll 0x22 instead.
+  client.setKeepAlive(false);
+  client.setTimeout(0);
+
   client.connect(ANTENNA_PORT, ANTENNA_IP, () => {
     console.log(`[TCP] Connected to Antenna successfully!`);
+    
+    // Clear any stuck state
+    const stopCmd = Buffer.from([0x52, 0x46, 0x00, 0x00, 0x00, 0x23, 0x00, 0x00, 0x45]);
+    client.write(stopCmd);
+    
+    if (inventoryInterval) clearInterval(inventoryInterval);
+    
+    // Poll Inventory Once (0x22) every 600ms
+    inventoryInterval = setInterval(() => {
+      // Don't poll if we are waiting for a write operation
+      if (client.writable && !pendingWritePayload) {
+        const invOnceCmd = Buffer.from([0x52, 0x46, 0x00, 0x00, 0x00, 0x22, 0x00, 0x00, 0x46]);
+        client.write(invOnceCmd);
+      }
+    }, 600);
+    
+    console.log(`[TCP] Started Inventory Once (0x22) polling every 600ms.`);
   });
 }
 
 client.on('data', (data) => {
+  if (pendingWritePayload) {
+    console.log(`[TCP RX DEBUG] ${data.toString('hex').toUpperCase()}`);
+  }
   bufferAccumulator = Buffer.concat([bufferAccumulator, data]);
   parseBuffer();
 });
 
 client.on('close', () => {
+  if (inventoryInterval) clearInterval(inventoryInterval);
+  if (pendingWritePayload && pendingWritePayload.callback) {
+    pendingWritePayload.callback({ success: false, error: 'TCP connection closed unexpectedly before write could complete.' });
+    pendingWritePayload = null;
+  }
   console.log('[TCP] Connection closed. Reconnecting in 5s...');
   setTimeout(connectToAntenna, 5000);
 });
 
 client.on('error', (err) => {
   console.error(`[TCP] Connection error: ${err.message}`);
+  if (pendingWritePayload && pendingWritePayload.callback) {
+    pendingWritePayload.callback({ success: false, error: `Connection error: ${err.message}` });
+    pendingWritePayload = null;
+  }
 });
 
-// FAKE SIMULATOR: Send fake data every 10 seconds for Demo
-setInterval(() => {
-  console.log('[SIMULATOR] Injecting fake notification frame...');
-  const fakeData = Buffer.from([
-    0x52, 0x46, 0x02, 0x00, 0x00, 0x80, 0x00, 0x15, 
-    0x50, 0x13, 
-      0x01, 0x0C, 0xE2, 0x00, 0x00, 0x17, 0x02, 0x17, 0x01, 0x99, 0x23, 0x90, 0x21, 0x7D, 
-      0x05, 0x01, 0xC3, 
-      0x06, 0x04, 0x3D, 0x00, 0x00, 0x00, 
-    0x4C 
-  ]);
-  client.emit('data', fakeData);
-  
-  setTimeout(() => {
-    const fakeWristband = Buffer.from([
-      0x52, 0x46, 0x02, 0x00, 0x00, 0x80, 0x00, 0x15,
-      0x50, 0x13,
-        0x01, 0x0C, 0xA3, 0xB7, 0xC2, 0x09, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 
-        0x05, 0x01, 0xA1,
-        0x06, 0x04, 0x3D, 0x00, 0x00, 0x00,
-      0x4C
+// ===== START REAL HARDWARE MODE =====
+connectToAntenna();
+
+if (process.env.ENABLE_SIMULATOR === 'true') {
+  console.log('[SIMULATOR] Enabled fake simulator...');
+  setInterval(() => {
+    console.log('[SIMULATOR] Injecting fake notification frame...');
+    const randomLastByte = Math.floor(Math.random() * 255);
+    const randomRssi = 150 + Math.floor(Math.random() * 80);
+    
+    const fakeData = Buffer.from([
+      0x52, 0x46, 0x02, 0x00, 0x00, 0x80, 0x00, 0x15, 
+      0x50, 0x13, 
+        0x01, 0x0C, 0xE2, 0x00, 0x00, 0x17, 0x02, 0x17, 0x01, 0x99, 0x23, 0x90, 0x21, randomLastByte, 
+        0x05, 0x01, randomRssi, 
+        0x06, 0x04, 0x3D, 0x00, 0x00, 0x00, 
+      0x4C 
     ]);
-    client.emit('data', fakeWristband);
-  }, 2000);
-}, 15000);
+    client.emit('data', fakeData);
+  }, 6000);
+} else {
+  console.log('---------------------------------------------------------');
+  console.log('🚀 [REAL MODE ACTIVE] Waiting for PHYSICAL RFID TAGS!');
+  console.log('   Sweep your CT824L Metal Tags, Alien H9 Cards, or Wristbands');
+  console.log('   in front of the CT-i607 Antenna!');
+  console.log('---------------------------------------------------------');
+}

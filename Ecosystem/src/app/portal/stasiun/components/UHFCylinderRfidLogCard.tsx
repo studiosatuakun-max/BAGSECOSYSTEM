@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { Scan, CheckCircle2, AlertCircle, Clock, Package, ChevronRight, Tag, Wifi } from 'lucide-react';
 import Icon from '@/components/ui/AppIcon';
 import { useSocket } from '@/hooks/useSocket';
+import { toast } from 'sonner';
 
 interface CylinderScan {
   id: string;
@@ -66,6 +67,34 @@ export default function UHFCylinderRfidLogCard() {
   const [isScanning, setIsScanning] = useState(false);
   const socket = useSocket();
 
+  // Write Tag Modal States
+  const [isWriteModalOpen, setIsWriteModalOpen] = useState(false);
+  const [writeBank, setWriteBank] = useState<number>(1);
+  const [writeHex, setWriteHex] = useState<string>('E20000170217019923902999');
+  const [isWriting, setIsWriting] = useState(false);
+
+  const handleExecuteWriteTag = () => {
+    if (!socket) {
+      toast.error('Edge Gateway socket not connected!');
+      return;
+    }
+
+    setIsWriting(true);
+    socket.emit('write_tag', { membank: writeBank, hexData: writeHex }, (response: any) => {
+      setIsWriting(false);
+      if (response?.success) {
+        toast.success('Tag Encoded Successfully!', {
+          description: `Frame 0x30 written to Bank ${writeBank}. EPC: ${response.epc}`
+        });
+        setIsWriteModalOpen(false);
+      } else {
+        toast.error('Failed to Write Tag', {
+          description: response?.error || 'Unknown error'
+        });
+      }
+    });
+  };
+
   useEffect(() => {
     if (!socket) return;
 
@@ -85,9 +114,8 @@ export default function UHFCylinderRfidLogCard() {
       };
 
       setScans(prev => {
-        // Prevent exact duplicates in UI for demo
-        if (prev.some(s => s.rfidEpc === newScan.rfidEpc)) return prev;
-        return [newScan, ...prev];
+        const filtered = prev.filter(s => s.rfidEpc !== newScan.rfidEpc);
+        return [newScan, ...filtered];
       });
 
       // Stop animation after 1s
@@ -136,14 +164,23 @@ export default function UHFCylinderRfidLogCard() {
             </p>
           </div>
         </div>
-        <button
-          onClick={simulateBatchScan}
-          disabled={isScanning}
-          className="px-4 py-2 bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-400 hover:to-purple-500 text-white font-extrabold rounded-xl text-xs shadow-md transition-all active:scale-95 flex items-center gap-2 disabled:opacity-50"
-        >
-          <Scan size={14} className={isScanning ? 'animate-spin' : ''} />
-          {isScanning ? 'Reading EPC Gen2...' : 'Simulate Batch Scan'}
-        </button>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => setIsWriteModalOpen(true)}
+            className="px-3.5 py-2 bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-600 dark:text-emerald-300 font-extrabold rounded-xl text-xs border border-emerald-500/30 transition-all active:scale-95 flex items-center gap-1.5"
+          >
+            <Tag size={14} />
+            <span>Encode Tag</span>
+          </button>
+          <button
+            onClick={simulateBatchScan}
+            disabled={isScanning}
+            className="px-4 py-2 bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-400 hover:to-purple-500 text-white font-extrabold rounded-xl text-xs shadow-md transition-all active:scale-95 flex items-center gap-2 disabled:opacity-50"
+          >
+            <Scan size={14} className={isScanning ? 'animate-spin' : ''} />
+            {isScanning ? 'Reading EPC Gen2...' : 'Simulate Batch Scan'}
+          </button>
+        </div>
       </div>
 
       {/* Search Bar & Summary Row */}
@@ -241,6 +278,68 @@ export default function UHFCylinderRfidLogCard() {
           <span>Antenna Active (868-928Mhz)</span>
         </span>
       </div>
+
+      {/* Write Tag Modal */}
+      {isWriteModalOpen && (
+        <div className="fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-md flex items-center justify-center p-4">
+          <div className="bg-slate-900 border border-slate-800 rounded-3xl p-6 max-w-md w-full shadow-2xl space-y-4">
+            <div className="flex items-center justify-between border-b border-slate-800 pb-3">
+              <h3 className="text-base font-extrabold text-white flex items-center gap-2">
+                <Tag className="text-emerald-400" size={18} />
+                <span>Write Data to Physical Tag</span>
+              </h3>
+              <button
+                onClick={() => setIsWriteModalOpen(false)}
+                className="text-slate-400 hover:text-white text-xs font-bold px-2 py-1 bg-slate-800 rounded-lg"
+              >
+                ✕
+              </button>
+            </div>
+
+            <div className="space-y-3 text-xs">
+              <div>
+                <label className="block font-bold text-slate-400 mb-1">Target Memory Bank</label>
+                <select
+                  value={writeBank}
+                  onChange={(e) => setWriteBank(Number(e.target.value))}
+                  className="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-white font-mono"
+                >
+                  <option value={1}>Bank 1 - EPC Memory (ID Tabung / Kartu)</option>
+                  <option value={3}>Bank 3 - USER Memory (Data SIO / Inspeksi)</option>
+                </select>
+              </div>
+
+              <div>
+                <label className="block font-bold text-slate-400 mb-1">Data Payload (HEX String)</label>
+                <input
+                  type="text"
+                  placeholder="e.g. E20000170217019923902999"
+                  value={writeHex}
+                  onChange={(e) => setWriteHex(e.target.value)}
+                  className="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-white font-mono placeholder:text-slate-600"
+                />
+                <p className="text-[10px] text-slate-500 mt-1">Must be valid Hexadecimal characters (0-9, A-F).</p>
+              </div>
+            </div>
+
+            <div className="pt-2 flex items-center gap-2 justify-end">
+              <button
+                onClick={() => setIsWriteModalOpen(false)}
+                className="px-4 py-2 rounded-xl text-xs font-bold text-slate-400 hover:bg-slate-800"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleExecuteWriteTag}
+                disabled={isWriting || !writeHex.trim()}
+                className="px-5 py-2 rounded-xl text-xs font-extrabold bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 text-white shadow-lg active:scale-95 disabled:opacity-50 flex items-center gap-2"
+              >
+                {isWriting ? 'Encoding Frame 0x30...' : 'Write To Tag Now'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
