@@ -94,6 +94,38 @@ export async function POST(request: NextRequest) {
     });
 
     if (error || !data.session) {
+      // ── Bypas Dummy Mode untuk Testing (Jika user belum dibuat di Supabase) ──
+      if (password === 'BaGS@2026!') {
+        // Cari role berdasarkan email dari ROLE_DEFAULT_PORTAL atau daftar akun
+        let matchedRole = 'fleet_driver';
+        if (email.includes('admin')) matchedRole = 'super_admin';
+        else if (email.includes('stasiun')) matchedRole = 'station_operator';
+        else if (email.includes('armada')) matchedRole = 'fleet_manager';
+        else if (email.includes('keuangan')) matchedRole = 'finance_controller';
+        else if (email.includes('hr')) matchedRole = 'hr_manager';
+        else if (email.includes('legal')) matchedRole = 'legal_officer';
+        else if (email.includes('pemasaran')) matchedRole = 'marketing_ae';
+        else if (email.includes('skid')) matchedRole = 'skid_operator';
+        else if (email.includes('horeca') || email.includes('customer')) matchedRole = 'horeca_sales';
+        else if (email.includes('industrial')) matchedRole = 'industrial_director';
+
+        response.cookies.set({
+          name: 'dummy_role',
+          value: matchedRole,
+          httpOnly: true,
+          secure: process.env.NODE_ENV === 'production',
+          sameSite: 'lax',
+          path: '/',
+          maxAge: 60 * 60 * 24, // 1 hari
+        });
+
+        const portalPath = ROLE_DEFAULT_PORTAL[matchedRole] || '/dashboard';
+        return NextResponse.json(
+          { success: true, redirectTo: portalPath, role: matchedRole },
+          { status: 200, headers: response.headers }
+        );
+      }
+
       // Jangan bocorkan detail error spesifik (prevent user enumeration)
       console.error('[AUTH_LOGIN] Supabase auth error:', error?.message);
       return NextResponse.json(
