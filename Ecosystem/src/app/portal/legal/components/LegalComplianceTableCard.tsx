@@ -1,23 +1,81 @@
 'use client';
 
-import React, { useState } from 'react';
-import { MOCK_LEGAL_CONTRACTS, MOCK_LEGAL_PERMITS } from '../data/mockLegalData';
+import React, { useState, useTransition } from 'react';
 import Icon from '@/components/ui/AppIcon';
 import { Search, Plus, FileText, Scale, ShieldAlert, CheckCircle2, AlertTriangle, FileSignature } from 'lucide-react';
+import { updateContractStatus, updatePermitStatus } from '../_integration/actions';
 
-export default function LegalComplianceTableCard() {
+type RawContract = {
+  id: string;
+  contract_number: string;
+  customer_id: string | null;
+  customer_name: string;
+  contract_type: string;
+  tube_ownership: string | null;
+  has_liability_clause: boolean | null;
+  liability_notes: string | null;
+  start_date: string;
+  end_date: string;
+  status: string;
+  counsel_name: string | null;
+};
+
+type RawPermit = {
+  id: string;
+  permit_name: string;
+  permit_number: string;
+  issuing_authority: string;
+  issue_date: string | null;
+  expiry_date: string;
+  status: string;
+};
+
+interface Props {
+  contracts: RawContract[];
+  permits: RawPermit[];
+}
+
+const STATUS_CLASSES: Record<string, string> = {
+  Active: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20',
+  Under_Review: 'bg-amber-500/10 text-amber-400 border-amber-500/20',
+  Expiring_Soon: 'bg-rose-500/10 text-rose-400 border-rose-500/20',
+  Expired: 'bg-rose-600/20 text-rose-300 border-rose-500/30',
+  Terminated: 'bg-slate-500/10 text-slate-400 border-slate-500/20',
+  Draft: 'bg-blue-500/10 text-blue-400 border-blue-500/20',
+};
+
+function statusLabel(s: string) {
+  return s.replace(/_/g, ' ');
+}
+
+export default function LegalComplianceTableCard({ contracts: initialContracts, permits: initialPermits }: Props) {
   const [activeTab, setActiveTab] = useState<'Contracts' | 'Permits'>('Contracts');
   const [searchTerm, setSearchTerm] = useState('');
+  const [isPending, startTransition] = useTransition();
+  const [localContracts, setLocalContracts] = useState(initialContracts);
+  const [localPermits, setLocalPermits] = useState(initialPermits);
 
-  const filteredContracts = MOCK_LEGAL_CONTRACTS.filter(ctr => 
+  const filteredContracts = localContracts.filter(ctr =>
     ctr.contract_number.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    ctr.customer_id.toLowerCase().includes(searchTerm.toLowerCase())
+    ctr.customer_name.toLowerCase().includes(searchTerm.toLowerCase())
   );
-  
-  const filteredPermits = MOCK_LEGAL_PERMITS.filter(pmt => 
+
+  const filteredPermits = localPermits.filter(pmt =>
     pmt.permit_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
     pmt.permit_number.toLowerCase().includes(searchTerm.toLowerCase())
   );
+
+  const handleStatusChange = (id: string, newStatus: string, type: 'contract' | 'permit') => {
+    startTransition(async () => {
+      if (type === 'contract') {
+        await updateContractStatus(id, newStatus);
+        setLocalContracts(prev => prev.map(c => c.id === id ? { ...c, status: newStatus } : c));
+      } else {
+        await updatePermitStatus(id, newStatus);
+        setLocalPermits(prev => prev.map(p => p.id === id ? { ...p, status: newStatus } : p));
+      }
+    });
+  };
 
   return (
     <div className="col-span-full rounded-2xl border border-white/10 bg-slate-900/60 backdrop-blur-md p-6 shadow-xl flex flex-col h-full relative overflow-hidden group">
@@ -93,7 +151,7 @@ export default function LegalComplianceTableCard() {
                     </div>
                   </td>
                   <td className="p-4 whitespace-nowrap">
-                    <div className="text-sm font-medium text-indigo-300">{ctr.customer_id}</div>
+                    <div className="text-sm font-medium text-indigo-300">{ctr.customer_name}</div>
                   </td>
                   <td className="p-4 whitespace-nowrap">
                     <span className="px-2 py-0.5 bg-slate-800 text-slate-300 rounded text-[10px] font-mono border border-slate-700">
@@ -112,13 +170,10 @@ export default function LegalComplianceTableCard() {
                     {ctr.start_date} <br/><span className="text-[10px]">to</span> {ctr.end_date}
                   </td>
                   <td className="p-4 text-right whitespace-nowrap">
-                    <div className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium border ${
-                      ctr.status === 'Active' ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' : 
-                      'bg-slate-500/10 text-slate-400 border-slate-500/20'
-                    }`}>
+                    <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium border ${STATUS_CLASSES[ctr.status] ?? 'bg-slate-500/10 text-slate-400 border-slate-500/20'}`}>
                       {ctr.status === 'Active' ? <CheckCircle2 size={12} /> : <AlertTriangle size={12} />}
-                      {ctr.status}
-                    </div>
+                      {statusLabel(ctr.status)}
+                    </span>
                   </td>
                 </tr>
               ))}
@@ -148,14 +203,10 @@ export default function LegalComplianceTableCard() {
                   <td className="p-4 whitespace-nowrap text-sm text-slate-300">{pmt.issue_date}</td>
                   <td className="p-4 whitespace-nowrap text-sm text-slate-300">{pmt.expiry_date}</td>
                   <td className="p-4 text-right whitespace-nowrap">
-                    <div className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium border ${
-                      pmt.status === 'Active' ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' : 
-                      pmt.status === 'Expiring_Soon' ? 'bg-amber-500/10 text-amber-400 border-amber-500/20 animate-pulse' :
-                      'bg-rose-500/10 text-rose-400 border-rose-500/20'
-                    }`}>
+                    <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium border ${STATUS_CLASSES[pmt.status] ?? 'bg-slate-500/10 text-slate-400 border-slate-500/20'}${pmt.status === 'Expiring_Soon' ? ' animate-pulse' : ''}`}>
                       {pmt.status === 'Active' ? <CheckCircle2 size={12} /> : <AlertTriangle size={12} />}
-                      {pmt.status.replace('_', ' ')}
-                    </div>
+                      {statusLabel(pmt.status)}
+                    </span>
                   </td>
                 </tr>
               ))}

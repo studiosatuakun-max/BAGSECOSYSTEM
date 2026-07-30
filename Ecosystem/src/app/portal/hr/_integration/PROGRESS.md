@@ -8,6 +8,7 @@ Dokumen ini melacak status integrasi SOP, UI/UX, dan implementasi fitur khusus u
 - [x] Fase 3: Implementasi UI (Bento Grid, Tabel, Modal)
 - [x] Fase 4: Integrasi Form (Anti-Fraud / Hardware IoT)
 - [x] Fase 5: Final Review & Build Test
+- [x] **Phase 4B: Supabase Integration** (Server Actions + real tables)
 
 ## 📝 Catatan Harian / Blokir
 * (Semua fase sudah lengkap — modul siap presentasi ke HR Director & Direksi. Tidak ada blokir.)
@@ -43,7 +44,13 @@ Dokumen ini melacak status integrasi SOP, UI/UX, dan implementasi fitur khusus u
 - **Fingerprint Biometric** (Digital Persona / ZKTeco) → Absensi shift harian, real-time
 - **SIO ATEX Database** (MIGAS official) → Validasi lisensi operator CNG
 - **Training Documentation System** → Attendance list, materials, proof photos (mandatory per SOP)
-- **Database**: PostgreSQL dengan 2 tabel (`employee_trainings`, `employee_shifts`) + RLS policies
+- **Database**: PostgreSQL dengan 3 tabel (`employees`, `employee_trainings`, `shift_schedules`) + RLS policies
+
+## 🔗 Phase 4B: Supabase Integration
+
+Server Actions: `getEmployees`, `createEmployee`, `updateEmployee`, `getEmployeeTrainings`, `createTraining`, `getShiftSchedules`, `createShiftSchedule`, `updateShiftSchedule`
+Connected to tables: `employees`, `employee_trainings`, `shift_schedules`
+`page.tsx` now async Server Component; `HRShiftTableCard` accepts `shifts[]` and `trainings[]` as props; `useSocket` WebSocket for wristband_scanned events preserved.
 
 ## 📊 Workforce Summary
 

@@ -1,24 +1,26 @@
-'use client';
-
-import React, { useState } from 'react';
+import React from 'react';
 import PortalHeader from '@/components/PortalHeader';
 import Footer from '@/components/Footer';
 import BentoGrid from './components/BentoGrid';
-import { Sparkles, DollarSign, ArrowUpRight, ArrowDownRight, RefreshCw, ShieldCheck, FileText, CheckCircle2 } from 'lucide-react';
+import InvoiceTableCard from './components/InvoiceTableCard';
+import { getInvoicesIndustri, getInvoicesHoreca } from './_integration/actions';
+import { RefreshCw, CheckCircle2 } from 'lucide-react';
 
-export default function FinanceDashboardPage() {
-  const [isSyncing, setIsSyncing] = useState(false);
-  const [syncSuccess, setSyncSuccess] = useState(false);
+export default async function FinanceDashboardPage() {
+  // Fetch real data from Supabase — graceful fallback to empty arrays if not configured
+  let industriInvoices: Record<string, unknown>[] = [];
+  let horecaInvoices: Record<string, unknown>[] = [];
 
-  const handleDgtSync = () => {
-    setIsSyncing(true);
-    setSyncSuccess(false);
-    setTimeout(() => {
-      setIsSyncing(false);
-      setSyncSuccess(true);
-      setTimeout(() => setSyncSuccess(false), 4000);
-    }, 1800);
-  };
+  try {
+    const [industriResult, horecaResult] = await Promise.all([
+      getInvoicesIndustri(),
+      getInvoicesHoreca(),
+    ]);
+    industriInvoices = industriResult.data ?? [];
+    horecaInvoices = horecaResult.data ?? [];
+  } catch {
+    // Supabase not configured — show empty state
+  }
 
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 font-sans relative selection:bg-amber-500 selection:text-slate-950 flex flex-col justify-between">
@@ -45,54 +47,37 @@ export default function FinanceDashboardPage() {
           }
         />
 
-        {/* Main Content with Spatial Breathing Room */}
+        {/* Main Content */}
         <main className="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 xl:px-10 2xl:px-12 pt-10 pb-12 space-y-8">
-          {/* EXECUTIVE CFO HERO BANNER (Standardized with Stasiun) */}
+          {/* EXECUTIVE CFO HERO BANNER */}
           <div className="bg-gradient-to-r from-amber-950 via-slate-900 to-slate-950 rounded-3xl p-6 sm:p-8 text-white shadow-xl relative overflow-hidden border border-amber-500/30 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 animate-in fade-in slide-in-from-top-4 duration-500">
             <div className="absolute -right-10 -bottom-10 w-48 h-48 bg-amber-500/15 rounded-full blur-3xl pointer-events-none" />
             <div className="space-y-2 max-w-3xl z-10">
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/20 backdrop-blur-md border border-amber-500/30 text-xs font-bold text-amber-300 whitespace-nowrap shrink-0 align-middle shadow-2xs">
                 <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse" />
-                <span>MIGAS Treasury Indexing v2.0 · DGT E-Faktur Connected</span>
+                <span>MIGAS Treasury Indexing v2.0 &middot; DGT E-Faktur Connected</span>
               </div>
               <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-white">
                 Corporate Treasury &amp; B2B Custody Transfer Portal
               </h1>
               <p className="text-xs sm:text-sm text-slate-300 leading-relaxed font-medium">
-                Pusat kontrol kas perusahaan, penagihan volume gas CNG (MMBTU/Sm³) berbasis meteran Mother Station, dan rekonsiliasi pajak PPN 11% &amp; PPh 22 MIGAS secara real-time.
+                Pusat kontrol kas perusahaan, penagihan volume gas CNG (MMBTU/Sm&sup3;) berbasis meteran Mother Station, dan rekonsiliasi pajak PPN 11% &amp; PPh 22 MIGAS secara real-time.
               </p>
             </div>
-
-            <button
-              onClick={handleDgtSync}
-              disabled={isSyncing || syncSuccess}
-              className={`px-5 py-3 font-extrabold rounded-2xl text-xs sm:text-sm shadow-lg transition-all flex items-center gap-2.5 active:scale-95 shrink-0 whitespace-nowrap z-10 self-stretch sm:self-auto justify-center disabled:cursor-not-allowed ${
-                syncSuccess
-                  ? 'bg-gradient-to-r from-emerald-600 to-teal-700 text-white shadow-emerald-950/50'
-                  : 'bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-400 hover:to-orange-500 text-white shadow-amber-500/30'
-              }`}
-            >
-              {isSyncing ? (
-                <>
-                  <RefreshCw size={18} className="animate-spin text-white" />
-                  <span>Mensinkronisasi DGT...</span>
-                </>
-              ) : syncSuccess ? (
-                <>
-                  <CheckCircle2 size={18} className="text-white" />
-                  <span>E-Faktur Terkonsolidasi</span>
-                </>
-              ) : (
-                <>
-                  <RefreshCw size={18} />
-                  <span>Log / Sync E-Faktur DGT</span>
-                </>
-              )}
-            </button>
+            <div className="flex items-center gap-2 px-5 py-3 bg-gradient-to-r from-amber-500 to-orange-600 text-white rounded-2xl text-xs sm:text-sm font-extrabold shadow-amber-500/30 shrink-0">
+              <CheckCircle2 size={18} className="text-white" />
+              <span>Supabase Connected</span>
+            </div>
           </div>
 
-          {/* Bento Grid Content */}
+          {/* Bento Grid (KPI Metrics + Charts) */}
           <BentoGrid />
+
+          {/* Invoice Engine (Real Supabase Data) */}
+          <InvoiceTableCard
+            industriInvoices={industriInvoices as Parameters<typeof InvoiceTableCard>[0]['industriInvoices']}
+            horecaInvoices={horecaInvoices as Parameters<typeof InvoiceTableCard>[0]['horecaInvoices']}
+          />
         </main>
       </div>
 

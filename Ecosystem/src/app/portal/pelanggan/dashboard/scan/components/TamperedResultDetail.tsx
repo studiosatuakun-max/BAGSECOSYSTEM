@@ -1,6 +1,6 @@
 import React from 'react';
 import { AlertTriangle, Hash, Calendar, ShieldX, Phone, AlertCircle } from 'lucide-react';
-import Icon from '@/app/portal/pelanggan/components/ui/AppIcon';
+import Icon from '@/components/ui/AppIcon';
 
 
 const suspectCylinder = {

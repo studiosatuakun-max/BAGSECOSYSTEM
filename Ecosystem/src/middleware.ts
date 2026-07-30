@@ -46,7 +46,8 @@ const ROLE_PERMISSIONS: Record<string, string[]> = {
 };
 
 // ─── Routes yang TIDAK perlu auth (public) ───────────────────────────────────
-const PUBLIC_ROUTES = ['/', '/login', '/unauthorized'];
+// '/' is the login page (root redirect), '/login' is deprecated
+const PUBLIC_ROUTES = ['/', '/unauthorized'];
 const PUBLIC_PREFIXES = ['/api/auth', '/_next', '/static'];
 
 // ─── Routes yang perlu dilindungi ────────────────────────────────────────────
@@ -105,8 +106,8 @@ export async function middleware(request: NextRequest) {
   // ── Route protected → wajib login ─────────────────────────────────────────
   if (isProtectedRoute(pathname)) {
     if (!session && !dummyRoleCookie) {
-      // Belum login → redirect ke /login dengan param return URL
-      const loginUrl = new URL('/login', request.url);
+      // Belum login → redirect ke '/' (login page) dengan param return URL
+      const loginUrl = new URL('/', request.url);
       loginUrl.searchParams.set('redirect', pathname);
       return NextResponse.redirect(loginUrl);
     }

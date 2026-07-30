@@ -1,20 +1,48 @@
 'use client';
 
-import React, { useState } from 'react';
-import { MOCK_SALES_LEADS_INDUSTRI, MOCK_SALES_LEADS_HORECA } from '../data/mockPemasaranData';
+import React, { useState, useTransition } from 'react';
 import Icon from '@/components/ui/AppIcon';
 import { Search, Plus, Users, CheckCircle2, Phone, Briefcase, MapPin, TrendingUp, HelpCircle } from 'lucide-react';
+import { updateLeadStage } from '../_integration/actions';
+import type { SalesLead } from '../_integration/types';
 
-export default function CRMPipelineTableCard() {
+type RawLead = SalesLead;
+
+interface Props {
+  industriLeads: RawLead[];
+  horecaLeads: RawLead[];
+}
+
+const STAGE_LABELS: Record<string, string> = {
+  Perkenalan_Awal: 'Perkenalan Awal',
+  Presentasi: 'Presentasi',
+  Penawaran: 'Penawaran',
+  Follow_Up: 'Follow Up',
+  Negosiasi: 'Negosiasi',
+  Penyampaian_Kontrak: 'Penyampaian Kontrak',
+  Dealing_Closed_Won: 'Closed Won',
+  Dealing_Closed_Lost: 'Closed Lost',
+};
+
+function stageBadgeClass(stage: string) {
+  if (stage === 'Dealing_Closed_Won') return 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20';
+  if (stage === 'Dealing_Closed_Lost') return 'bg-rose-500/10 text-rose-400 border-rose-500/20';
+  return 'bg-purple-500/10 text-purple-400 border-purple-500/20';
+}
+
+export default function CRMPipelineTableCard({ industriLeads: initialIndustri, horecaLeads: initialHoreca }: Props) {
   const [activeTab, setActiveTab] = useState<'Industri' | 'Horeca'>('Industri');
   const [searchTerm, setSearchTerm] = useState('');
+  const [isPending, startTransition] = useTransition();
+  const [localIndustri, setLocalIndustri] = useState(initialIndustri);
+  const [localHoreca, setLocalHoreca] = useState(initialHoreca);
 
-  const filteredIndustri = MOCK_SALES_LEADS_INDUSTRI.filter(lead => 
+  const filteredIndustri = localIndustri.filter(lead =>
     lead.company_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
     lead.contact_person.toLowerCase().includes(searchTerm.toLowerCase())
   );
-  
-  const filteredHoreca = MOCK_SALES_LEADS_HORECA.filter(lead => 
+
+  const filteredHoreca = localHoreca.filter(lead =>
     lead.company_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
     lead.contact_person.toLowerCase().includes(searchTerm.toLowerCase())
   );
@@ -107,13 +135,9 @@ export default function CRMPipelineTableCard() {
                     {lead.sales_rep_id}
                   </td>
                   <td className="p-4 whitespace-nowrap">
-                    <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium border ${
-                      lead.pipeline_stage === 'Dealing_Closed_Won' ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' : 
-                      lead.pipeline_stage === 'Closed_Lost' ? 'bg-rose-500/10 text-rose-400 border-rose-500/20' :
-                      'bg-purple-500/10 text-purple-400 border-purple-500/20'
-                    }`}>
+                    <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium border ${stageBadgeClass(lead.pipeline_stage)}`}>
                       {lead.pipeline_stage === 'Dealing_Closed_Won' ? <CheckCircle2 size={12} /> : <TrendingUp size={12} />}
-                      {lead.pipeline_stage.replace(/_/g, ' ')}
+                      {STAGE_LABELS[lead.pipeline_stage] ?? lead.pipeline_stage.replace(/_/g, ' ')}
                     </span>
                   </td>
                 </tr>
@@ -160,12 +184,8 @@ export default function CRMPipelineTableCard() {
                     )}
                   </td>
                   <td className="p-4 whitespace-nowrap">
-                    <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold border ${
-                      lead.pipeline_stage === 'Dealing_Closed_Won' ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' : 
-                      lead.pipeline_stage === 'Perkenalan_Awal' ? 'bg-blue-500/10 text-blue-400 border-blue-500/20' :
-                      'bg-purple-500/10 text-purple-400 border-purple-500/20'
-                    }`}>
-                      {lead.pipeline_stage.replace(/_/g, ' ')}
+                    <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold border ${stageBadgeClass(lead.pipeline_stage)}`}>
+                      {STAGE_LABELS[lead.pipeline_stage] ?? lead.pipeline_stage.replace(/_/g, ' ')}
                     </span>
                   </td>
                 </tr>

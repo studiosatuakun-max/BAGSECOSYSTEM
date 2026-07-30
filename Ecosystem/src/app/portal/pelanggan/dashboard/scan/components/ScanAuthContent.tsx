@@ -6,7 +6,7 @@ import { ArrowLeft, Wifi, QrCode, RefreshCw, Info } from 'lucide-react';
 import ScanArea from './ScanArea';
 import AuthResultDetail from './AuthResultDetail';
 import TamperedResultDetail from './TamperedResultDetail';
-import Icon from '@/app/portal/pelanggan/components/ui/AppIcon';
+import Icon from '@/components/ui/AppIcon';
 
 
 type ScanState = 'idle' | 'scanning' | 'success' | 'tampered';

@@ -1,11 +1,8 @@
-'use client';
-
 import React from 'react';
 import CashFlowChartCard from './CashFlowChartCard';
 import TaxComplianceCard from './TaxComplianceCard';
 import MetricCard from './MetricCard';
 import GenerateReportCard from './GenerateReportCard';
-import InvoiceTableCard from './InvoiceTableCard';
 
 export default function BentoGrid() {
   return (
@@ -62,10 +59,7 @@ export default function BentoGrid() {
         </div>
       </div>
 
-      {/* Row 3: CNG Custody Transfer Invoice Engine full width */}
-      <div className="grid grid-cols-1">
-        <InvoiceTableCard />
-      </div>
+      {/* Row 3: reserved for InvoiceTableCard (moved to page.tsx for Supabase data flow) */}
     </div>
   );
 }

@@ -1,6 +1,4 @@
-'use client';
-
-import React, { useState } from 'react';
+import React from 'react';
 import PortalHeader from '@/components/PortalHeader';
 import Footer from '@/components/Footer';
 import Icon from '@/components/ui/AppIcon';
@@ -8,62 +6,32 @@ import CRMPipelineTableCard from './components/CRMPipelineTableCard';
 import CampaignROIChart from './components/CampaignROIChart';
 import AcquisitionFunnel from './components/AcquisitionFunnel';
 import TopClientsTable from './components/TopClientsTable';
+import MarketingClientUI from './components/MarketingClientUI';
+import { getSalesLeads, getMarketingCampaigns } from './_integration/actions';
+import { CheckCircle2 } from 'lucide-react';
 
-const initialCampaigns = [
-  { id: 'CMP-01', name: 'B2B Smelter & Metallurgy Q3 Retargeting', plat: 'LinkedIn', stat: 'Running', budget: 'Rp 45.0 Jt', leads: 412, conversion: '12.4%' },
-  { id: 'CMP-02', name: 'Horeca & Commercial VGL Promo Merdeka', plat: 'Instagram', stat: 'Running', budget: 'Rp 28.5 Jt', leads: 320, conversion: '9.8%' },
-  { id: 'CMP-03', name: 'Industrial Bulk CNG Awareness Push', plat: 'Google Ads', stat: 'Paused', budget: 'Rp 60.0 Jt', leads: 280, conversion: '7.1%' },
-  { id: 'CMP-04', name: 'Skid Tube Trailer Milk-Run Expansion', plat: 'Email B2B', stat: 'Draft', budget: 'Rp 15.0 Jt', leads: 128, conversion: '14.2%' },
-];
+export default async function MarketingDashboardPage() {
+  // Fetch real data from Supabase — graceful fallback to empty arrays if not configured
+  let allLeads: Record<string, unknown>[] = [];
+  let campaigns: Record<string, unknown>[] = [];
 
-export default function MarketingDashboardPage() {
-  
-  
-  
-  const [formData, setFormData] = useState({ id: '', name: '', plat: 'LinkedIn', stat: 'Draft', budget: 'Rp 20.0 Jt', leads: 100, conversion: '8.5%' });
-  const [isSyncingCrm, setIsSyncingCrm] = useState(false);
-  const [crmSyncSuccess, setCrmSyncSuccess] = useState(false);
+  try {
+    const [leadsResult, campaignsResult] = await Promise.all([
+      getSalesLeads(),
+      getMarketingCampaigns(),
+    ]);
+    allLeads = leadsResult.data ?? [];
+    campaigns = campaignsResult.data ?? [];
+  } catch {
+    // Supabase not configured — show empty state
+  }
 
-  const handleOpenModal = (mode: 'create' | 'edit', campaign: any = null) => {
-    setModalMode(mode);
-    if (mode === 'edit' && campaign) {
-      setFormData(campaign);
-    } else {
-      setFormData({ id: `CMP-0${Math.floor(5 + Math.random() * 9)}`, name: '', plat: 'LinkedIn', stat: 'Draft', budget: 'Rp 25.0 Jt', leads: 150, conversion: '10.0%' });
-    }
-    setIsModalOpen(true);
-  };
-
-  const handleCloseModal = () => setIsModalOpen(false);
-
-  const handleSave = () => {
-    if (!formData.name) return alert('Campaign Name is required');
-    if (modalMode === 'create') {
-      setCampaigns([formData, ...campaigns]);
-    } else {
-      setCampaigns(campaigns.map(c => c.id === formData.id ? formData : c));
-    }
-    handleCloseModal();
-  };
-
-  const handleDelete = (id: string) => {
-    if (confirm('Are you sure you want to delete this CNG marketing campaign?')) {
-      setCampaigns(campaigns.filter(c => c.id !== id));
-    }
-  };
-
-  const handleTriggerCrmSync = () => {
-    setIsSyncingCrm(true);
-    setCrmSyncSuccess(false);
-    setTimeout(() => {
-      setIsSyncingCrm(false);
-      setCrmSyncSuccess(true);
-      setTimeout(() => setCrmSyncSuccess(false), 4000);
-    }, 1500);
-  };
+  const industriLeads = allLeads.filter((l) => (l as { segment: string }).segment === 'Industri');
+  const horecaLeads = allLeads.filter((l) => (l as { segment: string }).segment === 'Horeca');
 
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-slate-950 font-sans relative flex flex-col justify-between selection:bg-pink-500 selection:text-white">
+
       {/* Top Header */}
       <PortalHeader
         title="Baskara CMO &amp; B2B Commercial Console"
@@ -82,53 +50,31 @@ export default function MarketingDashboardPage() {
         }
       />
 
-      {/* Gold Benchmark Spacing: pt-10 pb-12 space-y-8 */}
+      {/* Main Content */}
       <main className="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 xl:px-10 2xl:px-12 pt-10 pb-12 space-y-8 flex-1 w-full">
-        {/* EXECUTIVE CMO CRM & AE PIPELINE HERO BANNER (Standardized with Stasiun) */}
+
+        {/* EXECUTIVE CMO HERO BANNER */}
         <div className="bg-gradient-to-r from-pink-950 via-slate-900 to-slate-950 rounded-3xl p-6 sm:p-8 text-white shadow-xl relative overflow-hidden border border-pink-500/30 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 animate-in fade-in slide-in-from-top-4 duration-500">
           <div className="absolute -right-10 -bottom-10 w-48 h-48 bg-pink-500/15 rounded-full blur-3xl pointer-events-none" />
           <div className="space-y-2 max-w-3xl z-10">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-pink-500/20 backdrop-blur-md border border-pink-500/30 text-xs font-bold text-pink-300 whitespace-nowrap shrink-0 align-middle shadow-2xs">
               <span className="w-1.5 h-1.5 rounded-full bg-pink-400 animate-pulse" />
-              <span>B2B Gas Growth Engine v2.4 · AE CRM Connected</span>
+              <span>B2B Gas Growth Engine v2.4 &middot; AE CRM Connected</span>
             </div>
             <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-white">
               B2B Commercial Gas Growth &amp; Pipeline Console
             </h1>
             <p className="text-xs sm:text-sm text-slate-300 leading-relaxed font-medium">
-              Pusat kendali akuisisi prospek manufaktur berat &amp; Horeca (Sm³/day), pemantauan konversi kuota MMBTU, serta analisis ROI kampanye pemasaran gas secara real-time.
+              Pusat kendali akuisisi prospek manufaktur berat &amp; Horeca (Sm&sup3;/day), pemantauan konversi kuota MMBTU, serta analisis ROI kampanye pemasaran gas secara real-time.
             </p>
           </div>
-
-          <button
-            onClick={handleTriggerCrmSync}
-            disabled={isSyncingCrm || crmSyncSuccess}
-            className={`px-5 py-3 font-extrabold rounded-2xl text-xs sm:text-sm shadow-lg transition-all flex items-center gap-2.5 active:scale-95 shrink-0 whitespace-nowrap z-10 self-stretch sm:self-auto justify-center disabled:cursor-not-allowed ${
-              crmSyncSuccess
-                ? 'bg-gradient-to-r from-emerald-600 to-teal-700 text-white shadow-emerald-950/50'
-                : 'bg-gradient-to-r from-pink-500 to-rose-600 hover:from-pink-400 hover:to-rose-500 text-white shadow-pink-500/30'
-            }`}
-          >
-            {isSyncingCrm ? (
-              <>
-                <Icon name="ArrowPathIcon" size={18} className="animate-spin text-white" />
-                <span>Syncing AE CRM...</span>
-              </>
-            ) : crmSyncSuccess ? (
-              <>
-                <Icon name="CheckCircleIcon" size={18} className="text-white" />
-                <span>Pipeline Verified</span>
-              </>
-            ) : (
-              <>
-                <Icon name="BoltIcon" size={18} />
-                <span>Sync AE CRM Pipeline</span>
-              </>
-            )}
-          </button>
+          <div className="flex items-center gap-2 px-5 py-3 bg-gradient-to-r from-pink-500 to-rose-600 text-white rounded-2xl text-xs sm:text-sm font-extrabold shadow-pink-500/30 shrink-0">
+            <CheckCircle2 size={18} className="text-white" />
+            <span>Supabase Connected</span>
+          </div>
         </div>
 
-        {/* ROW 1: EXECUTIVE HERO METRICS (4 CARDS) WITH FROSTED GLASSMORPHISM & ACCENT GLOWS */}
+        {/* ROW 1: EXECUTIVE HERO METRICS */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-5">
           {/* Card 1: Total Inbound Leads */}
           <div className="bg-gradient-to-br from-pink-900 via-pink-950 to-slate-950 text-white p-6 rounded-3xl border border-pink-800/60 shadow-xl relative overflow-hidden flex flex-col justify-between group hover:border-pink-500 hover:-translate-y-1.5 hover:shadow-2xl hover:shadow-pink-950/50 transition-all duration-300 animate-in fade-in slide-in-from-bottom-6 duration-700">
@@ -199,7 +145,7 @@ export default function MarketingDashboardPage() {
             </div>
           </div>
 
-          {/* Card 4: CAC (Cost Per Acquisition) */}
+          {/* Card 4: CAC */}
           <div className="bg-gradient-to-br from-rose-900 via-rose-950 to-slate-950 text-white p-6 rounded-3xl border border-rose-800/60 shadow-xl relative overflow-hidden flex flex-col justify-between group hover:border-rose-500 hover:-translate-y-1.5 hover:shadow-2xl hover:shadow-rose-950/50 transition-all duration-300 animate-in fade-in slide-in-from-bottom-6 duration-700" style={{ animationDelay: '240ms' }}>
             <div className="absolute -right-8 -top-8 w-32 h-32 bg-rose-500/20 rounded-full blur-2xl group-hover:bg-rose-500/30 transition-all duration-500 pointer-events-none" />
             <div>
@@ -223,7 +169,7 @@ export default function MarketingDashboardPage() {
           </div>
         </div>
 
-        {/* ROW 2: ANALYTICS BENTO GRID (ROI CHART + ACQUISITION FUNNEL) */}
+        {/* ROW 2: ANALYTICS BENTO GRID */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <div className="lg:col-span-2">
             <CampaignROIChart />
@@ -233,15 +179,19 @@ export default function MarketingDashboardPage() {
           </div>
         </div>
 
-        {/* ROW 3: ENTERPRISE TOP CLIENTS TABLE */}
-        <div className="w-full">
-          <TopClientsTable />
-        </div>
+        {/* ROW 3: TOP CLIENTS TABLE */}
+        <TopClientsTable />
 
-                <div className="animate-in fade-in slide-in-from-bottom-6 duration-700 delay-300 fill-mode-both">
-          <CRMPipelineTableCard />
-        </div>
+        {/* ROW 4: CRM PIPELINE (Supabase Data) */}
+        <CRMPipelineTableCard
+          industriLeads={industriLeads as Parameters<typeof CRMPipelineTableCard>[0]['industriLeads']}
+          horecaLeads={horecaLeads as Parameters<typeof CRMPipelineTableCard>[0]['horecaLeads']}
+        />
 
+        {/* ROW 5: CAMPAIGNS (Supabase Data) */}
+        <MarketingClientUI
+          initialCampaigns={campaigns as Parameters<typeof MarketingClientUI>[0]['initialCampaigns']}
+        />
       </main>
 
       <Footer />

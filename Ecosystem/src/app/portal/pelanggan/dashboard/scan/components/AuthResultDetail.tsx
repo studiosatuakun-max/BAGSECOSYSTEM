@@ -11,7 +11,7 @@ import {
   Thermometer,
   FileCheck,
 } from 'lucide-react';
-import Icon from '@/app/portal/pelanggan/components/ui/AppIcon';
+import Icon from '@/components/ui/AppIcon';
 
 
 const verifiedCylinder = {

@@ -8,6 +8,7 @@ Dokumen ini meltrack status integrasi SOP, UI/UX, dan implementasi fitur khusus 
 - [x] Fase 3: Implementasi UI (Bento Grid, Tabel, Modal)
 - [x] Fase 4: Integrasi Form (Anti-Fraud / Hardware IoT)
 - [x] Fase 5: Final Review & Build Test
+- [x] **Phase 4B: Supabase Integration** (Server Actions + real tables)
 
 ## 📝 Catatan Harian / Blokir
 * (Semua fase sudah lengkap — modul siap presentasi ke Direksi. Tidak ada blokir.)

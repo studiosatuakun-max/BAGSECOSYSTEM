@@ -121,8 +121,8 @@ To elevate BaGS Ecosystem into an autonomous, next-generation enterprise ERP, we
 - [x] **Step 8**: Upgrade **Modul Armada (`/portal/armada`)** — Fleet, GPS Tracker, & Logistics Control (Completed & Verified).
 - [x] **Step 9**: Upgrade **Modul Industrial (`/portal/industrial`)** — B2B Director Console (Completed & Verified).
 - [x] **Step 10**: Upgrade **Modul Horeca (`/portal/horeca`)** — Commercial Gas & Horeca Console (Completed & Verified).
-- [ ] Connect and configure live Supabase tables (`dispatches` and `dispatch_files` storage bucket) for permanent production persistence.
-- [ ] Implement end-to-end user authentication and role-based access control (RBAC) linking login credentials to specific division inbox filters.
+- [x] Connect and configure live Supabase tables (`dispatches` and `dispatch_files` storage bucket) for permanent production persistence.
+- [x] Implement end-to-end user authentication and role-based access control (RBAC) linking login credentials to specific division inbox filters.
 
 ## Phase 2: SOP Integration (Data Real)
 - [x] Menganalisis Kuesioner Discovery Workflow PT BaGS.
@@ -149,4 +149,15 @@ To elevate BaGS Ecosystem into an autonomous, next-generation enterprise ERP, we
 - [x] **DevSecOps & RBAC**: Menerapkan *Role-Based Access Control* (11 roles) via Supabase Auth, Row-Level Security (RLS) ketat, Edge Middleware Next.js, dan secure login/logout API (Completed).
 - [x] **Seed Data & Master Data**: Menyiapkan mock/seed data awal untuk Industrial & Horeca Clients, Profiles, dan Dispatches (Completed).
 - [ ] **Phase 4B - Frontend Refactoring**: Menghubungkan *mock data* statis di 9 modul operasional ke *real tables* di Supabase via Server Actions dan Server Components.
+  - [x] **Keuangan** (`/portal/keuangan`) — `actions.ts` Server Actions, `InvoiceTableCard` migrated to Supabase (RLS-protected `invoices_industri`, `invoices_horeca`), page → Server Component
+  - [x] **Pemasaran** (`/portal/pemasaran`) — `actions.ts` Server Actions, `CRMPipelineTableCard` + `MarketingClientUI` migrated to Supabase (`sales_leads`, `marketing_campaigns`), page → Server Component
+  - [x] **Legal** (`/portal/legal`) — `actions.ts` Server Actions, `LegalComplianceTableCard` migrated to Supabase (`legal_contracts`, `legal_permits`), page → Server Component
+  - [x] **HR** (`/portal/hr`) — `actions.ts` Server Actions, `HRShiftTableCard` migrated to Supabase (`shift_schedules`, `employee_trainings`), `useSocket` WebSocket preserved, page → Server Component
 - [ ] **Storage Integration**: Implementasi upload & manajemen file (Bucket `dispatch-attachments`, dokumen kontrak legal, SIO, dll).
+
+## Phase 5: IoT & Hardware Integration (Edge Computing)
+- [x] **Edge Gateway Node.js Daemon**: Membangun `bags-edge-gateway/server.js` untuk mem-parsing Raw Hex Bytes Protocol (TLV) dari Antena UHF RFID CT-i607 via koneksi TCP Socket.
+- [x] **WebSocket Real-time Hooks**: Membuat `useSocket.ts` di Next.js untuk menerima *event push* dari *hardware* secara *real-time* tanpa *page refresh*.
+- [x] **Horeca 12Kg Batch Scanning**: Mengintegrasikan `UHFCylinderRfidLogCard.tsx` (Modul Stasiun) dengan event `cng_cylinder_scanned` untuk mendeteksi UHF Metal Tag Alien H3.
+- [x] **ATEX Safety Wristband Tracking**: Mengintegrasikan `AttendanceCard.tsx` dan `HRShiftTableCard.tsx` (Modul HR) dengan event `wristband_scanned` untuk pelacakan pergerakan *engineer* secara fisik di lapangan.
+- [ ] **Form 101 Auth Hardware Integration**: Menyelesaikan bug *Timeout Connection* saat pengiriman perintah `Write Tag (0x30)` secara sinkronus untuk penulisan *User Memory* di Kartu Alien H9 (Modul Stasiun).
