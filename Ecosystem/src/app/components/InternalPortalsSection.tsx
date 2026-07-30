@@ -128,7 +128,7 @@ const divisions: DivisionCard[] = [
   },
 ];
 
-export default function InternalPortalsSection() {
+export default function InternalPortalsSection({ isAuthenticated = false }: { isAuthenticated?: boolean }) {
   const sectionRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
@@ -245,7 +245,7 @@ export default function InternalPortalsSection() {
 
                 {/* CTA Button */}
                 <Link
-                  href={`/portal/${div.id}`}
+                  href={isAuthenticated ? `/portal/${div.id}` : `/?login_modal=true&destination=/portal/${div.id}`}
                   className="magnetic-btn w-full flex items-center justify-center gap-2 rounded-2xl py-3 font-bold border transition-all duration-300 shadow-sm hover:shadow-md"
                   style={{
                     fontSize: '13px',

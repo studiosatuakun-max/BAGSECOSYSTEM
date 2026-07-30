@@ -5,7 +5,7 @@ import Link from 'next/link';
 import AppImage from '@/components/ui/AppImage';
 import Icon from '@/components/ui/AppIcon';
 
-export default function PrimaryPortalsSection() {
+export default function PrimaryPortalsSection({ isAuthenticated = false }: { isAuthenticated?: boolean }) {
   const sectionRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
@@ -102,7 +102,9 @@ export default function PrimaryPortalsSection() {
                 )}
               </div>
 
-              <Link href="/portal/industrial" className="magnetic-btn w-full flex items-center justify-center gap-2 bg-industrial text-primary-foreground rounded-2xl py-3.5 font-bold hover:bg-primary/90 transition-all shadow-md hover:shadow-lg" style={{ fontSize: '14px' }}>
+              <Link 
+                href={isAuthenticated ? '/portal/industrial' : '/?login_modal=true&destination=/portal/industrial'}
+                className="magnetic-btn w-full flex items-center justify-center gap-2 bg-industrial text-primary-foreground rounded-2xl py-3.5 font-bold hover:bg-primary/90 transition-all shadow-md hover:shadow-lg" style={{ fontSize: '14px' }}>
                 <Icon name="LogInIcon" size={16} variant="outline" className="text-primary-foreground" />
                 Access Industrial Portal
                 <Icon name="ArrowRightIcon" size={15} variant="outline" className="text-primary-foreground group-hover:translate-x-1 transition-transform" />
@@ -161,7 +163,9 @@ export default function PrimaryPortalsSection() {
                 )}
               </div>
 
-              <Link href="/portal/horeca" className="magnetic-btn w-full flex items-center justify-center gap-2 text-white rounded-2xl py-3.5 font-bold transition-all shadow-md hover:shadow-lg" style={{ fontSize: '14px', backgroundColor: 'var(--amber-dark)' }}>
+              <Link 
+                href={isAuthenticated ? '/portal/horeca' : '/?login_modal=true&destination=/portal/horeca'}
+                className="magnetic-btn w-full flex items-center justify-center gap-2 text-white rounded-2xl py-3.5 font-bold transition-all shadow-md hover:shadow-lg" style={{ fontSize: '14px', backgroundColor: 'var(--amber-dark)' }}>
                 <Icon name="LogInIcon" size={16} variant="outline" className="text-white" />
                 Access Horeca Portal
                 <Icon name="ArrowRightIcon" size={15} variant="outline" className="text-white group-hover:translate-x-1 transition-transform" />
