@@ -5,7 +5,7 @@ import Link from 'next/link';
 import AppImage from '@/components/ui/AppImage';
 import Icon from '@/components/ui/AppIcon';
 
-export default function PrimaryPortalsSection({ isAuthenticated = false }: { isAuthenticated?: boolean }) {
+export default function PrimaryPortalsSection() {
   const sectionRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
@@ -103,7 +103,7 @@ export default function PrimaryPortalsSection({ isAuthenticated = false }: { isA
               </div>
 
               <Link 
-                href={isAuthenticated ? '/portal/industrial' : '/?login_modal=true&destination=/portal/industrial'}
+                href="/portal/industrial"
                 className="magnetic-btn w-full flex items-center justify-center gap-2 bg-industrial text-primary-foreground rounded-2xl py-3.5 font-bold hover:bg-primary/90 transition-all shadow-md hover:shadow-lg" style={{ fontSize: '14px' }}>
                 <Icon name="LogInIcon" size={16} variant="outline" className="text-primary-foreground" />
                 Access Industrial Portal
@@ -164,7 +164,7 @@ export default function PrimaryPortalsSection({ isAuthenticated = false }: { isA
               </div>
 
               <Link 
-                href={isAuthenticated ? '/portal/horeca' : '/?login_modal=true&destination=/portal/horeca'}
+                href="/portal/horeca"
                 className="magnetic-btn w-full flex items-center justify-center gap-2 text-white rounded-2xl py-3.5 font-bold transition-all shadow-md hover:shadow-lg" style={{ fontSize: '14px', backgroundColor: 'var(--amber-dark)' }}>
                 <Icon name="LogInIcon" size={16} variant="outline" className="text-white" />
                 Access Horeca Portal

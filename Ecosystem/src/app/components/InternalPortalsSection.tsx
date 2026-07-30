@@ -19,6 +19,18 @@ interface DivisionCard {
 
 const divisions: DivisionCard[] = [
   {
+    id: 'pusat',
+    title: 'Pusat',
+    subtitle: 'Super Admin · Management',
+    iconName: 'ShieldCheckIcon',
+    description: 'Central command center with cross-module audit logging, master data configuration, and access control.',
+    features: ['Audit Trail', 'Master Data', 'Role Management', 'Global Analytics'],
+    accentColor: 'var(--indigo)',
+    bgLight: 'var(--indigo-light)',
+    borderColor: 'rgba(79,70,229,0.2)',
+    ctaLabel: 'Command Center',
+  },
+  {
     id: 'stasiun',
     title: 'Stasiun',
     subtitle: 'Operations · Mother Station',
@@ -128,7 +140,7 @@ const divisions: DivisionCard[] = [
   },
 ];
 
-export default function InternalPortalsSection({ isAuthenticated = false }: { isAuthenticated?: boolean }) {
+export default function InternalPortalsSection() {
   const sectionRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
@@ -245,7 +257,7 @@ export default function InternalPortalsSection({ isAuthenticated = false }: { is
 
                 {/* CTA Button */}
                 <Link
-                  href={isAuthenticated ? `/portal/${div.id}` : `/?login_modal=true&destination=/portal/${div.id}`}
+                  href={`/portal/${div.id}`}
                   className="magnetic-btn w-full flex items-center justify-center gap-2 rounded-2xl py-3 font-bold border transition-all duration-300 shadow-sm hover:shadow-md"
                   style={{
                     fontSize: '13px',
