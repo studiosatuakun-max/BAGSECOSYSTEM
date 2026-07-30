@@ -1,0 +1,14 @@
+D:\PriceList\Vendor\Wallace\CT-I829\C#\Demo_Source\RfidReaderDemo\bin\Debug\RfidReader.exe.config
+D:\PriceList\Vendor\Wallace\CT-I829\C#\Demo_Source\RfidReaderDemo\bin\Debug\RfidReader.exe
+D:\PriceList\Vendor\Wallace\CT-I829\C#\Demo_Source\RfidReaderDemo\bin\Debug\RfidReader.pdb
+D:\PriceList\Vendor\Wallace\CT-I829\C#\Demo_Source\RfidReaderDemo\obj\Debug\RfidReader.csproj.AssemblyReference.cache
+D:\PriceList\Vendor\Wallace\CT-I829\C#\Demo_Source\RfidReaderDemo\obj\Debug\RfidReader.Form1.resources
+D:\PriceList\Vendor\Wallace\CT-I829\C#\Demo_Source\RfidReaderDemo\obj\Debug\RfidReader.M100Window.resources
+D:\PriceList\Vendor\Wallace\CT-I829\C#\Demo_Source\RfidReaderDemo\obj\Debug\RfidReader.Properties.Resources.resources
+D:\PriceList\Vendor\Wallace\CT-I829\C#\Demo_Source\RfidReaderDemo\obj\Debug\RfidReader.ScanWindow.resources
+D:\PriceList\Vendor\Wallace\CT-I829\C#\Demo_Source\RfidReaderDemo\obj\Debug\RfidReader.TcpServerWindows.resources
+D:\PriceList\Vendor\Wallace\CT-I829\C#\Demo_Source\RfidReaderDemo\obj\Debug\RfidReader.csproj.GenerateResource.cache
+D:\PriceList\Vendor\Wallace\CT-I829\C#\Demo_Source\RfidReaderDemo\obj\Debug\RfidReader.csproj.CoreCompileInputs.cache
+D:\PriceList\Vendor\Wallace\CT-I829\C#\Demo_Source\RfidReaderDemo\obj\Debug\RfidReader.csproj.CopyComplete
+D:\PriceList\Vendor\Wallace\CT-I829\C#\Demo_Source\RfidReaderDemo\obj\Debug\RfidReader.exe
+D:\PriceList\Vendor\Wallace\CT-I829\C#\Demo_Source\RfidReaderDemo\obj\Debug\RfidReader.pdb

@@ -1,13 +1,33 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { MOCK_HR_SHIFTS, MOCK_HR_TRAININGS } from '../data/mockHRData';
 import Icon from '@/components/ui/AppIcon';
 import { Search, Plus, CalendarClock, UserCheck, CalendarDays, CheckCircle2, Clock, AlertTriangle, GraduationCap } from 'lucide-react';
+import { toast } from 'sonner';
+import { useSocket } from '@/hooks/useSocket';
 
 export default function HRShiftTableCard() {
   const [activeTab, setActiveTab] = useState<'Shifts' | 'Trainings'>('Shifts');
   const [searchTerm, setSearchTerm] = useState('');
+  const socket = useSocket();
+
+  useEffect(() => {
+    if (!socket) return;
+
+    const handleWristbandScanned = (data: any) => {
+      toast.success('Live ATEX Zone Clearance', {
+        description: `Operator (ID: ...${data.epc.substring(data.epc.length - 4)}) entered restricted area.`,
+        icon: '👷‍♂️',
+      });
+    };
+
+    socket.on('wristband_scanned', handleWristbandScanned);
+
+    return () => {
+      socket.off('wristband_scanned', handleWristbandScanned);
+    };
+  }, [socket]);
 
   const filteredShifts = MOCK_HR_SHIFTS.filter(shift => 
     shift.employee_id.toLowerCase().includes(searchTerm.toLowerCase()) ||

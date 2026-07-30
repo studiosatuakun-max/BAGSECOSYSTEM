@@ -1,8 +1,9 @@
 'use client';
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { BarChart, Bar, XAxis, ResponsiveContainer, Tooltip, Cell } from 'recharts';
 import { UserCheck, Clock, ShieldCheck } from 'lucide-react';
+import { useSocket } from '@/hooks/useSocket';
 
 const attendanceTrend = [
   { day: 'Mon', present: 395, absent: 5, leave: 12 },
@@ -32,6 +33,20 @@ const CustomTooltip = ({ active, payload, label }: { active?: boolean; payload?:
 };
 
 export default function AttendanceCard() {
+  const [presentCount, setPresentCount] = useState(397);
+  const socket = useSocket();
+
+  useEffect(() => {
+    if (!socket) return;
+    const handleWristbandScanned = () => {
+      setPresentCount(prev => prev + 1);
+    };
+    socket.on('wristband_scanned', handleWristbandScanned);
+    return () => {
+      socket.off('wristband_scanned', handleWristbandScanned);
+    };
+  }, [socket]);
+
   return (
     <div className="rounded-3xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-6 shadow-xl flex flex-col justify-between h-full transition-all duration-300">
       <div>
@@ -63,7 +78,9 @@ export default function AttendanceCard() {
         {/* 3 Pill Stats */}
         <div className="grid grid-cols-3 gap-2.5 text-xs mb-5">
           <div className="bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-800/60 rounded-2xl p-3 text-center transition-all hover:scale-[1.02]">
-            <p className="text-xl font-black tabular-nums text-emerald-700 dark:text-emerald-400">397</p>
+            <p className="text-xl font-black tabular-nums text-emerald-700 dark:text-emerald-400">
+              {presentCount}
+            </p>
             <p className="text-[10px] text-emerald-600 dark:text-emerald-300 font-extrabold uppercase mt-0.5">Present / On Shift</p>
           </div>
           <div className="bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800/60 rounded-2xl p-3 text-center transition-all hover:scale-[1.02]">

@@ -1,8 +1,9 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Scan, CheckCircle2, AlertCircle, Clock, Package, ChevronRight, Tag, Wifi } from 'lucide-react';
 import Icon from '@/components/ui/AppIcon';
+import { useSocket } from '@/hooks/useSocket';
 
 interface CylinderScan {
   id: string;
@@ -63,6 +64,42 @@ export default function UHFCylinderRfidLogCard() {
   const [searchQuery, setSearchQuery] = useState('');
   const [scans, setScans] = useState<CylinderScan[]>([]);
   const [isScanning, setIsScanning] = useState(false);
+  const socket = useSocket();
+
+  useEffect(() => {
+    if (!socket) return;
+
+    const handleCylinderScanned = (data: any) => {
+      setIsScanning(true);
+      
+      const newScan: CylinderScan = {
+        id: `cyl-live-${Date.now()}`,
+        cylinderSerial: `CYL-26-CNG-${data.epc.substring(data.epc.length - 4)}`, // Mock serial from last 4 digits of EPC
+        rfidEpc: `EPC:ALIEN:H3:${data.epc}`,
+        weightKg: data.weightKg,
+        scanTime: new Date(data.timestamp).toLocaleTimeString('id-ID', { hour12: false }),
+        operator: 'Edge-Gateway',
+        hydrotestExpiry: '2029-12-31',
+        hydrotestStatus: data.hydrotestStatus,
+        fillStatus: data.fillStatus
+      };
+
+      setScans(prev => {
+        // Prevent exact duplicates in UI for demo
+        if (prev.some(s => s.rfidEpc === newScan.rfidEpc)) return prev;
+        return [newScan, ...prev];
+      });
+
+      // Stop animation after 1s
+      setTimeout(() => setIsScanning(false), 1000);
+    };
+
+    socket.on('cng_cylinder_scanned', handleCylinderScanned);
+
+    return () => {
+      socket.off('cng_cylinder_scanned', handleCylinderScanned);
+    };
+  }, [socket]);
 
   const filteredScans = scans.filter(
     (c) =>
