@@ -27,6 +27,9 @@ export async function POST(request: NextRequest) {
       },
     });
 
+    // Hapus dummy_role cookie jika ada
+    response.cookies.delete('dummy_role');
+
     // Sign out dari Supabase — otomatis clear cookies session
     const { error } = await supabase.auth.signOut();
 

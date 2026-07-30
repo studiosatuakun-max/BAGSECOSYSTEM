@@ -8,7 +8,7 @@ export default function DashboardHeader() {
     <header className="pt-6 pb-2">
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-3">
-          <Link href="/dashboard" className="flex items-center gap-1 text-xs font-bold text-muted-foreground hover:text-foreground bg-muted hover:bg-muted/80 px-2.5 py-1.5 rounded-xl transition-colors">
+          <Link href="/" className="flex items-center gap-1 text-xs font-bold text-muted-foreground hover:text-foreground bg-muted hover:bg-muted/80 px-2.5 py-1.5 rounded-xl transition-colors">
             ← Back
           </Link>
           <div className="flex items-center gap-2">

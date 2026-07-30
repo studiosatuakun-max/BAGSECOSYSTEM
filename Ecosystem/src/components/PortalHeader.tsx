@@ -31,7 +31,7 @@ export default function PortalHeader({
   roleBadge,
   roleColor = 'indigo',
   navItems,
-  backUrl = '/dashboard',
+  backUrl = '/',
   backText = 'Exit Portal',
   showInbox = true,
   rightCustom,

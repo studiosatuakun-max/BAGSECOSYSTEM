@@ -7,7 +7,7 @@ export default function Header() {
     <header className="w-full bg-background border-b border-border sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-6 py-3 flex items-center justify-between gap-4">
         {/* Logo + Brand */}
-        <Link href="/dashboard" className="flex items-center gap-3 group">
+        <Link href="/" className="flex items-center gap-3 group">
           <Image
             src="/assets/images/icon.png"
             alt="BaGS - PT Baskara Asri Ghas logo"

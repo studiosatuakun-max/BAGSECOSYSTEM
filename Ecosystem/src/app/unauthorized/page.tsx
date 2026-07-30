@@ -6,7 +6,7 @@ import { Shield, Lock, ArrowLeft, Home } from 'lucide-react';
 
 // Role → Portal label mapping untuk UX yang informatif
 const ROLE_PORTAL_MAP: Record<string, { label: string; href: string; color: string }> = {
-  super_admin:        { label: 'Dashboard Utama',         href: '/dashboard',         color: 'text-purple-400' },
+  super_admin:        { label: 'Dashboard Utama',         href: '/',         color: 'text-purple-400' },
   station_operator:  { label: 'Portal Stasiun',          href: '/portal/stasiun',    color: 'text-emerald-400' },
   fleet_manager:     { label: 'Portal Armada',           href: '/portal/armada',     color: 'text-cyan-400' },
   fleet_driver:      { label: 'Driver App',              href: '/portal/pwa',        color: 'text-sky-400' },
@@ -126,7 +126,7 @@ function UnauthorizedContent() {
               </button>
             ) : (
               <button
-                onClick={() => router.push('/dashboard')}
+                onClick={() => router.push('/')}
                 className="flex-1 flex items-center justify-center gap-2 px-5 py-3.5 rounded-2xl bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-bold transition-all duration-200 shadow-lg shadow-indigo-600/25"
               >
                 <Home className="w-4 h-4" />

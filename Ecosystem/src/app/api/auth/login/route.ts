@@ -29,7 +29,7 @@ const LoginSchema = z.object({
 
 // ─── Role → Default Portal Redirect Map ──────────────────────────────────────
 const ROLE_DEFAULT_PORTAL: Record<string, string> = {
-  super_admin: '/dashboard',
+  super_admin: '/',
   station_operator: '/portal/stasiun',
   fleet_manager: '/portal/armada',
   fleet_driver: '/portal/pwa',
@@ -119,7 +119,7 @@ export async function POST(request: NextRequest) {
           maxAge: 60 * 60 * 24, // 1 hari
         });
 
-        const portalPath = ROLE_DEFAULT_PORTAL[matchedRole] || '/dashboard';
+        const portalPath = ROLE_DEFAULT_PORTAL[matchedRole] || '/';
         return NextResponse.json(
           { success: true, redirectTo: portalPath, role: matchedRole },
           { status: 200, headers: response.headers }
@@ -140,7 +140,7 @@ export async function POST(request: NextRequest) {
     // ── 4. Ekstrak Role dari app_metadata ─────────────────────────────────────
     const userRole = (data.user.app_metadata?.role as string) ?? 'fleet_driver';
     const userName = data.user.user_metadata?.full_name ?? data.user.email;
-    const defaultPortal = ROLE_DEFAULT_PORTAL[userRole] ?? '/dashboard';
+    const defaultPortal = ROLE_DEFAULT_PORTAL[userRole] ?? '/';
 
     // ── 5. Return sukses dengan user info & redirect suggestion ───────────────
     return NextResponse.json(

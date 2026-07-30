@@ -32,8 +32,8 @@ export default function LoginPage() {
 
         {/* Header */}
         <div className="text-center mb-10">
-          <Link href="/dashboard" className="inline-block mb-6 text-xs font-bold text-gray-500 hover:text-gray-900 bg-gray-100 hover:bg-gray-200 px-3 py-1.5 rounded-xl transition-colors">
-            ← Back to Hub
+          <Link href="/" className="inline-block mb-6 text-xs font-bold text-gray-500 hover:text-gray-900 bg-gray-100 hover:bg-gray-200 px-3 py-1.5 rounded-xl transition-colors">
+            ← Return to Ecosystem
           </Link>
           <div className="w-16 h-16 bg-white border border-slate-200 rounded-2xl flex items-center justify-center mx-auto mb-5 shadow-sm overflow-hidden p-2.5">
             <img src="/assets/images/icon.png" alt="BaGS Logo" className="w-full h-full object-contain" />
