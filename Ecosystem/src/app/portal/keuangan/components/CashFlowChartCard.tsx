@@ -114,6 +114,7 @@ export default function CashFlowChartCard() {
           <p className="text-lg font-black text-emerald-600 dark:text-emerald-400 tabular-nums mt-0.5">+ Rp 7.995.000.000</p>
         </div>
       </div>
+      </div>
 
       {showExpenseModal && <AddExpenseModal onClose={() => setShowExpenseModal(false)} />}
     </>
