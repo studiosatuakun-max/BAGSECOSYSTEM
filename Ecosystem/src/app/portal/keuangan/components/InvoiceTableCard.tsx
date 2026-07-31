@@ -160,7 +160,8 @@ export default function InvoiceTableCard({ industriInvoices: initialIndustri, ho
                   <tr key={inv.id} className="hover:bg-slate-800/30 transition-colors">
                     <td className="p-4">
                       <div className="font-semibold text-white text-sm whitespace-nowrap shrink-0 align-middle">{inv.invoice_no}</div>
-                      <div className="text-xs text-slate-400 mt-0.5">Due: {inv.due_date}</div>
+                      <div className="text-xs font-medium text-amber-500 mt-1">{inv.customer_name || 'Unknown Client'}</div>
+                      <div className="text-[10px] text-slate-400 mt-0.5">Due: {inv.due_date}</div>
                     </td>
                     <td className="p-4 text-sm text-slate-300 whitespace-nowrap shrink-0 align-middle">
                       {inv.billing_period_start} <br />
@@ -233,7 +234,8 @@ export default function InvoiceTableCard({ industriInvoices: initialIndustri, ho
                 <tr key={inv.id} className="hover:bg-slate-800/30 transition-colors">
                   <td className="p-4">
                     <div className="font-semibold text-white text-sm whitespace-nowrap shrink-0 align-middle">{inv.invoice_no}</div>
-                    <div className="text-xs text-slate-400 mt-0.5">Due: {inv.due_date}</div>
+                    <div className="text-xs font-medium text-amber-500 mt-1">{inv.customer_name || 'Unknown Client'}</div>
+                    <div className="text-[10px] text-slate-400 mt-0.5">Due: {inv.due_date}</div>
                   </td>
                   <td className="p-4 text-sm text-slate-300 whitespace-nowrap shrink-0 align-middle">{inv.invoice_date}</td>
                   <td className="p-4 text-sm font-medium text-amber-300 whitespace-nowrap shrink-0 align-middle">

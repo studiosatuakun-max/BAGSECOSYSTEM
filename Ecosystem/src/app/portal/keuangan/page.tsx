@@ -1,4 +1,7 @@
 import React from 'react';
+
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
 import PortalHeader from '@/components/PortalHeader';
 import Footer from '@/components/Footer';
 import BentoGrid from './components/BentoGrid';
