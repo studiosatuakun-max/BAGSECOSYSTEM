@@ -108,7 +108,7 @@ export async function POST(request: NextRequest) {
         else if (email.includes('pemasaran')) matchedRole = 'marketing_ae';
         else if (email.includes('skid')) matchedRole = 'skid_operator';
         else if (email.includes('horeca')) matchedRole = 'horeca_sales';
-        else if (email.includes('customer')) matchedRole = 'customer';
+        else if (email.includes('pelanggan') || email.includes('customer')) matchedRole = 'customer';
         else if (email.includes('industrial')) matchedRole = 'industrial_director';
         else if (email.includes('industrial')) matchedRole = 'industrial_director';
 

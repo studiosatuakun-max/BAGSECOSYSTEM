@@ -8,11 +8,10 @@ import Icon from '@/components/ui/AppIcon';
 const demoAccounts = [
   { role: 'Super Admin', portal: 'Command Center', email: 'admin@baskara.id', pwd: 'BaGS@2026!', icon: 'ShieldCheckIcon', color: 'bg-white hover:bg-slate-50 text-indigo-600 border-indigo-100' },
   { role: 'B2B Director', portal: 'Industrial Portal', email: 'industrial@baskara.id', pwd: 'BaGS@2026!', icon: 'BuildingOfficeIcon', color: 'bg-white hover:bg-slate-50 text-amber-600 border-amber-100' },
+  { role: 'B2B Customer', portal: 'Customer App', email: 'pelanggan@baskara.id', pwd: 'BaGS@2026!', icon: 'ShoppingBagIcon', color: 'bg-white hover:bg-slate-50 text-yellow-600 border-yellow-100' },
   { role: 'B2B Sales', portal: 'Horeca Portal', email: 'horeca@baskara.id', pwd: 'BaGS@2026!', icon: 'FireIcon', color: 'bg-white hover:bg-slate-50 text-orange-600 border-orange-100' },
-  { role: 'B2B Customer', portal: 'Skid Portal', email: 'skid@baskara.id', pwd: 'BaGS@2026!', icon: 'ScaleIcon', color: 'bg-white hover:bg-slate-50 text-rose-600 border-rose-100' },
   { role: 'Station Operator', portal: 'Stasiun', email: 'stasiun@baskara.id', pwd: 'BaGS@2026!', icon: 'CpuChipIcon', color: 'bg-white hover:bg-slate-50 text-emerald-600 border-emerald-100' },
   { role: 'Fleet Manager', portal: 'Armada', email: 'armada@baskara.id', pwd: 'BaGS@2026!', icon: 'TruckIcon', color: 'bg-white hover:bg-slate-50 text-blue-600 border-blue-100' },
-  { role: 'B2C Customer', portal: 'Customer App', email: 'customer@baskara.id', pwd: 'BaGS@2026!', icon: 'ShoppingBagIcon', color: 'bg-white hover:bg-slate-50 text-yellow-600 border-yellow-100' },
   { role: 'CFO / Finance', portal: 'Keuangan', email: 'keuangan@baskara.id', pwd: 'BaGS@2026!', icon: 'BanknotesIcon', color: 'bg-white hover:bg-slate-50 text-green-600 border-green-100' },
   { role: 'Marketing Head', portal: 'Pemasaran', email: 'pemasaran@baskara.id', pwd: 'BaGS@2026!', icon: 'PresentationChartLineIcon', color: 'bg-white hover:bg-slate-50 text-pink-600 border-pink-100' },
   { role: 'HR Manager', portal: 'HRD', email: 'hr@baskara.id', pwd: 'BaGS@2026!', icon: 'UsersIcon', color: 'bg-white hover:bg-slate-50 text-violet-600 border-violet-100' },

@@ -14,7 +14,7 @@ export default async function OpsHsseDashboard() {
   let records: MasterFuelingRecord[] = [];
   try {
     const result = await getMasterFuelingRecords();
-    records = result.data as unknown as MasterFuelingRecord[];
+    records = (result.data ?? []) as unknown as MasterFuelingRecord[];
   } catch {
     records = [];
   }

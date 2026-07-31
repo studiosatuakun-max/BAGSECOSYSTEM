@@ -9,7 +9,7 @@ export default async function DireksiB2BPage() {
   let clients: Record<string, unknown>[] = [];
   try {
     const result = await getIndustrialClients();
-    clients = result.data as unknown as Parameters<typeof IndustrialTableClient>[0]['initialClients'];
+    clients = (result.data ?? []) as unknown as Parameters<typeof IndustrialTableClient>[0]['initialClients'];
   } catch {
     clients = [];
   }

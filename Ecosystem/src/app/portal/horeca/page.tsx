@@ -24,7 +24,7 @@ export default async function HorecaCommercialPage() {
   let clients: HorecaClient[] = [];
   try {
     const result = await getHorecaClients();
-    clients = result.data as unknown as HorecaClient[];
+    clients = (result.data ?? []) as unknown as HorecaClient[];
   } catch {
     clients = [];
   }

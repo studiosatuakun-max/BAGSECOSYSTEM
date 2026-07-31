@@ -1,5 +1,4 @@
 import { getCustodyTransfers } from './_integration/actions';
-import { toast } from 'sonner';
 import PortalHeader from '@/components/PortalHeader';
 import Footer from '@/components/Footer';
 import Icon from '@/components/ui/AppIcon';
@@ -15,7 +14,7 @@ export default async function SkidPortalDashboardPage() {
   let slips: CustodyTransferSlip[] = [];
   try {
     const result = await getCustodyTransfers();
-    slips = result.data as unknown as CustodyTransferSlip[];
+    slips = (result.data ?? []) as unknown as CustodyTransferSlip[];
   } catch {
     slips = [];
   }
