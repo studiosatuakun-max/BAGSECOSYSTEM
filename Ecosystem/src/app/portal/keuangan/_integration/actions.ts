@@ -67,7 +67,6 @@ export async function createInvoiceIndustri(payload: {
       billing_period_start: payload.billing_period_start,
       billing_period_end: payload.billing_period_end,
       total_volume_mmbtu: payload.total_volume_mmbtu,
-      unit_price_usd: payload.unit_price_usd,
       subtotal_usd: payload.subtotal_usd,
       tax_rate_percent: payload.tax_rate_percent,
       tax_amount_usd: payload.tax_amount_usd,
@@ -160,9 +159,13 @@ export async function createInvoiceHoreca(payload: {
   efaktur_url?: string;
 }): Promise<{ data: Record<string, unknown> | null; error: string | null }> {
   const supabase = createSupabaseAdmin();
+  
+  // Destructure to omit tax_rate_percent which is not in the schema
+  const { tax_rate_percent, ...insertPayload } = payload;
+  
   const { data, error } = await supabase
     .from('invoices_horeca')
-    .insert(payload)
+    .insert(insertPayload)
     .select()
     .single();
 
