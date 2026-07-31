@@ -135,7 +135,7 @@ export default function IssueInvoiceModal({ onClose, defaultTab }: Props) {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+    <div className="fixed inset-0 z-[999] flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
       <div className="bg-slate-900/90 border border-slate-700 w-full max-w-2xl rounded-2xl shadow-2xl overflow-hidden flex flex-col">
         <div className="flex justify-between items-center p-6 border-b border-slate-700/50">
           <h2 className="text-xl font-semibold text-white">Issue New Invoice</h2>

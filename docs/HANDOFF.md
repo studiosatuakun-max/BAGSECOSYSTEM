@@ -17,7 +17,13 @@ Vercel auto-deploy ~2-3 menit. Monitor: https://vercel.com/dashboard
 - **Opex System**: Penambahan CRUD `operating_expenses` untuk memisahkan pengeluaran dari pendapatan kas.
 - **Cross-Module Automation**: Server actions di `keuangan/actions.ts` sudah siap dieksekusi (dipanggil) oleh agen-agen yang bekerja di modul Skid/Armada.
 
-### 2. Client-Side Crash on `/portal/stasiun` and `/portal/skid`
+### 2. Finance: Clipped Modal Bug Fix (Hotfix)
+**Root Cause:** Komponen `IssueInvoiceModal` dan `AddExpenseModal` ter-render di dalam card wrapper yang memiliki class `overflow-hidden`, menyebabkan modal terpotong dan tidak *full-screen*.
+**Fix:** 
+- Membungkus return dari `InvoiceTableCard` dan `CashFlowChartCard` dengan `<React.Fragment>` (`<>`) dan mengeluarkan komponen modal ke luar blok div yang *overflowing*.
+- Memperbarui class modal menggunakan `fixed inset-0 z-[999] bg-black/50 backdrop-blur-sm` agar *overlay* 100% menutupi viewport dengan baik.
+
+### 3. Client-Side Crash on `/portal/stasiun` and `/portal/skid`
 **Root Cause:** Server Component passed `data: null` from Supabase (RLS blocks dummy cookie auth) to `MasterFuelingTableCard`. Component did `useState(null)`, then `.filter()` crashed.
 
 **Fix:** Always default to `[]` when Supabase returns null:

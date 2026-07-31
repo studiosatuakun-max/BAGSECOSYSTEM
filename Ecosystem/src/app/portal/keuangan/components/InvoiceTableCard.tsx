@@ -78,8 +78,9 @@ export default function InvoiceTableCard({ industriInvoices: initialIndustri, ho
   };
 
   return (
-    <div className="col-span-full rounded-2xl border border-white/10 bg-slate-900/60 backdrop-blur-md p-6 shadow-xl flex flex-col h-full relative overflow-hidden group">
-      {/* Background Gradients */}
+    <>
+      <div className="col-span-full rounded-2xl border border-white/10 bg-slate-900/60 backdrop-blur-md p-6 shadow-xl flex flex-col h-full relative overflow-hidden group">
+        {/* Background Gradients */}
       <div className="absolute top-0 right-0 w-96 h-96 bg-amber-500/10 rounded-full blur-[100px] pointer-events-none" />
 
       {/* Header */}
@@ -280,6 +281,7 @@ export default function InvoiceTableCard({ industriInvoices: initialIndustri, ho
             </tbody>
           </table>
         )}
+        </div>
       </div>
 
       {showIssueModal && (
@@ -288,6 +290,6 @@ export default function InvoiceTableCard({ industriInvoices: initialIndustri, ho
           defaultTab={activeTab}
         />
       )}
-    </div>
+    </>
   );
 }

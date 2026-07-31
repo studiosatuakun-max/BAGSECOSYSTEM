@@ -26,8 +26,9 @@ export default function CashFlowChartCard() {
   const [showExpenseModal, setShowExpenseModal] = useState(false);
 
   return (
-    <div className="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200/80 dark:border-slate-800 p-6 shadow-xl hover:shadow-2xl transition-all duration-300 h-full flex flex-col justify-between gap-5 group">
-      {/* Header */}
+    <>
+      <div className="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200/80 dark:border-slate-800 p-6 shadow-xl hover:shadow-2xl transition-all duration-300 h-full flex flex-col justify-between gap-5 group">
+        {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-100 dark:border-slate-800 pb-4">
         <div className="flex items-center gap-3">
           <div className="w-11 h-11 rounded-2xl bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-200 dark:border-emerald-800 flex items-center justify-center text-emerald-600 dark:text-emerald-400 shrink-0 shadow-inner group-hover:scale-105 transition-transform duration-300">
@@ -115,6 +116,6 @@ export default function CashFlowChartCard() {
       </div>
 
       {showExpenseModal && <AddExpenseModal onClose={() => setShowExpenseModal(false)} />}
-    </div>
+    </>
   );
 }

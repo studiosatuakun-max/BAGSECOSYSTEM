@@ -17,6 +17,7 @@ Membangun portal eksekutif CFO yang menangani skema tagihan ganda (Industri/FOB 
 - [x] **Supabase Storage Integration**: Buat bucket `finance-efaktur` untuk melampirkan file PDF DJP ke tagihan.
 - [x] **Cross-Module Automation**: Bangun Trigger/Server Action yang mengintegrasikan Modul Keuangan dengan Modul Skid, Armada, dan Pemasaran.
 - [x] **Data Seed**: Injeksi 10 data Invoice asli (PT Krakatau Baja, dsb) untuk presentasi.
+- [x] **Hotfix Modal Capping**: Fix bug *Issue Invoice Modal* dan *Add Expense Modal* yang terpotong di dalam bento card `overflow-hidden`. Modal kini dirender *full-screen* dengan z-index `999` dan background overlay `black/50`.
 
 ## 📈 Financial Metrics Summary
 
