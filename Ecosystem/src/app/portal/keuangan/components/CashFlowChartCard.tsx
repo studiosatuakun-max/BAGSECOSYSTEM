@@ -2,7 +2,8 @@
 
 import React, { useState } from 'react';
 import dynamic from 'next/dynamic';
-import { TrendingUp, MoreHorizontal, Download, Sparkles } from 'lucide-react';
+import { TrendingUp, MoreHorizontal, Download, Sparkles, PlusCircle } from 'lucide-react';
+import AddExpenseModal from './AddExpenseModal';
 
 const CashFlowChart = dynamic(() => import('./CashFlowChart'), {
   ssr: false,
@@ -22,6 +23,7 @@ const periods = [
 
 export default function CashFlowChartCard() {
   const [activePeriod, setActivePeriod] = useState('12m');
+  const [showExpenseModal, setShowExpenseModal] = useState(false);
 
   return (
     <div className="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200/80 dark:border-slate-800 p-6 shadow-xl hover:shadow-2xl transition-all duration-300 h-full flex flex-col justify-between gap-5 group">
@@ -64,6 +66,10 @@ export default function CashFlowChartCard() {
               </button>
             ))}
           </div>
+          <button onClick={() => setShowExpenseModal(true)} className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-900 dark:bg-slate-800 text-white font-bold hover:bg-slate-800 dark:hover:bg-slate-700 transition-all text-xs">
+            <PlusCircle size={14} />
+            Catat Pengeluaran
+          </button>
           <button className="p-2 rounded-xl text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-white transition-all duration-150 border border-transparent hover:border-slate-200 dark:hover:border-slate-700">
             <Download size={16} />
           </button>
@@ -107,6 +113,8 @@ export default function CashFlowChartCard() {
           <p className="text-lg font-black text-emerald-600 dark:text-emerald-400 tabular-nums mt-0.5">+ Rp 7.995.000.000</p>
         </div>
       </div>
+
+      {showExpenseModal && <AddExpenseModal onClose={() => setShowExpenseModal(false)} />}
     </div>
   );
 }

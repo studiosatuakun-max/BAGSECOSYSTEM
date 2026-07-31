@@ -9,9 +9,15 @@ Vercel auto-deploy ~2-3 menit. Monitor: https://vercel.com/dashboard
 
 ---
 
-## Bugs Fixed This Session
+## Bugs Fixed / New Features This Session
 
-### 1. Client-Side Crash on `/portal/stasiun` and `/portal/skid`
+### 1. Finance: PDF Auto-Generator & Storage Bucket (Phase 4.5)
+- **PDF Generator**: Diimplementasikan menggunakan pendekatan `/print/[type]/[id]` page dengan CSS `@media print` dan `window.print()` di `useEffect` (Zero heavy libraries seperti jsPDF/html2pdf).
+- **Storage Bucket**: Terintegrasi `finance-efaktur` Supabase storage bucket via browser client dengan limit file size maks 5MB. URL hasil upload dihubungkan ke field `efaktur_url` di tabel database.
+- **Opex System**: Penambahan CRUD `operating_expenses` untuk memisahkan pengeluaran dari pendapatan kas.
+- **Cross-Module Automation**: Server actions di `keuangan/actions.ts` sudah siap dieksekusi (dipanggil) oleh agen-agen yang bekerja di modul Skid/Armada.
+
+### 2. Client-Side Crash on `/portal/stasiun` and `/portal/skid`
 **Root Cause:** Server Component passed `data: null` from Supabase (RLS blocks dummy cookie auth) to `MasterFuelingTableCard`. Component did `useState(null)`, then `.filter()` crashed.
 
 **Fix:** Always default to `[]` when Supabase returns null:

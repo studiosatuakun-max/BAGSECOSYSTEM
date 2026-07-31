@@ -26,6 +26,7 @@ export const InvoiceIndustriSchema = z.object({
   
   payment_term: z.enum(['Cash_Deposit', 'Tempo']),
   status: z.enum(['Draft', 'Issued', 'Paid', 'Overdue', 'Cancelled']),
+  efaktur_url: z.string().url().optional(),
   
   items: z.array(InvoiceItemSchema).min(1, 'Invoice must have at least one item')
 }).refine(data => {
@@ -55,5 +56,14 @@ export const InvoiceHorecaSchema = z.object({
   total_amount_idr: z.number().positive(),
   
   payment_term: z.enum(['Cash_Deposit', 'COD', 'Termin']),
-  status: z.enum(['Draft', 'Issued', 'Paid', 'Overdue', 'Cancelled'])
+  status: z.enum(['Draft', 'Issued', 'Paid', 'Overdue', 'Cancelled']),
+  efaktur_url: z.string().url().optional()
+});
+
+export const OperatingExpenseSchema = z.object({
+  date: z.string().date(),
+  category: z.string().min(1),
+  description: z.string().min(1),
+  amount_idr: z.number().positive(),
+  created_by: z.string().uuid().optional()
 });

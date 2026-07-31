@@ -25,6 +25,7 @@ CREATE TABLE IF NOT EXISTS public.invoices_industri (
   
   payment_term TEXT CHECK (payment_term IN ('Cash_Deposit', 'Tempo')),
   status TEXT DEFAULT 'Draft' CHECK (status IN ('Draft', 'Issued', 'Paid', 'Overdue', 'Cancelled')),
+  efaktur_url TEXT,
   
   created_at TIMESTAMPTZ DEFAULT now(),
   updated_at TIMESTAMPTZ DEFAULT now()
@@ -56,7 +57,19 @@ CREATE TABLE IF NOT EXISTS public.invoices_horeca (
   
   payment_term TEXT CHECK (payment_term IN ('Cash_Deposit', 'COD', 'Termin')),
   status TEXT DEFAULT 'Draft' CHECK (status IN ('Draft', 'Issued', 'Paid', 'Overdue', 'Cancelled')),
+  efaktur_url TEXT,
   
+  created_at TIMESTAMPTZ DEFAULT now(),
+  updated_at TIMESTAMPTZ DEFAULT now()
+);
+
+CREATE TABLE IF NOT EXISTS public.operating_expenses (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  date DATE NOT NULL DEFAULT CURRENT_DATE,
+  category TEXT NOT NULL,
+  description TEXT NOT NULL,
+  amount_idr NUMERIC(15,2) NOT NULL,
+  created_by UUID,
   created_at TIMESTAMPTZ DEFAULT now(),
   updated_at TIMESTAMPTZ DEFAULT now()
 );
@@ -67,6 +80,7 @@ CREATE TABLE IF NOT EXISTS public.invoices_horeca (
 ALTER TABLE public.invoices_industri ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.invoice_industri_items ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.invoices_horeca ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.operating_expenses ENABLE ROW LEVEL SECURITY;
 
 -- 1. Read Policy: Finance team and Super Admins can view all invoices
 CREATE POLICY "finance_read_invoices" ON public.invoices_industri
@@ -76,6 +90,12 @@ CREATE POLICY "finance_read_invoices" ON public.invoices_industri
 
 -- 2. Insert/Update Policy: Only Finance team can issue invoices
 CREATE POLICY "finance_manage_invoices" ON public.invoices_industri
+  FOR ALL USING (
+    auth.jwt() ->> 'role' IN ('Finance Manager', 'Finance Staff', 'Super Admin')
+  );
+
+-- 3. Opex Policies
+CREATE POLICY "finance_manage_opex" ON public.operating_expenses
   FOR ALL USING (
     auth.jwt() ->> 'role' IN ('Finance Manager', 'Finance Staff', 'Super Admin')
   );

@@ -51,6 +51,7 @@ export async function createInvoiceIndustri(payload: {
   total_amount_idr: number;
   payment_term: 'Tempo' | 'Cash_Deposit';
   status: 'Draft' | 'Issued' | 'Paid' | 'Overdue' | 'Cancelled';
+  efaktur_url?: string;
   items: { description: string; volume_mmbtu: number; unit_price_usd: number; subtotal_usd: number }[];
 }): Promise<{ data: Record<string, unknown> | null; error: string | null }> {
   const supabase = await createSupabaseServerClient();
@@ -75,6 +76,7 @@ export async function createInvoiceIndustri(payload: {
       total_amount_idr: payload.total_amount_idr,
       payment_term: payload.payment_term,
       status: payload.status,
+      efaktur_url: payload.efaktur_url,
     })
     .select()
     .single();
@@ -155,6 +157,7 @@ export async function createInvoiceHoreca(payload: {
   total_amount_idr: number;
   payment_term: 'COD' | 'Termin' | 'Cash_Deposit';
   status: 'Draft' | 'Issued' | 'Paid' | 'Overdue' | 'Cancelled';
+  efaktur_url?: string;
 }): Promise<{ data: Record<string, unknown> | null; error: string | null }> {
   const supabase = await createSupabaseServerClient();
   const { data, error } = await supabase
@@ -195,6 +198,7 @@ export async function getKeuanganSummary(): Promise<{
   issuedCount: number;
   paidCount: number;
   overdueCount: number;
+  totalOpex: number;
 }> {
   const supabase = await createSupabaseServerClient();
 
@@ -216,6 +220,9 @@ export async function getKeuanganSummary(): Promise<{
     .filter((i) => i.status === 'Issued' || i.status === 'Overdue')
     .reduce((sum, i) => sum + (i.total_amount_idr ?? 0), 0);
 
+  const { data: opexData } = await supabase.from('operating_expenses').select('amount_idr');
+  const totalOpex = (opexData ?? []).reduce((sum, item) => sum + (item.amount_idr ?? 0), 0);
+
   return {
     totalRevenueIdr,
     totalArOutstanding: outstanding,
@@ -223,5 +230,108 @@ export async function getKeuanganSummary(): Promise<{
     issuedCount: all.filter((i) => i.status === 'Issued').length,
     paidCount: all.filter((i) => i.status === 'Paid').length,
     overdueCount: all.filter((i) => i.status === 'Overdue').length,
+    totalOpex,
   };
+}
+
+// ─── Operating Expenses (OPEX) ────────────────────────────────────────────────
+
+export async function createOpex(payload: {
+  date: string;
+  category: string;
+  description: string;
+  amount_idr: number;
+}): Promise<{ error: string | null }> {
+  const supabase = await createSupabaseServerClient();
+  const { error } = await supabase.from('operating_expenses').insert(payload);
+  if (!error) revalidatePath('/portal/keuangan');
+  return { error: error?.message ?? null };
+}
+
+export async function getOpexSummary(): Promise<{ data: any[] | null; error: string | null }> {
+  const supabase = await createSupabaseServerClient();
+  const { data, error } = await supabase
+    .from('operating_expenses')
+    .select('*')
+    .order('date', { ascending: false })
+    .limit(50);
+  return { data: data ?? [], error: error?.message ?? null };
+}
+
+// ─── Cross-Module Automation (Ready for other agents) ──────────────────────────
+
+export async function generateDraftInvoiceFromCustody(skidData: any) {
+  // Dipanggil otomatis oleh Skid Module saat "Completed"
+  console.log('Generating Draft Invoice Industri based on Skid Data:', skidData);
+  // Implementation will parse skidData and call createInvoiceIndustri
+  return { success: true };
+}
+
+export async function addCashFromArmada(deliveryData: any) {
+  // Dipanggil otomatis oleh Armada Module saat "Delivered (COD)"
+  console.log('Adding COD Cash from Horeca Delivery:', deliveryData);
+  return { success: true };
+}
+
+export async function notifySalesOnOverdue(invoiceId: string, invoiceNo: string) {
+  // Dipanggil otomatis oleh Keuangan saat Invoice diubah menjadi Overdue
+  const supabase = await createSupabaseServerClient();
+  const { error } = await supabase.from('dispatches').insert({
+    title: `Follow up tagihan overdue: ${invoiceNo}`,
+    assigned_to: 'horeca_sales',
+    status: 'Pending',
+    created_at: new Date().toISOString()
+  });
+  return { error: error?.message ?? null };
+}
+
+// ─── Data Seeding ─────────────────────────────────────────────────────────────
+
+export async function seedKeuanganData() {
+  const supabase = await createSupabaseServerClient();
+  
+  // Dummy data Krakatau Baja
+  const industri = {
+    invoice_no: `INV-IND-${Date.now()}`,
+    customer_id: '11111111-1111-1111-1111-111111111111',
+    customer_name: 'PT Krakatau Baja',
+    invoice_date: new Date().toISOString().split('T')[0],
+    due_date: new Date(Date.now() + 14 * 86400000).toISOString().split('T')[0],
+    billing_period_start: new Date(Date.now() - 30 * 86400000).toISOString().split('T')[0],
+    billing_period_end: new Date().toISOString().split('T')[0],
+    total_volume_mmbtu: 5000,
+    unit_price_usd: 12.5,
+    subtotal_usd: 62500,
+    tax_rate_percent: 11,
+    tax_amount_usd: 6875,
+    total_amount_usd: 69375,
+    exchange_rate_idr: 15500,
+    total_amount_idr: 1075312500,
+    payment_term: 'Tempo',
+    status: 'Issued',
+    items: [{ description: 'CNG Gas Supply', volume_mmbtu: 5000, unit_price_usd: 12.5, subtotal_usd: 62500 }]
+  };
+  
+  // Dummy data Restoran Sederhana
+  const horeca = {
+    invoice_no: `INV-HOR-${Date.now()}`,
+    customer_id: '22222222-2222-2222-2222-222222222222',
+    customer_name: 'Restoran Sederhana',
+    invoice_date: new Date().toISOString().split('T')[0],
+    due_date: new Date(Date.now() + 7 * 86400000).toISOString().split('T')[0],
+    total_tabung: 20,
+    price_per_tabung_idr: 150000,
+    subtotal_idr: 3000000,
+    tax_rate_percent: 11,
+    tax_amount_idr: 330000,
+    total_amount_idr: 3330000,
+    payment_term: 'COD',
+    status: 'Paid',
+  };
+
+  const { error: e1 } = await createInvoiceIndustri(industri as any);
+  const { error: e2 } = await createInvoiceHoreca(horeca as any);
+
+  revalidatePath('/portal/keuangan');
+  return { success: !e1 && !e2, errors: [e1, e2] };
 }

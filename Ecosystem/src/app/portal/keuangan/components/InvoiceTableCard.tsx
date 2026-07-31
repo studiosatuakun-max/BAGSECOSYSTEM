@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useTransition, useCallback } from 'react';
+import { useRouter } from 'next/navigation';
 import Icon from '@/components/ui/AppIcon';
 import { FileText, Search, Plus, CheckCircle2, AlertTriangle, Download, ArrowRightLeft } from 'lucide-react';
 import {
@@ -11,6 +12,7 @@ import {
   deleteInvoiceIndustri,
 } from '../_integration/actions';
 import type { InvoiceIndustri, InvoiceHoreca } from '../_integration/types';
+import IssueInvoiceModal from './IssueInvoiceModal';
 
 // Inline minimal types matching Supabase response shape
 type RawInvoiceIndustri = InvoiceIndustri & {
@@ -39,6 +41,8 @@ export default function InvoiceTableCard({ industriInvoices: initialIndustri, ho
   const [isPending, startTransition] = useTransition();
   const [localIndustri, setLocalIndustri] = useState(initialIndustri);
   const [localHoreca, setLocalHoreca] = useState(initialHoreca);
+  const [showIssueModal, setShowIssueModal] = useState(false);
+  const router = useRouter();
 
   const handleMarkPaid = useCallback(
     (id: string, type: 'industri' | 'horeca') => {
@@ -101,7 +105,7 @@ export default function InvoiceTableCard({ industriInvoices: initialIndustri, ho
               className="w-full bg-slate-800/50 border border-slate-700/50 text-white placeholder:text-slate-500 rounded-xl pl-10 pr-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500/50 transition-all"
             />
           </div>
-          <button className="flex items-center gap-2 px-4 py-2 bg-amber-500 hover:bg-amber-600 text-slate-900 rounded-xl text-sm font-bold transition-all shadow-[0_0_20px_rgba(245,158,11,0.3)] whitespace-nowrap shrink-0 disabled:opacity-50" disabled>
+          <button onClick={() => setShowIssueModal(true)} className="flex items-center gap-2 px-4 py-2 bg-amber-500 hover:bg-amber-600 text-slate-900 rounded-xl text-sm font-bold transition-all shadow-[0_0_20px_rgba(245,158,11,0.3)] whitespace-nowrap shrink-0">
             <Plus size={18} />
             <span className="hidden sm:inline">Issue Invoice</span>
           </button>
@@ -195,7 +199,10 @@ export default function InvoiceTableCard({ industriInvoices: initialIndustri, ho
                             <CheckCircle2 size={16} />
                           </button>
                         )}
-                        <button className="p-1.5 text-slate-400 hover:bg-slate-700 rounded-lg transition-colors" title="Download PDF">
+                        <button 
+                          onClick={() => router.push(`/portal/keuangan/print/industri/${inv.id}`)}
+                          className="p-1.5 text-slate-400 hover:bg-slate-700 rounded-lg transition-colors" title="Download PDF"
+                        >
                           <Download size={16} />
                         </button>
                       </div>
@@ -260,7 +267,10 @@ export default function InvoiceTableCard({ industriInvoices: initialIndustri, ho
                           <CheckCircle2 size={16} />
                         </button>
                       )}
-                      <button className="p-1.5 text-slate-400 hover:bg-slate-700 rounded-lg transition-colors" title="Download PDF">
+                      <button 
+                        onClick={() => router.push(`/portal/keuangan/print/horeca/${inv.id}`)}
+                        className="p-1.5 text-slate-400 hover:bg-slate-700 rounded-lg transition-colors" title="Download PDF"
+                      >
                         <Download size={16} />
                       </button>
                     </div>
@@ -271,6 +281,13 @@ export default function InvoiceTableCard({ industriInvoices: initialIndustri, ho
           </table>
         )}
       </div>
+
+      {showIssueModal && (
+        <IssueInvoiceModal 
+          onClose={() => setShowIssueModal(false)}
+          defaultTab={activeTab}
+        />
+      )}
     </div>
   );
 }
