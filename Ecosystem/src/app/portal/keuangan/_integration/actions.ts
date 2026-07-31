@@ -142,6 +142,20 @@ export async function getInvoicesHoreca(): Promise<{
   return { data, error: error?.message ?? null };
 }
 
+export async function getInvoiceHorecaById(id: string): Promise<{
+  data: Record<string, unknown> | null;
+  error: string | null;
+}> {
+  const supabase = createSupabaseAdmin();
+  const { data, error } = await supabase
+    .from('invoices_horeca')
+    .select('*')
+    .eq('id', id)
+    .single();
+
+  return { data, error: error?.message ?? null };
+}
+
 export async function createInvoiceHoreca(payload: {
   invoice_no: string;
   customer_id: string;

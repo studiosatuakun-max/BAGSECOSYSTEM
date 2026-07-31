@@ -1,5 +1,5 @@
 import React from 'react';
-import { getInvoiceIndustriById } from '../../../_integration/actions';
+import { getInvoiceIndustriById, getInvoiceHorecaById } from '../../../_integration/actions';
 import AutoPrint from './AutoPrint';
 
 export default async function PrintInvoicePage({ params }: { params: Promise<{ type: string; id: string }> }) {
@@ -11,10 +11,9 @@ export default async function PrintInvoicePage({ params }: { params: Promise<{ t
   if (type === 'industri') {
     const res = await getInvoiceIndustriById(id);
     invoice = res.data;
-  } else {
-    // For horeca, we can add getInvoiceHorecaById if needed, 
-    // but for now let's just mock or use similar logic
-    // invoice = (await getInvoiceHorecaById(id)).data;
+  } else if (type === 'horeca') {
+    const res = await getInvoiceHorecaById(id);
+    invoice = res.data;
   }
 
   if (!invoice) {
