@@ -43,6 +43,7 @@ const ROLE_PERMISSIONS: Record<string, string[]> = {
   skid_operator: ['/portal/skid', '/dashboard'],
   horeca_sales: ['/portal/horeca', '/dashboard'],
   industrial_director: ['/portal/industrial', '/dashboard'],
+  customer: ['/portal/pelanggan', '/dashboard'],
 };
 
 // ─── Routes yang TIDAK perlu auth (public) ───────────────────────────────────

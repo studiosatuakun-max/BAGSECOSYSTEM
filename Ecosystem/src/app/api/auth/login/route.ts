@@ -39,6 +39,7 @@ const ROLE_DEFAULT_PORTAL: Record<string, string> = {
   marketing_ae: '/portal/pemasaran',
   skid_operator: '/portal/skid',
   horeca_sales: '/portal/horeca',
+  customer: '/portal/pelanggan',
   industrial_director: '/portal/industrial',
 };
 
@@ -106,7 +107,9 @@ export async function POST(request: NextRequest) {
         else if (email.includes('legal')) matchedRole = 'legal_officer';
         else if (email.includes('pemasaran')) matchedRole = 'marketing_ae';
         else if (email.includes('skid')) matchedRole = 'skid_operator';
-        else if (email.includes('horeca') || email.includes('customer')) matchedRole = 'horeca_sales';
+        else if (email.includes('horeca')) matchedRole = 'horeca_sales';
+        else if (email.includes('customer')) matchedRole = 'customer';
+        else if (email.includes('industrial')) matchedRole = 'industrial_director';
         else if (email.includes('industrial')) matchedRole = 'industrial_director';
 
         response.cookies.set({
