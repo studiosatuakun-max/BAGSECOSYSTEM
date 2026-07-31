@@ -83,10 +83,9 @@ export default async function FinanceDashboardPage() {
           {/* Bento Grid (KPI Metrics + Charts) */}
           <BentoGrid summary={summary} />
 
-          {/* Invoice Engine (Real Supabase Data) */}
           <InvoiceTableCard
-            industriInvoices={industriInvoices as Parameters<typeof InvoiceTableCard>[0]['industriInvoices']}
-            horecaInvoices={horecaInvoices as Parameters<typeof InvoiceTableCard>[0]['horecaInvoices']}
+            industriInvoices={industriInvoices as unknown as Parameters<typeof InvoiceTableCard>[0]['industriInvoices']}
+            horecaInvoices={horecaInvoices as unknown as Parameters<typeof InvoiceTableCard>[0]['horecaInvoices']}
           />
         </main>
       </div>
