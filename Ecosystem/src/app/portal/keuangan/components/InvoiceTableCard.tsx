@@ -138,7 +138,7 @@ export default function InvoiceTableCard({ industriInvoices: initialIndustri, ho
       </div>
 
       {/* Tables */}
-      <div className="overflow-x-auto rounded-xl border border-slate-800/60 bg-slate-900/40 relative z-10">
+      <div className="overflow-x-auto overflow-y-auto max-h-[295px] scrollbar-thin scrollbar-thumb-slate-700 rounded-xl border border-slate-800/60 bg-slate-900/40 relative z-10">
         {activeTab === 'Industri' ? (
           filteredIndustri.length === 0 ? (
             <div className="py-16 text-center text-slate-500 text-sm font-medium">No industrial invoices found.</div>

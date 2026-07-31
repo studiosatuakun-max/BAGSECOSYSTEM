@@ -47,7 +47,7 @@ export default function CashbookCard({ transactions }: CashbookCardProps) {
         </div>
       </div>
 
-      <div className="flex-1 overflow-y-auto pr-2 space-y-3 max-h-[350px] scrollbar-thin scrollbar-thumb-slate-200 dark:scrollbar-thumb-slate-800">
+      <div className="flex-1 overflow-y-auto pr-2 space-y-3 max-h-[260px] scrollbar-thin scrollbar-thumb-slate-200 dark:scrollbar-thumb-slate-800">
         {transactions.length === 0 ? (
           <div className="flex flex-col items-center justify-center h-40 text-slate-400 text-sm">
             <Briefcase size={32} className="mb-2 opacity-50" />
