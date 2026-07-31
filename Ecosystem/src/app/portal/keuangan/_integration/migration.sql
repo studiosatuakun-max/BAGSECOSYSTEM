@@ -6,6 +6,7 @@ CREATE TABLE IF NOT EXISTS public.invoices_industri (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
   invoice_no TEXT UNIQUE NOT NULL,
   customer_id UUID NOT NULL,
+  customer_name TEXT NOT NULL,
   
   invoice_date DATE NOT NULL DEFAULT CURRENT_DATE,
   due_date DATE NOT NULL,
@@ -44,6 +45,7 @@ CREATE TABLE IF NOT EXISTS public.invoices_horeca (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
   invoice_no TEXT UNIQUE NOT NULL,
   customer_id UUID NOT NULL,
+  customer_name TEXT NOT NULL,
   
   invoice_date DATE NOT NULL DEFAULT CURRENT_DATE,
   due_date DATE NOT NULL,
