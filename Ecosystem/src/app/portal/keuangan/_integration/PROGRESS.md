@@ -19,6 +19,13 @@ Membangun portal eksekutif CFO yang menangani skema tagihan ganda (Industri/FOB 
 - [x] **Data Seed**: Injeksi 10 data Invoice asli (PT Krakatau Baja, dsb) untuk presentasi.
 - [x] **Hotfix Modal Capping**: Fix bug *Issue Invoice Modal* dan *Add Expense Modal* yang terpotong di dalam bento card `overflow-hidden`. Modal kini dirender *full-screen* dengan z-index `999` dan background overlay `black/50`.
 - [x] **Hotfix Syntax Error**: Perbaikan tag penutup `</div>` yang hilang di `CashFlowChartCard.tsx` akibat migrasi komponen modal ke `<React.Fragment>`. Build sukses (0 error).
+- [x] **Enhancement UI/UX (Demo Ready)**: 
+  - Validasi *Foreign Key* Supabase: Form *Issue Invoice* kini menggunakan *Dropdown Dynamic* yang mengambil data real dari tabel `industrial_clients` dan `horeca_clients`.
+  - Penambahan kartu **Arsip Dokumen (Vault)** untuk menampung PDF E-Faktur yang diunggah.
+  - Penambahan kartu **Buku Kas (General Ledger)** untuk merekam riwayat masuk/keluar mutasi secara kronologis.
+  - Penambahan identitas *Customer Name* di tabel tagihan.
+  - Penerapan *inner scrollbar* (`max-h`) pada tabel panjang agar tinggi UI (*Bento Grid*) tetap mewah dan konsisten.
+- [x] **DevSecOps & Caching Fixes**: Menghapus sistem *caching* statis bawaan Next.js App Router (`force-dynamic`) agar data di Dashboard selalu *real-time* setelah submit form modal, dan memperbaiki *Constraint Violation Bug* (Reset *Payment Term* Horeca).
 
 ## 📈 Financial Metrics Summary
 
