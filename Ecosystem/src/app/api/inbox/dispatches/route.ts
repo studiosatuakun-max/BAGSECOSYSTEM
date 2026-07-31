@@ -1,23 +1,9 @@
-// src/app/api/inbox/dispatches/route.ts
 import { NextResponse, NextRequest } from 'next/server';
 import { supabase } from '@/lib/supabaseClient';
 import { z } from 'zod';
+import type { DispatchItem } from '@/types/dispatch';
 
-export interface DispatchItem {
-  id: string;
-  sender_division: string;
-  receiver_division: string;
-  subject: string;
-  content: string;
-  priority: 'Normal' | 'High' | 'Urgent';
-  status: 'Unread' | 'Read' | 'In Review' | 'Resolved';
-  created_at: string;
-  attachments?: {
-    file_name: string;
-    file_url: string;
-    file_size: string;
-  }[];
-}
+export type { DispatchItem };
 
 // 1. Strict Zod Schemas for Payload Validation & Anti-Injection
 const AttachmentSchema = z.object({

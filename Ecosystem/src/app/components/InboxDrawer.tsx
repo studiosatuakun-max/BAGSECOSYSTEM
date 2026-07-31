@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 import Icon from '@/components/ui/AppIcon';
-import { DispatchItem } from '@/app/api/inbox/dispatches/route';
+import { DispatchItem } from '@/types/dispatch';
 
 const DIVISIONS = [
   'All Divisions',
