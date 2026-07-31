@@ -15,7 +15,10 @@ interface BentoGridProps {
 
 export default function BentoGrid({ summary }: BentoGridProps) {
   // Format to Miliar
-  const formatMiliar = (val: number) => `Rp ${(val / 1000000000).toFixed(2).replace('.', ',')} M`;
+  const formatMiliar = (val: number) => {
+    if (val === 0) return "Rp 0";
+    return `Rp ${(val / 1000000000).toFixed(2).replace('.', ',')} M`;
+  };
   const revenueM = formatMiliar(summary.totalRevenueIdr);
   const opexM = formatMiliar(summary.totalOpex);
   const netSurplus = summary.totalRevenueIdr - summary.totalOpex;

@@ -10,13 +10,13 @@ export default async function FinanceDashboardPage() {
   let industriInvoices: Record<string, unknown>[] = [];
   let horecaInvoices: Record<string, unknown>[] = [];
   let summary = {
-    totalRevenueIdr: 12450000000,
-    totalArOutstanding: 450000000,
-    avgDaysOutstanding: 18,
+    totalRevenueIdr: 0,
+    totalArOutstanding: 0,
+    avgDaysOutstanding: 0,
     issuedCount: 0,
     paidCount: 0,
     overdueCount: 0,
-    totalOpex: 4455000000,
+    totalOpex: 0,
   };
 
   try {

@@ -28,9 +28,9 @@ interface CashFlowChartCardProps {
 }
 
 export default function CashFlowChartCard({ 
-  totalRevenueIdr = 12450000000, 
-  totalOpex = 4455000000, 
-  netSurplus = 7995000000 
+  totalRevenueIdr = 0, 
+  totalOpex = 0, 
+  netSurplus = 0 
 }: CashFlowChartCardProps) {
   const [activePeriod, setActivePeriod] = useState('12m');
   const [showExpenseModal, setShowExpenseModal] = useState(false);
