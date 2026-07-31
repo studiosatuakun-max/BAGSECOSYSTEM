@@ -40,6 +40,14 @@ export default function IssueInvoiceModal({ onClose, defaultTab }: Props) {
         setCustomerName('');
       }
     });
+    
+    // Reset paymentTerm when tab changes to avoid Supabase check constraint errors
+    if (activeTab === 'Industri') {
+      setPaymentTerm('Tempo');
+    } else {
+      setPaymentTerm('Termin'); // Use Termin as default for Horeca based on user preference
+    }
+
     return () => { active = false; };
   }, [activeTab]);
 
