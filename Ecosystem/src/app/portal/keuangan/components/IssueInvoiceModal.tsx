@@ -4,6 +4,7 @@ import React, { useState, useTransition } from 'react';
 import { X, UploadCloud, FileType, Loader2 } from 'lucide-react';
 import { createSupabaseBrowserClient } from '@/lib/supabaseBrowser';
 import { createInvoiceIndustri, createInvoiceHoreca, getKeuanganClients } from '../_integration/actions';
+import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 
 interface Props {
@@ -12,6 +13,7 @@ interface Props {
 }
 
 export default function IssueInvoiceModal({ onClose, defaultTab }: Props) {
+  const router = useRouter();
   const [activeTab, setActiveTab] = useState<'Industri' | 'Horeca'>(defaultTab);
   const [isPending, startTransition] = useTransition();
   const [isUploading, setIsUploading] = useState(false);
@@ -119,6 +121,7 @@ export default function IssueInvoiceModal({ onClose, defaultTab }: Props) {
         if (res.error) toast.error(res.error);
         else {
           toast.success('Invoice Industri berhasil dibuat');
+          router.refresh();
           onClose();
         }
       } else {
@@ -145,6 +148,7 @@ export default function IssueInvoiceModal({ onClose, defaultTab }: Props) {
         if (res.error) toast.error(res.error);
         else {
           toast.success('Invoice Horeca berhasil dibuat');
+          router.refresh();
           onClose();
         }
       }

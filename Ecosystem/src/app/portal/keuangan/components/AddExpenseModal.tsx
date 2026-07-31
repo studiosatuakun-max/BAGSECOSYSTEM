@@ -3,6 +3,7 @@
 import React, { useState, useTransition } from 'react';
 import { X, Loader2 } from 'lucide-react';
 import { createOpex } from '../_integration/actions';
+import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 
 interface Props {
@@ -10,6 +11,7 @@ interface Props {
 }
 
 export default function AddExpenseModal({ onClose }: Props) {
+  const router = useRouter();
   const [isPending, startTransition] = useTransition();
 
   const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
@@ -37,6 +39,7 @@ export default function AddExpenseModal({ onClose }: Props) {
         toast.error(res.error);
       } else {
         toast.success('Pengeluaran operasional berhasil dicatat');
+        router.refresh();
         onClose();
       }
     });
