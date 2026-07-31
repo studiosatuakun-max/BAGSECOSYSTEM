@@ -4,7 +4,22 @@ import TaxComplianceCard from './TaxComplianceCard';
 import MetricCard from './MetricCard';
 import GenerateReportCard from './GenerateReportCard';
 
-export default function BentoGrid() {
+interface BentoGridProps {
+  summary: {
+    totalRevenueIdr: number;
+    totalArOutstanding: number;
+    avgDaysOutstanding: number;
+    totalOpex: number;
+  };
+}
+
+export default function BentoGrid({ summary }: BentoGridProps) {
+  // Format to Miliar
+  const formatMiliar = (val: number) => `Rp ${(val / 1000000000).toFixed(2).replace('.', ',')} M`;
+  const revenueM = formatMiliar(summary.totalRevenueIdr);
+  const opexM = formatMiliar(summary.totalOpex);
+  const netSurplus = summary.totalRevenueIdr - summary.totalOpex;
+
   return (
     <div className="space-y-6 lg:space-y-8">
       {/* Row 1: Executive KPI Hero Cards + Treasury AI Generator */}
@@ -12,20 +27,20 @@ export default function BentoGrid() {
         <MetricCard
           id="metric-revenue"
           label="Total Revenue CNG (YTD)"
-          value="Rp 12,45 M"
-          rawValue="12.450.000.000"
+          value={revenueM}
+          rawValue={summary.totalRevenueIdr.toString()}
           trend="+18,4%"
           trendDir="up"
           subLabel="vs kuartal lalu"
           accentColor="positive"
           icon="TrendingUp"
-          detail="Dari 48 Kontrak B2B Industrial & Horeca"
+          detail="Dari Kontrak B2B Industrial & Horeca"
         />
         <MetricCard
           id="metric-expense"
           label="Biaya Ops Mother Station"
-          value="Rp 4,45 M"
-          rawValue="4.455.000.000"
+          value={opexM}
+          rawValue={summary.totalOpex.toString()}
           trend="+2,1%"
           trendDir="up-bad"
           subLabel="efisiensi kompresi"
@@ -36,8 +51,8 @@ export default function BentoGrid() {
         <MetricCard
           id="metric-ar"
           label="AR Aging Piutang B2B"
-          value="18 Hari"
-          rawValue="18"
+          value={`${summary.avgDaysOutstanding} Hari`}
+          rawValue={summary.avgDaysOutstanding.toString()}
           trend="-4 hari"
           trendDir="down-good"
           subLabel="rata-rata jatuh tempo"
@@ -52,7 +67,11 @@ export default function BentoGrid() {
       {/* Row 2: Cash Flow Chart (3 cols) + MIGAS Tax Compliance (1 col) */}
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 lg:gap-6">
         <div className="lg:col-span-3">
-          <CashFlowChartCard />
+          <CashFlowChartCard 
+            totalRevenueIdr={summary.totalRevenueIdr}
+            totalOpex={summary.totalOpex}
+            netSurplus={netSurplus}
+          />
         </div>
         <div className="lg:col-span-1">
           <TaxComplianceCard />

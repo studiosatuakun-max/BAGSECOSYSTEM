@@ -31,7 +31,7 @@ CREATE TABLE IF NOT EXISTS public.invoices_industri (
   updated_at TIMESTAMPTZ DEFAULT now()
 );
 
-CREATE TABLE IF NOT EXISTS public.invoice_industri_items (
+CREATE TABLE IF NOT EXISTS public.invoice_items_industri (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
   invoice_id UUID REFERENCES public.invoices_industri(id) ON DELETE CASCADE,
   description TEXT NOT NULL,
@@ -78,7 +78,7 @@ CREATE TABLE IF NOT EXISTS public.operating_expenses (
 -- ROW LEVEL SECURITY (RLS) POLICIES
 -- ============================================
 ALTER TABLE public.invoices_industri ENABLE ROW LEVEL SECURITY;
-ALTER TABLE public.invoice_industri_items ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.invoice_items_industri ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.invoices_horeca ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.operating_expenses ENABLE ROW LEVEL SECURITY;
 

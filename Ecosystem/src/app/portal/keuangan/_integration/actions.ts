@@ -1,6 +1,6 @@
 'use server';
 
-import { createSupabaseServerClient } from '@/lib/supabaseSSR';
+import { createSupabaseServerClient, createSupabaseAdmin } from '@/lib/supabaseSSR';
 import { revalidatePath } from 'next/cache';
 
 // ─── Invoice Industri (B2B / USD / MMBTU) ────────────────────────────────────
@@ -9,7 +9,7 @@ export async function getInvoicesIndustri(): Promise<{
   data: Record<string, unknown>[] | null;
   error: string | null;
 }> {
-  const supabase = await createSupabaseServerClient();
+  const supabase = createSupabaseAdmin();
   const { data, error } = await supabase
     .from('invoices_industri')
     .select('*, invoice_items_industri(*)')
@@ -23,7 +23,7 @@ export async function getInvoiceIndustriById(id: string): Promise<{
   data: Record<string, unknown> | null;
   error: string | null;
 }> {
-  const supabase = await createSupabaseServerClient();
+  const supabase = createSupabaseAdmin();
   const { data, error } = await supabase
     .from('invoices_industri')
     .select('*, invoice_items_industri(*)')
@@ -54,7 +54,7 @@ export async function createInvoiceIndustri(payload: {
   efaktur_url?: string;
   items: { description: string; volume_mmbtu: number; unit_price_usd: number; subtotal_usd: number }[];
 }): Promise<{ data: Record<string, unknown> | null; error: string | null }> {
-  const supabase = await createSupabaseServerClient();
+  const supabase = createSupabaseAdmin();
 
   const { data: invoice, error: invError } = await supabase
     .from('invoices_industri')
@@ -105,7 +105,7 @@ export async function updateInvoiceIndustriStatus(
   id: string,
   status: 'Draft' | 'Issued' | 'Paid' | 'Overdue' | 'Cancelled'
 ): Promise<{ error: string | null }> {
-  const supabase = await createSupabaseServerClient();
+  const supabase = createSupabaseAdmin();
   const payload: Record<string, unknown> = { status };
   if (status === 'Paid') {
     payload.paid_at = new Date().toISOString();
@@ -121,7 +121,7 @@ export async function updateInvoiceIndustriStatus(
 }
 
 export async function deleteInvoiceIndustri(id: string): Promise<{ error: string | null }> {
-  const supabase = await createSupabaseServerClient();
+  const supabase = createSupabaseAdmin();
   const { error } = await supabase.from('invoices_industri').delete().eq('id', id);
   if (!error) revalidatePath('/portal/keuangan');
   return { error: error?.message ?? null };
@@ -133,7 +133,7 @@ export async function getInvoicesHoreca(): Promise<{
   data: Record<string, unknown>[] | null;
   error: string | null;
 }> {
-  const supabase = await createSupabaseServerClient();
+  const supabase = createSupabaseAdmin();
   const { data, error } = await supabase
     .from('invoices_horeca')
     .select('*')
@@ -159,7 +159,7 @@ export async function createInvoiceHoreca(payload: {
   status: 'Draft' | 'Issued' | 'Paid' | 'Overdue' | 'Cancelled';
   efaktur_url?: string;
 }): Promise<{ data: Record<string, unknown> | null; error: string | null }> {
-  const supabase = await createSupabaseServerClient();
+  const supabase = createSupabaseAdmin();
   const { data, error } = await supabase
     .from('invoices_horeca')
     .insert(payload)
@@ -174,7 +174,7 @@ export async function updateInvoiceHorecaStatus(
   id: string,
   status: 'Draft' | 'Issued' | 'Paid' | 'Overdue' | 'Cancelled'
 ): Promise<{ error: string | null }> {
-  const supabase = await createSupabaseServerClient();
+  const supabase = createSupabaseAdmin();
   const payload: Record<string, unknown> = { status };
   if (status === 'Paid') {
     payload.paid_at = new Date().toISOString();
@@ -200,7 +200,7 @@ export async function getKeuanganSummary(): Promise<{
   overdueCount: number;
   totalOpex: number;
 }> {
-  const supabase = await createSupabaseServerClient();
+  const supabase = createSupabaseAdmin();
 
   const { data: invInd } = await supabase
     .from('invoices_industri')
@@ -242,14 +242,14 @@ export async function createOpex(payload: {
   description: string;
   amount_idr: number;
 }): Promise<{ error: string | null }> {
-  const supabase = await createSupabaseServerClient();
+  const supabase = createSupabaseAdmin();
   const { error } = await supabase.from('operating_expenses').insert(payload);
   if (!error) revalidatePath('/portal/keuangan');
   return { error: error?.message ?? null };
 }
 
 export async function getOpexSummary(): Promise<{ data: any[] | null; error: string | null }> {
-  const supabase = await createSupabaseServerClient();
+  const supabase = createSupabaseAdmin();
   const { data, error } = await supabase
     .from('operating_expenses')
     .select('*')
@@ -275,7 +275,7 @@ export async function addCashFromArmada(deliveryData: any) {
 
 export async function notifySalesOnOverdue(invoiceId: string, invoiceNo: string) {
   // Dipanggil otomatis oleh Keuangan saat Invoice diubah menjadi Overdue
-  const supabase = await createSupabaseServerClient();
+  const supabase = createSupabaseAdmin();
   const { error } = await supabase.from('dispatches').insert({
     title: `Follow up tagihan overdue: ${invoiceNo}`,
     assigned_to: 'horeca_sales',
@@ -288,7 +288,7 @@ export async function notifySalesOnOverdue(invoiceId: string, invoiceNo: string)
 // ─── Data Seeding ─────────────────────────────────────────────────────────────
 
 export async function seedKeuanganData() {
-  const supabase = await createSupabaseServerClient();
+  const supabase = createSupabaseAdmin();
   
   // Dummy data Krakatau Baja
   const industri = {

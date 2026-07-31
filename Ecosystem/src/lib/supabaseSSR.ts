@@ -16,6 +16,7 @@ import type { NextRequest, NextResponse } from 'next/server';
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
+const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
 
 /**
  * Buat Supabase client untuk Server Components.
@@ -63,6 +64,19 @@ export function createSupabaseMiddlewareClient(
           response.cookies.set(name, value, options)
         );
       },
+    },
+  });
+}
+
+/**
+ * Buat Supabase admin client untuk Server Actions.
+ * Bypass RLS karena kita menggunakan Dummy Auth di fase development.
+ */
+export function createSupabaseAdmin() {
+  return createServerClient(supabaseUrl, supabaseServiceKey, {
+    cookies: {
+      getAll() { return []; },
+      setAll() {},
     },
   });
 }

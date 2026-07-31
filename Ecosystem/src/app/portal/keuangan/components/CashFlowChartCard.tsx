@@ -21,7 +21,17 @@ const periods = [
   { label: 'Q3 Proyeksi', value: 'q3' },
 ];
 
-export default function CashFlowChartCard() {
+interface CashFlowChartCardProps {
+  totalRevenueIdr?: number;
+  totalOpex?: number;
+  netSurplus?: number;
+}
+
+export default function CashFlowChartCard({ 
+  totalRevenueIdr = 12450000000, 
+  totalOpex = 4455000000, 
+  netSurplus = 7995000000 
+}: CashFlowChartCardProps) {
   const [activePeriod, setActivePeriod] = useState('12m');
   const [showExpenseModal, setShowExpenseModal] = useState(false);
 
@@ -103,15 +113,21 @@ export default function CashFlowChartCard() {
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 bg-slate-50 dark:bg-slate-950/60 p-4 rounded-2xl border border-slate-100 dark:border-slate-800 text-center sm:text-left">
         <div>
           <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Total Revenue YTD</span>
-          <p className="text-lg font-black text-slate-900 dark:text-white tabular-nums mt-0.5">Rp 12.450.000.000</p>
+          <p className="text-lg font-black text-slate-900 dark:text-white tabular-nums mt-0.5">
+            Rp {totalRevenueIdr.toLocaleString('id-ID')}
+          </p>
         </div>
         <div>
           <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Total Ops Expense YTD</span>
-          <p className="text-lg font-black text-amber-600 dark:text-amber-400 tabular-nums mt-0.5">Rp 4.455.000.000</p>
+          <p className="text-lg font-black text-amber-600 dark:text-amber-400 tabular-nums mt-0.5">
+            Rp {totalOpex.toLocaleString('id-ID')}
+          </p>
         </div>
         <div>
           <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Net Treasury Surplus</span>
-          <p className="text-lg font-black text-emerald-600 dark:text-emerald-400 tabular-nums mt-0.5">+ Rp 7.995.000.000</p>
+          <p className="text-lg font-black text-emerald-600 dark:text-emerald-400 tabular-nums mt-0.5">
+            {netSurplus >= 0 ? '+' : '-'} Rp {Math.abs(netSurplus).toLocaleString('id-ID')}
+          </p>
         </div>
       </div>
       </div>

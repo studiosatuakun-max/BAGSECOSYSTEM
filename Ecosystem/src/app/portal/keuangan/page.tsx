@@ -3,23 +3,33 @@ import PortalHeader from '@/components/PortalHeader';
 import Footer from '@/components/Footer';
 import BentoGrid from './components/BentoGrid';
 import InvoiceTableCard from './components/InvoiceTableCard';
-import { getInvoicesIndustri, getInvoicesHoreca } from './_integration/actions';
+import { getInvoicesIndustri, getInvoicesHoreca, getKeuanganSummary } from './_integration/actions';
 import { RefreshCw, CheckCircle2 } from 'lucide-react';
 
 export default async function FinanceDashboardPage() {
-  // Fetch real data from Supabase — graceful fallback to empty arrays if not configured
   let industriInvoices: Record<string, unknown>[] = [];
   let horecaInvoices: Record<string, unknown>[] = [];
+  let summary = {
+    totalRevenueIdr: 12450000000,
+    totalArOutstanding: 450000000,
+    avgDaysOutstanding: 18,
+    issuedCount: 0,
+    paidCount: 0,
+    overdueCount: 0,
+    totalOpex: 4455000000,
+  };
 
   try {
-    const [industriResult, horecaResult] = await Promise.all([
+    const [industriResult, horecaResult, summaryResult] = await Promise.all([
       getInvoicesIndustri(),
       getInvoicesHoreca(),
+      getKeuanganSummary(),
     ]);
     industriInvoices = industriResult.data ?? [];
     horecaInvoices = horecaResult.data ?? [];
+    summary = summaryResult;
   } catch {
-    // Supabase not configured — show empty state
+    // Supabase not configured — show fallback data
   }
 
   return (
@@ -71,7 +81,7 @@ export default async function FinanceDashboardPage() {
           </div>
 
           {/* Bento Grid (KPI Metrics + Charts) */}
-          <BentoGrid />
+          <BentoGrid summary={summary} />
 
           {/* Invoice Engine (Real Supabase Data) */}
           <InvoiceTableCard
