@@ -3,7 +3,7 @@
 import React, { useState, useTransition } from 'react';
 import { X, UploadCloud, FileType, Loader2 } from 'lucide-react';
 import { createSupabaseBrowserClient } from '@/lib/supabaseBrowser';
-import { createInvoiceIndustri, createInvoiceHoreca } from '../_integration/actions';
+import { createInvoiceIndustri, createInvoiceHoreca, getKeuanganClients } from '../_integration/actions';
 import { toast } from 'sonner';
 
 interface Props {
@@ -17,12 +17,29 @@ export default function IssueInvoiceModal({ onClose, defaultTab }: Props) {
   const [isUploading, setIsUploading] = useState(false);
   const [file, setFile] = useState<File | null>(null);
 
-  // Form states
-  const [customerId, setCustomerId] = useState('11111111-1111-1111-1111-111111111111'); // Dummy
-  const [customerName, setCustomerName] = useState('PT Krakatau Baja');
-  const [volume, setVolume] = useState('5000'); // MMBTU or Tabung
-  const [price, setPrice] = useState('12.5'); // USD or IDR
+  const [customers, setCustomers] = useState<{ id: string; company_name: string }[]>([]);
+  const [customerId, setCustomerId] = useState('');
+  const [customerName, setCustomerName] = useState('');
+  const [volume, setVolume] = useState(''); // MMBTU or Tabung
+  const [price, setPrice] = useState(''); // USD or IDR
   const [paymentTerm, setPaymentTerm] = useState('Tempo'); // 'Tempo', 'Cash_Deposit', 'COD', 'Termin'
+
+  React.useEffect(() => {
+    let active = true;
+    getKeuanganClients().then(data => {
+      if (!active) return;
+      const list = activeTab === 'Industri' ? data.industrial : data.horeca;
+      setCustomers(list);
+      if (list.length > 0) {
+        setCustomerId(list[0].id);
+        setCustomerName(list[0].company_name);
+      } else {
+        setCustomerId('');
+        setCustomerName('');
+      }
+    });
+    return () => { active = false; };
+  }, [activeTab]);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selected = e.target.files?.[0];
@@ -175,7 +192,21 @@ export default function IssueInvoiceModal({ onClose, defaultTab }: Props) {
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <label className="block text-xs text-slate-400 mb-1">Customer Name</label>
-                <input required type="text" value={customerName} onChange={e => setCustomerName(e.target.value)} className="w-full bg-slate-800/50 border border-slate-700/50 rounded-lg p-2.5 text-sm text-white focus:ring-1 focus:ring-amber-500/50 outline-none" />
+                <select 
+                  required 
+                  value={customerId} 
+                  onChange={e => {
+                    setCustomerId(e.target.value);
+                    const sel = customers.find(c => c.id === e.target.value);
+                    if (sel) setCustomerName(sel.company_name);
+                  }} 
+                  className="w-full bg-slate-800/50 border border-slate-700/50 rounded-lg p-2.5 text-sm text-white focus:ring-1 focus:ring-amber-500/50 outline-none"
+                >
+                  {customers.map(c => (
+                    <option key={c.id} value={c.id}>{c.company_name}</option>
+                  ))}
+                  {customers.length === 0 && <option value="">No clients found</option>}
+                </select>
               </div>
               <div>
                 <label className="block text-xs text-slate-400 mb-1">Payment Term</label>

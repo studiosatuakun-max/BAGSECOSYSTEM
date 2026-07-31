@@ -192,6 +192,142 @@ export async function updateInvoiceHorecaStatus(
   return { error: error?.message ?? null };
 }
 
+// ─── Client Fetching for Issue Invoice Modal ───────────────────────────────────
+
+export async function getKeuanganClients(): Promise<{
+  industrial: { id: string; company_name: string }[];
+  horeca: { id: string; company_name: string }[];
+}> {
+  const supabase = createSupabaseAdmin();
+
+  const { data: indData } = await supabase
+    .from('industrial_clients')
+    .select('id, company_name')
+    .order('company_name', { ascending: true });
+
+  const { data: horData } = await supabase
+    .from('horeca_clients')
+    .select('id, business_name')
+    .order('business_name', { ascending: true });
+
+  return {
+    industrial: indData ?? [],
+    // Map business_name to company_name for unified frontend usage
+    horeca: (horData ?? []).map((h) => ({ id: h.id, company_name: h.business_name })),
+  };
+}
+
+// ─── Document Vault ────────────────────────────────────────────────────────────
+
+export async function getDocumentVault(): Promise<{
+  id: string;
+  invoice_no: string;
+  customer_name: string;
+  date: string;
+  url: string;
+  type: 'Industri' | 'Horeca';
+}[]> {
+  const supabase = createSupabaseAdmin();
+
+  const { data: indData } = await supabase
+    .from('invoices_industri')
+    .select('id, invoice_no, customer_name, invoice_date, efaktur_url')
+    .not('efaktur_url', 'is', null)
+    .order('invoice_date', { ascending: false })
+    .limit(25);
+
+  const { data: horData } = await supabase
+    .from('invoices_horeca')
+    .select('id, invoice_no, customer_name, invoice_date, efaktur_url')
+    .not('efaktur_url', 'is', null)
+    .order('invoice_date', { ascending: false })
+    .limit(25);
+
+  const combined = [
+    ...(indData ?? []).map((i) => ({
+      id: i.id,
+      invoice_no: i.invoice_no,
+      customer_name: i.customer_name,
+      date: i.invoice_date,
+      url: i.efaktur_url,
+      type: 'Industri' as const,
+    })),
+    ...(horData ?? []).map((h) => ({
+      id: h.id,
+      invoice_no: h.invoice_no,
+      customer_name: h.customer_name,
+      date: h.invoice_date,
+      url: h.efaktur_url,
+      type: 'Horeca' as const,
+    })),
+  ];
+
+  // Sort by date desc
+  combined.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+  return combined;
+}
+
+// ─── Cashbook ──────────────────────────────────────────────────────────────────
+
+export async function getCashbook(): Promise<{
+  id: string;
+  date: string;
+  description: string;
+  type: 'Kredit' | 'Debit';
+  amount: number;
+}[]> {
+  const supabase = createSupabaseAdmin();
+
+  // Income (Kredit)
+  const { data: indData } = await supabase
+    .from('invoices_industri')
+    .select('id, invoice_no, invoice_date, total_amount_idr, status')
+    .eq('status', 'Paid')
+    .order('invoice_date', { ascending: false })
+    .limit(20);
+
+  const { data: horData } = await supabase
+    .from('invoices_horeca')
+    .select('id, invoice_no, invoice_date, total_amount_idr, status')
+    .eq('status', 'Paid')
+    .order('invoice_date', { ascending: false })
+    .limit(20);
+
+  // Expense (Debit)
+  const { data: opexData } = await supabase
+    .from('operating_expenses')
+    .select('id, description, date, amount_idr')
+    .order('date', { ascending: false })
+    .limit(30);
+
+  const combined = [
+    ...(indData ?? []).map((i) => ({
+      id: i.id,
+      date: i.invoice_date,
+      description: `Pembayaran Tagihan Industri: ${i.invoice_no}`,
+      type: 'Kredit' as const,
+      amount: i.total_amount_idr,
+    })),
+    ...(horData ?? []).map((h) => ({
+      id: h.id,
+      date: h.invoice_date,
+      description: `Pembayaran Tagihan Horeca: ${h.invoice_no}`,
+      type: 'Kredit' as const,
+      amount: h.total_amount_idr,
+    })),
+    ...(opexData ?? []).map((o) => ({
+      id: o.id,
+      date: o.date,
+      description: `Beban Operasional: ${o.description}`,
+      type: 'Debit' as const,
+      amount: o.amount_idr,
+    })),
+  ];
+
+  combined.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+  return combined.slice(0, 50);
+}
+
 // ─── Summary Stats ─────────────────────────────────────────────────────────────
 
 export async function getKeuanganSummary(): Promise<{

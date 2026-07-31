@@ -3,7 +3,9 @@ import PortalHeader from '@/components/PortalHeader';
 import Footer from '@/components/Footer';
 import BentoGrid from './components/BentoGrid';
 import InvoiceTableCard from './components/InvoiceTableCard';
-import { getInvoicesIndustri, getInvoicesHoreca, getKeuanganSummary } from './_integration/actions';
+import DocumentVaultCard from './components/DocumentVaultCard';
+import CashbookCard from './components/CashbookCard';
+import { getInvoicesIndustri, getInvoicesHoreca, getKeuanganSummary, getDocumentVault, getCashbook } from './_integration/actions';
 import { RefreshCw, CheckCircle2 } from 'lucide-react';
 
 export default async function FinanceDashboardPage() {
@@ -18,16 +20,22 @@ export default async function FinanceDashboardPage() {
     overdueCount: 0,
     totalOpex: 0,
   };
+  let vaultDocuments: any[] = [];
+  let cashbookTransactions: any[] = [];
 
   try {
-    const [industriResult, horecaResult, summaryResult] = await Promise.all([
+    const [industriResult, horecaResult, summaryResult, vaultData, cashbookData] = await Promise.all([
       getInvoicesIndustri(),
       getInvoicesHoreca(),
       getKeuanganSummary(),
+      getDocumentVault(),
+      getCashbook(),
     ]);
     industriInvoices = industriResult.data ?? [];
     horecaInvoices = horecaResult.data ?? [];
     summary = summaryResult;
+    vaultDocuments = vaultData;
+    cashbookTransactions = cashbookData;
   } catch {
     // Supabase not configured — show fallback data
   }
@@ -82,6 +90,12 @@ export default async function FinanceDashboardPage() {
 
           {/* Bento Grid (KPI Metrics + Charts) */}
           <BentoGrid summary={summary} />
+
+          {/* Secondary Grid: Cashbook & Document Vault */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <CashbookCard transactions={cashbookTransactions} />
+            <DocumentVaultCard documents={vaultDocuments} />
+          </div>
 
           <InvoiceTableCard
             industriInvoices={industriInvoices as unknown as Parameters<typeof InvoiceTableCard>[0]['industriInvoices']}
