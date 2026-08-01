@@ -93,7 +93,7 @@ function LoginContent() {
           {/* Header Elegance (Outside the Box) */}
           <div className="flex flex-col items-center gap-0 z-10 px-2 text-center">
             <img src="/assets/images/logo.png" alt="BaGS Logo" className="h-56 w-auto object-contain drop-shadow-xl" />
-            <h1 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight drop-shadow-md -mt-16">
+            <h1 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight drop-shadow-md -mt-8">
               BaGS <span className="text-indigo-400">Ecosystem</span>
             </h1>
           </div>
