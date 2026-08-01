@@ -62,18 +62,18 @@ export default async function MarketingDashboardPage() {
           <div className="space-y-2 max-w-3xl z-10">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-pink-500/20 backdrop-blur-md border border-pink-500/30 text-xs font-bold text-pink-300 whitespace-nowrap shrink-0 align-middle shadow-2xs">
               <span className="w-1.5 h-1.5 rounded-full bg-pink-400 animate-pulse" />
-              <span>B2B Gas Growth Engine v2.4 &middot; AE CRM Connected</span>
+              <span>B2B Acquisition Engine &bull; Live CRM Tracking</span>
             </div>
             <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-white">
-              B2B Commercial Gas Growth &amp; Pipeline Console
+              Commercial Growth &amp; B2B Pipeline Console
             </h1>
             <p className="text-xs sm:text-sm text-slate-300 leading-relaxed font-medium">
-              Pusat kendali akuisisi prospek manufaktur berat &amp; Horeca (Sm&sup3;/day), pemantauan konversi kuota MMBTU, serta analisis ROI kampanye pemasaran gas secara real-time.
+              Pusat komando strategis untuk memantau akuisisi klien industri (MMBTU) &amp; Horeca (Tabung), melacak konversi sales pipeline, serta menganalisis ROI kampanye pemasaran secara real-time.
             </p>
           </div>
           <div className="flex items-center gap-2 px-5 py-3 bg-gradient-to-r from-pink-500 to-rose-600 text-white rounded-2xl text-xs sm:text-sm font-extrabold shadow-pink-500/30 shrink-0">
             <CheckCircle2 size={18} className="text-white" />
-            <span>Supabase Connected</span>
+            <span>Live CRM Sync</span>
           </div>
         </div>
 
