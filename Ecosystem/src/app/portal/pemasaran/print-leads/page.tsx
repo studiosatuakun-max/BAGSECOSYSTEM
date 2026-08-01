@@ -38,7 +38,7 @@ export default async function PrintLeadsPage() {
               <Image src="/assets/images/logo.png" alt="BaGS Logo" fill className="object-contain" />
             </div>
             <div>
-              <h1 className="text-2xl font-black text-slate-900 tracking-tight">PT. BASKARA GLOBAL SINERGI</h1>
+              <h1 className="text-2xl font-black text-slate-900 tracking-tight">PT. BASKARA ASRI GHAS (BaGS)</h1>
               <p className="text-sm text-slate-600 font-medium">Divisi Pemasaran & Commercial Growth</p>
             </div>
           </div>
@@ -130,7 +130,7 @@ export default async function PrintLeadsPage() {
         {/* Footer */}
         <div className="mt-16 pt-8 border-t border-slate-300 text-center text-sm text-slate-500">
           <p className="font-bold mb-1">CONFIDENTIAL & PROPRIETARY</p>
-          <p>Dokumen ini ditujukan untuk kebutuhan internal PT. Baskara Global Sinergi.</p>
+          <p>Dokumen ini ditujukan untuk kebutuhan internal PT. Baskara Asri Ghas (BaGS).</p>
         </div>
         
       </div>
