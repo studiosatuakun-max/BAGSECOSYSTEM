@@ -44,7 +44,7 @@ export default async function PrintReportPage({ params }: { params: Promise<{ ty
         <div className="flex justify-between items-start border-b-4 border-amber-600 pb-6 mb-8">
           <div>
             <h1 className="text-4xl font-black text-amber-600 tracking-tighter">PT BaGS</h1>
-            <p className="text-sm font-bold text-slate-800 mt-1 uppercase tracking-widest">Baskara Global Synergy</p>
+            <p className="text-sm font-bold text-slate-800 mt-1 uppercase tracking-widest">PT Baskara Asri Ghas (BaGS)</p>
             <p className="text-xs text-slate-500 mt-2">
               Kawasan Industri Krakatau, Cilegon, Banten<br/>
               Phone: (0254) 123456 | Email: finance@baskara.id
@@ -104,12 +104,12 @@ export default async function PrintReportPage({ params }: { params: Promise<{ ty
           <div>
             <p className="font-bold text-slate-700 mb-8">Disiapkan oleh,</p>
             <p className="font-bold text-slate-800 uppercase">Treasury / Finance Dept.</p>
-            <p>PT Baskara Global Synergy</p>
+            <p>PT Baskara Asri Ghas (BaGS)</p>
           </div>
           <div>
             <p className="font-bold text-slate-700 mb-8">Disetujui oleh,</p>
             <p className="font-bold text-slate-800 uppercase">Chief Financial Officer (CFO)</p>
-            <p>PT Baskara Global Synergy</p>
+            <p>PT Baskara Asri Ghas (BaGS)</p>
           </div>
         </div>
       </div>

@@ -33,7 +33,7 @@ export default async function PrintInvoicePage({ params }: { params: Promise<{ t
         <div className="flex justify-between items-start border-b-2 border-slate-900 pb-6 mb-8">
           <div>
             <Image src="/assets/images/logo.png" alt="PT BaGS Logo" width={160} height={60} className="mb-1 object-contain" priority />
-            <p className="text-xs font-semibold text-slate-500 mt-1">Baskara Global Synergy</p>
+            <p className="text-xs font-semibold text-slate-500 mt-1">PT Baskara Asri Ghas (BaGS)</p>
             <p className="text-xs text-slate-500 max-w-xs mt-2">
               Kawasan Industri Krakatau, Cilegon, Banten<br/>
               Phone: (0254) 123456 | Email: finance@baskara.id
@@ -116,7 +116,7 @@ export default async function PrintInvoicePage({ params }: { params: Promise<{ t
           <div>
             <p className="text-xs font-bold text-slate-400 mb-2 uppercase">Payment Instructions</p>
             <p className="text-sm text-slate-700 font-semibold">Bank Mandiri</p>
-            <p className="text-sm text-slate-600">A/N: PT Baskara Global Synergy</p>
+            <p className="text-sm text-slate-600">A/N: PT Baskara Asri Ghas (BaGS)</p>
             <p className="text-sm text-slate-600">A/C: 163-00-1234567-8</p>
           </div>
           <div className="text-center">
