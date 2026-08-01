@@ -211,19 +211,29 @@ function LoginContent() {
           </div>
         </div>
 
-      </div>
-
       {/* Footer */}
-      <div className="relative z-10 mt-16 w-full flex flex-col items-center text-center text-xs text-slate-400 gap-1.5 opacity-80">
-        <p className="font-semibold text-slate-300">© 2026 PT Baskara Asri Ghas</p>
-        <p>Baskara Ecosystem Engine v1</p>
-        <div className="flex items-center gap-2 mt-1">
-          <a href="#" className="hover:text-white transition-colors">Privacy</a>
-          <span>&bull;</span>
-          <a href="#" className="hover:text-white transition-colors">Terms</a>
-          <span>&bull;</span>
-          <a href="#" className="hover:text-white transition-colors">Support</a>
+      <div className="relative z-10 mt-16 w-full max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between text-xs text-slate-400 opacity-90 gap-4 pb-4 px-2">
+        
+        {/* Left */}
+        <div className="flex items-center gap-2">
+          <img src="/assets/images/logo.png" alt="BaGS" className="h-5 w-auto object-contain drop-shadow-md" />
+          <p className="font-semibold text-slate-300">© 2026 PT Baskara Asri Ghas</p>
         </div>
+
+        {/* Center */}
+        <div className="bg-white/10 border border-white/20 px-4 py-1.5 rounded-full backdrop-blur-md">
+          <p className="font-medium text-white">Baskara Ecosystem Engine v2</p>
+        </div>
+
+        {/* Right */}
+        <div className="flex items-center gap-4">
+          <a href="#" className="hover:text-white transition-colors font-medium">Privacy</a>
+          <span className="opacity-40">&bull;</span>
+          <a href="#" className="hover:text-white transition-colors font-medium">Terms</a>
+          <span className="opacity-40">&bull;</span>
+          <a href="#" className="hover:text-white transition-colors font-medium">Support</a>
+        </div>
+        
       </div>
     </div>
   );
