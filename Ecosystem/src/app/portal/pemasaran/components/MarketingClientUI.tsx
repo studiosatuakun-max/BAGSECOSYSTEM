@@ -46,7 +46,7 @@ export default function MarketingClientUI({ initialCampaigns }: Props) {
   });
   const [isPending, startTransition] = useTransition();
   const [mounted, setMounted] = useState(false);
-  
+
   useEffect(() => setMounted(true), []);
 
   const handleTriggerCrmSync = () => {
@@ -152,11 +152,10 @@ export default function MarketingClientUI({ initialCampaigns }: Props) {
       <button
         onClick={handleTriggerCrmSync}
         disabled={isSyncingCrm || crmSyncSuccess}
-        className={`px-5 py-3 font-extrabold rounded-2xl text-xs sm:text-sm shadow-lg transition-all flex items-center gap-2.5 active:scale-95 shrink-0 whitespace-nowrap z-10 self-stretch sm:self-auto justify-center disabled:cursor-not-allowed ${
-          crmSyncSuccess
+        className={`px-5 py-3 font-extrabold rounded-2xl text-xs sm:text-sm shadow-lg transition-all flex items-center gap-2.5 active:scale-95 shrink-0 whitespace-nowrap z-10 self-stretch sm:self-auto justify-center disabled:cursor-not-allowed ${crmSyncSuccess
             ? 'bg-gradient-to-r from-emerald-600 to-teal-700 text-white shadow-emerald-950/50'
             : 'bg-gradient-to-r from-pink-500 to-rose-600 hover:from-pink-400 hover:to-rose-500 text-white shadow-pink-500/30'
-        }`}
+          }`}
       >
         {isSyncingCrm ? (
           <>

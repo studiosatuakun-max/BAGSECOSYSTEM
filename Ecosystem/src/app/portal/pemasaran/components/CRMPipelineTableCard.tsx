@@ -100,7 +100,7 @@ export default function CRMPipelineTableCard({ industriLeads: initialIndustri, h
     <div className="col-span-full rounded-2xl border border-white/10 bg-slate-900/60 backdrop-blur-md p-6 shadow-xl flex flex-col h-full relative overflow-hidden group">
       {/* Background Gradients */}
       <div className="absolute top-0 right-0 w-96 h-96 bg-purple-500/10 rounded-full blur-[100px] pointer-events-none" />
-      
+
       {/* Header */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 gap-4 relative z-10">
         <div className="flex items-center gap-3">
@@ -112,7 +112,7 @@ export default function CRMPipelineTableCard({ industriLeads: initialIndustri, h
             <p className="text-sm text-slate-400 mt-0.5">B2B Industri (MMBTU) and HORECA (Tabung) Sales Tracking</p>
           </div>
         </div>
-        
+
         <div className="flex items-center gap-3 w-full sm:w-auto">
           <div className="relative w-full sm:w-64">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
@@ -133,13 +133,13 @@ export default function CRMPipelineTableCard({ industriLeads: initialIndustri, h
 
       {/* Tabs */}
       <div className="flex gap-2 mb-6 border-b border-slate-700/50 pb-2 relative z-10">
-        <button 
+        <button
           onClick={() => setActiveTab('Industri')}
           className={`px-4 py-2 text-sm font-semibold rounded-lg transition-all ${activeTab === 'Industri' ? 'bg-purple-500/20 text-purple-300 border border-purple-500/30' : 'text-slate-400 hover:text-slate-200'}`}
         >
           Industri B2B Pipeline
         </button>
-        <button 
+        <button
           onClick={() => setActiveTab('Horeca')}
           className={`px-4 py-2 text-sm font-semibold rounded-lg transition-all ${activeTab === 'Horeca' ? 'bg-purple-500/20 text-purple-300 border border-purple-500/30' : 'text-slate-400 hover:text-slate-200'}`}
         >
@@ -302,7 +302,7 @@ export default function CRMPipelineTableCard({ industriLeads: initialIndustri, h
                   className="w-full bg-slate-800 border border-slate-700 text-white rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500 placeholder:text-slate-500"
                 />
               </div>
-              
+
               <div>
                 <label className="block text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1.5">Phone Number</label>
                 <input

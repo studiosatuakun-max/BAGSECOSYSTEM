@@ -1,6 +1,6 @@
 'use server';
 
-import { createSupabaseServerClient } from '@/lib/supabaseSSR';
+import { createSupabaseServerClient, createSupabaseAdmin } from '@/lib/supabaseSSR';
 import { revalidatePath } from 'next/cache';
 
 // ─── Sales Leads ──────────────────────────────────────────────────────────────
@@ -32,7 +32,7 @@ export async function createSalesLead(payload: {
   competitor_contract_end_date?: string;
   notes?: string;
 }): Promise<{ data: Record<string, unknown> | null; error: string | null }> {
-  const supabase = await createSupabaseServerClient();
+  const supabase = createSupabaseAdmin();
   const { data: { user } } = await supabase.auth.getUser();
   
   const { data, error } = await supabase
@@ -146,7 +146,7 @@ export async function createMarketingCampaign(payload: {
   budget_idr: number;
   notes?: string;
 }): Promise<{ data: Record<string, unknown> | null; error: string | null }> {
-  const supabase = await createSupabaseServerClient();
+  const supabase = createSupabaseAdmin();
   const { data: { user } } = await supabase.auth.getUser();
   
   const { data, error } = await supabase
