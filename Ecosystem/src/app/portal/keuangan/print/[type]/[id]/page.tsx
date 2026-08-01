@@ -1,4 +1,5 @@
 import React from 'react';
+import Image from 'next/image';
 import { getInvoiceIndustriById, getInvoiceHorecaById } from '../../../_integration/actions';
 import AutoPrint from './AutoPrint';
 
@@ -31,7 +32,7 @@ export default async function PrintInvoicePage({ params }: { params: Promise<{ t
         {/* Header */}
         <div className="flex justify-between items-start border-b-2 border-slate-900 pb-6 mb-8">
           <div>
-            <h1 className="text-3xl font-black text-amber-600 tracking-tighter">PT BaGS</h1>
+            <Image src="/assets/images/logo.png" alt="PT BaGS Logo" width={160} height={60} className="mb-1 object-contain" priority />
             <p className="text-xs font-semibold text-slate-500 mt-1">Baskara Global Synergy</p>
             <p className="text-xs text-slate-500 max-w-xs mt-2">
               Kawasan Industri Krakatau, Cilegon, Banten<br/>
