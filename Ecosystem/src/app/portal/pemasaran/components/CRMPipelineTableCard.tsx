@@ -1,6 +1,7 @@
 'use client';
 
-import React, { useState, useTransition } from 'react';
+import React, { useState, useTransition, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import Icon from '@/components/ui/AppIcon';
 import { Search, Plus, Users, CheckCircle2, Phone, Briefcase, MapPin, TrendingUp, HelpCircle, X } from 'lucide-react';
 import { updateLeadStage, createSalesLead } from '../_integration/actions';
@@ -56,6 +57,9 @@ export default function CRMPipelineTableCard({ industriLeads: initialIndustri, h
     estimated_volume_mmbtu: 0,
     cluster_location: ''
   });
+
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
 
   const handleStageChange = (id: string, company_name: string, newStage: string, segment: 'Industri' | 'Horeca') => {
     startTransition(async () => {
@@ -254,8 +258,8 @@ export default function CRMPipelineTableCard({ industriLeads: initialIndustri, h
       </div>
 
       {/* Add Lead Modal */}
-      {isModalOpen && (
-        <div className="fixed inset-0 z-[200] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+      {isModalOpen && mounted && createPortal(
+        <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
           <div className="bg-slate-900 border border-slate-700 rounded-2xl p-6 w-full max-w-md shadow-2xl">
             <div className="flex items-center justify-between mb-5">
               <h3 className="text-lg font-bold text-white">Add New Lead</h3>
@@ -349,7 +353,8 @@ export default function CRMPipelineTableCard({ industriLeads: initialIndustri, h
               </button>
             </div>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
     </div>
   );

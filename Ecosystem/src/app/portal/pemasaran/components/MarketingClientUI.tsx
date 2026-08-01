@@ -1,6 +1,7 @@
 'use client';
 
-import React, { useState, useTransition } from 'react';
+import React, { useState, useTransition, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import Icon from '@/components/ui/AppIcon';
 import {
   RefreshCw,
@@ -44,6 +45,9 @@ export default function MarketingClientUI({ initialCampaigns }: Props) {
     leads_converted: 0,
   });
   const [isPending, startTransition] = useTransition();
+  const [mounted, setMounted] = useState(false);
+  
+  useEffect(() => setMounted(true), []);
 
   const handleTriggerCrmSync = () => {
     setIsSyncingCrm(true);
@@ -236,8 +240,8 @@ export default function MarketingClientUI({ initialCampaigns }: Props) {
       </div>
 
       {/* ── Modal ── */}
-      {isModalOpen && (
-        <div className="fixed inset-0 z-[200] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+      {isModalOpen && mounted && createPortal(
+        <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
           <div className="bg-slate-900 border border-slate-700 rounded-2xl p-6 w-full max-w-md shadow-2xl">
             <div className="flex items-center justify-between mb-5">
               <h3 className="text-lg font-bold text-white">
@@ -305,7 +309,8 @@ export default function MarketingClientUI({ initialCampaigns }: Props) {
               </button>
             </div>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
     </>
   );
