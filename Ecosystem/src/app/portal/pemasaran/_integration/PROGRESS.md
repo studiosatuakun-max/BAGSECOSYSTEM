@@ -56,6 +56,12 @@ Dokumen ini melacak status integrasi SOP, UI/UX, dan implementasi fitur khusus u
 | Industrial Bulk CNG Awareness | Google Ads | Paused | Rp 60J | 280 | 7.1% |
 | Skid Tube Trailer Expansion | Email B2B | Draft | Rp 15J | 128 | 14.2% |
 
+## 🚀 Next Action Plan (Fitur "WOW" untuk Phase 8)
+*(Dijadwalkan untuk iterasi berikutnya)*
+1. **Activity Timeline & History Log (Database):** Membuat tabel relasional `lead_activities` dan komponen `LeadTimelineDrawer` agar tiap *update notes* terekam secara kronologis.
+2. **Automated Reminder Engine (Cron Jobs):** Mengintegrasikan sistem *Background Job* untuk mengirim notifikasi H-30 sebelum kontrak kompetitor habis (Horeca) atau jadwal *follow-up* (Industri).
+3. **Dynamic Quotation Generator:** Menambahkan tombol "Generate Penawaran" yang secara dinamis mencetak "Surat Penawaran Harga PT BaGS" dalam format PDF A4, dihitung berdasarkan volume MMBTU.
+
 ---
 *Diperbarui secara otomatis oleh sistem saat ada perubahan di modul ini.*
 *Dokumen finalisasi: 2026-08-01 — Modul Pemasaran siap presentasi Marketing Director & Direksi.*
