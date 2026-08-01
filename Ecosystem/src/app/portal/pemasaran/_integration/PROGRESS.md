@@ -58,4 +58,4 @@ Dokumen ini melacak status integrasi SOP, UI/UX, dan implementasi fitur khusus u
 
 ---
 *Diperbarui secara otomatis oleh sistem saat ada perubahan di modul ini.*
-*Dokumen finalisasi: 2026-07-29 — Modul siap presentasi Marketing Director & Direksi.*
+*Dokumen finalisasi: 2026-08-01 — Modul Pemasaran siap presentasi Marketing Director & Direksi.*
