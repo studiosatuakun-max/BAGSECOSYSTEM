@@ -211,6 +211,8 @@ function LoginContent() {
           </div>
         </div>
 
+      </div>
+
       {/* Footer */}
       <div className="relative z-10 mt-16 w-full max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between text-xs text-slate-400 opacity-90 gap-4 pb-4 px-2">
         
