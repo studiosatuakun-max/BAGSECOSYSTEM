@@ -9,9 +9,10 @@ Dokumen ini melacak status integrasi SOP, UI/UX, dan implementasi fitur khusus u
 - [x] Fase 4: Integrasi Form (Anti-Fraud / Hardware IoT)
 - [x] Fase 5: Final Review & Build Test
 - [x] **Phase 6: Production Supabase Migration** (Server Actions, Real-time CRUD, KPI Aggregation, Cross-Module Triggers)
+- [x] **Phase 7: Stage-Gate & Reporting Optimization** (Stage-Gate Validation, Modal Notes, Competitor Input, HTML-to-PDF Dossier Export)
 
 ## 📝 Catatan Harian / Blokir
-* (2026-08-01: Berhasil memigrasi Modul Pemasaran dari Dummy UI ke Production-ready menggunakan Supabase dan Next.js 15 Server Actions. Fitur Add Lead, Update Stage, Create Campaign, dan Update Campaign sudah terhubung ke database. KPI Dashboard sekarang melakukan kalkulasi real-time. Trigger `triggerLegalContract` dan `syncRevenueProjection` sudah disiapkan.)
+* (2026-08-01: Berhasil memigrasi Modul Pemasaran dari Dummy UI ke Production-ready menggunakan Supabase dan Next.js 15 Server Actions. Menambahkan fitur validasi Stage-Gate (wajib mengisi Catatan Lapangan, Kompetitor, Volume) serta fitur ekspor PDF Dossier Pipeline menggunakan `window.print()`.)
 
 ---
 
