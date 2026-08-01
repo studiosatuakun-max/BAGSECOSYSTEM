@@ -19,6 +19,7 @@ import { createSupabaseMiddlewareClient } from '@/lib/supabaseSSR';
 // ─── RBAC Role-to-Route Mapping ───────────────────────────────────────────────
 const ROLE_PERMISSIONS: Record<string, string[]> = {
   super_admin: [
+    '/portal/admin',
     '/portal/stasiun',
     '/portal/armada',
     '/portal/keuangan',

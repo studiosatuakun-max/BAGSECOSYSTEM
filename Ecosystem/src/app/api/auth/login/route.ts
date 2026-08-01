@@ -29,7 +29,7 @@ const LoginSchema = z.object({
 
 // ─── Role → Default Portal Redirect Map ──────────────────────────────────────
 const ROLE_DEFAULT_PORTAL: Record<string, string> = {
-  super_admin: '/',
+  super_admin: '/portal/admin',
   station_operator: '/portal/stasiun',
   fleet_manager: '/portal/armada',
   fleet_driver: '/portal/pwa',
