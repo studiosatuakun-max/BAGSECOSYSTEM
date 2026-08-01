@@ -32,7 +32,7 @@ export async function createSalesLead(payload: {
   competitor_contract_end_date?: string;
   notes?: string;
 }): Promise<{ data: Record<string, unknown> | null; error: string | null }> {
-  const supabase = createSupabaseAdmin();
+  const supabase = await createSupabaseServerClient();
   const { data: { user } } = await supabase.auth.getUser();
   
   const { data, error } = await supabase
@@ -52,18 +52,26 @@ export async function createSalesLead(payload: {
 
 export async function updateLeadStage(
   id: string,
-  pipeline_stage: string,
-  company_name?: string
+  payload: {
+    pipeline_stage: string;
+    company_name?: string;
+    notes?: string;
+    next_follow_up_date?: string;
+    current_vendor?: string;
+    competitor_contract_end_date?: string;
+    estimated_volume_mmbtu?: number;
+    lost_reason?: string;
+  }
 ): Promise<{ error: string | null }> {
   const supabase = await createSupabaseServerClient();
   const { error } = await supabase
     .from('sales_leads')
-    .update({ pipeline_stage, updated_at: new Date().toISOString() })
+    .update({ ...payload, updated_at: new Date().toISOString() })
     .eq('id', id);
 
   if (!error) {
-    if (pipeline_stage === 'Dealing_Closed_Won') {
-      await triggerLegalContract(id, company_name || 'Unknown Company');
+    if (payload.pipeline_stage === 'Dealing_Closed_Won') {
+      await triggerLegalContract(id, payload.company_name || 'Unknown Company');
     }
     await syncRevenueProjection();
     revalidatePath('/portal/pemasaran');
@@ -146,7 +154,7 @@ export async function createMarketingCampaign(payload: {
   budget_idr: number;
   notes?: string;
 }): Promise<{ data: Record<string, unknown> | null; error: string | null }> {
-  const supabase = createSupabaseAdmin();
+  const supabase = await createSupabaseServerClient();
   const { data: { user } } = await supabase.auth.getUser();
   
   const { data, error } = await supabase

@@ -3,7 +3,7 @@
 import React, { useState, useTransition, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import Icon from '@/components/ui/AppIcon';
-import { Search, Plus, Users, CheckCircle2, Phone, Briefcase, MapPin, TrendingUp, HelpCircle, X } from 'lucide-react';
+import { Search, Plus, Users, CheckCircle2, Phone, Briefcase, MapPin, TrendingUp, HelpCircle, X, Printer } from 'lucide-react';
 import { updateLeadStage, createSalesLead } from '../_integration/actions';
 import type { SalesLead } from '../_integration/types';
 
@@ -57,19 +57,68 @@ export default function CRMPipelineTableCard({ industriLeads: initialIndustri, h
     estimated_volume_mmbtu: 0,
     cluster_location: ''
   });
+  
+  const [stageGateModal, setStageGateModal] = useState<{
+    isOpen: boolean;
+    leadId: string;
+    company_name: string;
+    targetStage: string;
+    segment: 'Industri' | 'Horeca';
+  } | null>(null);
+
+  const [stageFormData, setStageFormData] = useState({
+    notes: '',
+    next_follow_up_date: '',
+    current_vendor: '',
+    competitor_contract_end_date: '',
+    estimated_volume_mmbtu: 0,
+    lost_reason: ''
+  });
 
   const [mounted, setMounted] = useState(false);
   useEffect(() => setMounted(true), []);
 
-  const handleStageChange = (id: string, company_name: string, newStage: string, segment: 'Industri' | 'Horeca') => {
+  const openStageGate = (id: string, company_name: string, newStage: string, segment: 'Industri' | 'Horeca', currentVolume: number) => {
+    setStageGateModal({ isOpen: true, leadId: id, company_name, targetStage: newStage, segment });
+    setStageFormData({
+      notes: '',
+      next_follow_up_date: '',
+      current_vendor: '',
+      competitor_contract_end_date: '',
+      estimated_volume_mmbtu: currentVolume || 0,
+      lost_reason: ''
+    });
+  };
+
+  const handleStageSubmit = () => {
+    if (!stageGateModal) return;
+    if (!stageFormData.notes.trim()) {
+      alert('Catatan lapangan wajib diisi untuk mengubah stage!');
+      return;
+    }
+    
     startTransition(async () => {
       // Optimistic update
-      if (segment === 'Industri') {
-        setLocalIndustri(prev => prev.map(l => l.id === id ? { ...l, pipeline_stage: newStage } : l));
+      if (stageGateModal.segment === 'Industri') {
+        setLocalIndustri(prev => prev.map(l => l.id === stageGateModal.leadId ? { ...l, pipeline_stage: stageGateModal.targetStage } : l));
       } else {
-        setLocalHoreca(prev => prev.map(l => l.id === id ? { ...l, pipeline_stage: newStage } : l));
+        setLocalHoreca(prev => prev.map(l => l.id === stageGateModal.leadId ? { ...l, pipeline_stage: stageGateModal.targetStage } : l));
       }
-      await updateLeadStage(id, newStage, company_name);
+      
+      const payload: any = {
+        pipeline_stage: stageGateModal.targetStage,
+        company_name: stageGateModal.company_name,
+        notes: stageFormData.notes
+      };
+      
+      if (stageFormData.next_follow_up_date) payload.next_follow_up_date = stageFormData.next_follow_up_date;
+      if (stageFormData.current_vendor) payload.current_vendor = stageFormData.current_vendor;
+      if (stageFormData.competitor_contract_end_date) payload.competitor_contract_end_date = stageFormData.competitor_contract_end_date;
+      if (stageFormData.estimated_volume_mmbtu > 0) payload.estimated_volume_mmbtu = stageFormData.estimated_volume_mmbtu;
+      if (stageFormData.lost_reason) payload.lost_reason = stageFormData.lost_reason;
+      
+      await updateLeadStage(stageGateModal.leadId, payload);
+      setStageGateModal(null);
     });
   };
 
@@ -124,6 +173,10 @@ export default function CRMPipelineTableCard({ industriLeads: initialIndustri, h
               className="w-full bg-slate-800/50 border border-slate-700/50 text-white placeholder:text-slate-500 rounded-xl pl-10 pr-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500/50 transition-all"
             />
           </div>
+          <button onClick={() => window.open('/portal/pemasaran/print-leads', '_blank')} className="flex items-center gap-2 px-4 py-2 bg-slate-800 hover:bg-slate-700 border border-slate-700 text-white rounded-xl text-sm font-bold transition-all shrink-0">
+            <Printer size={18} />
+            <span className="hidden sm:inline">Export Dossier (PDF)</span>
+          </button>
           <button onClick={() => setIsModalOpen(true)} className="flex items-center gap-2 px-4 py-2 bg-purple-500 hover:bg-purple-600 text-white rounded-xl text-sm font-bold transition-all shadow-[0_0_20px_rgba(168,85,247,0.3)] whitespace-nowrap shrink-0">
             <Plus size={18} />
             <span className="hidden sm:inline">Add Lead</span>
@@ -186,7 +239,7 @@ export default function CRMPipelineTableCard({ industriLeads: initialIndustri, h
                   <td className="p-4 whitespace-nowrap">
                     <select
                       value={lead.pipeline_stage}
-                      onChange={(e) => handleStageChange(lead.id, lead.company_name, e.target.value, 'Industri')}
+                      onChange={(e) => openStageGate(lead.id!, lead.company_name, e.target.value, 'Industri', lead.estimated_volume_mmbtu || 0)}
                       disabled={isPending}
                       className={`text-xs font-medium px-2.5 py-1 rounded-full border cursor-pointer focus:outline-none appearance-none ${stageBadgeClass(lead.pipeline_stage)}`}
                     >
@@ -241,7 +294,7 @@ export default function CRMPipelineTableCard({ industriLeads: initialIndustri, h
                   <td className="p-4 whitespace-nowrap">
                     <select
                       value={lead.pipeline_stage}
-                      onChange={(e) => handleStageChange(lead.id, lead.company_name, e.target.value, 'Horeca')}
+                      onChange={(e) => openStageGate(lead.id!, lead.company_name, e.target.value, 'Horeca', lead.estimated_volume_mmbtu || 0)}
                       disabled={isPending}
                       className={`text-[10px] font-bold px-2.5 py-1 rounded-full border cursor-pointer focus:outline-none appearance-none ${stageBadgeClass(lead.pipeline_stage)}`}
                     >
@@ -350,6 +403,113 @@ export default function CRMPipelineTableCard({ industriLeads: initialIndustri, h
               >
                 {isPending && <Icon name="ArrowPathIcon" size={14} className="animate-spin" />}
                 Add Lead
+              </button>
+            </div>
+          </div>
+        </div>,
+        document.body
+      )}
+
+      {/* Stage-Gate Modal */}
+      {stageGateModal?.isOpen && mounted && createPortal(
+        <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+          <div className="bg-slate-900 border border-slate-700 rounded-2xl p-6 w-full max-w-md shadow-2xl">
+            <div className="flex items-center justify-between mb-5">
+              <h3 className="text-lg font-bold text-white">Update Stage: {STAGE_LABELS[stageGateModal.targetStage]}</h3>
+              <button onClick={() => setStageGateModal(null)} className="p-1.5 text-slate-400 hover:text-white hover:bg-slate-700 rounded-lg">
+                <X size={18} />
+              </button>
+            </div>
+
+            <div className="space-y-4">
+              <div>
+                <label className="block text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1.5">Catatan Lapangan <span className="text-rose-400">*</span></label>
+                <textarea
+                  required
+                  rows={3}
+                  value={stageFormData.notes}
+                  onChange={(e) => setStageFormData(p => ({ ...p, notes: e.target.value }))}
+                  placeholder="Catatan update progress..."
+                  className="w-full bg-slate-800 border border-slate-700 text-white rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500 placeholder:text-slate-500 resize-none"
+                />
+              </div>
+
+              {stageGateModal.targetStage !== 'Dealing_Closed_Won' && stageGateModal.targetStage !== 'Dealing_Closed_Lost' && (
+                <div>
+                  <label className="block text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1.5">Next Follow-Up Date</label>
+                  <input
+                    type="date"
+                    value={stageFormData.next_follow_up_date}
+                    onChange={(e) => setStageFormData(p => ({ ...p, next_follow_up_date: e.target.value }))}
+                    className="w-full bg-slate-800 border border-slate-700 text-white rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
+                  />
+                </div>
+              )}
+
+              {(stageGateModal.targetStage === 'Presentasi' || stageGateModal.targetStage === 'Penawaran') && (
+                <>
+                  <div>
+                    <label className="block text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1.5">Current Vendor (Kompetitor)</label>
+                    <input
+                      type="text"
+                      value={stageFormData.current_vendor}
+                      onChange={(e) => setStageFormData(p => ({ ...p, current_vendor: e.target.value }))}
+                      placeholder="e.g. PGN, CNE, EBS..."
+                      className="w-full bg-slate-800 border border-slate-700 text-white rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500 placeholder:text-slate-500"
+                    />
+                  </div>
+                  {stageFormData.current_vendor && (
+                    <div>
+                      <label className="block text-[11px] font-bold text-amber-400 uppercase tracking-wider mb-1.5">Target Contract Switch Date</label>
+                      <input
+                        type="date"
+                        value={stageFormData.competitor_contract_end_date}
+                        onChange={(e) => setStageFormData(p => ({ ...p, competitor_contract_end_date: e.target.value }))}
+                        className="w-full bg-slate-800 border border-slate-700 text-white rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500"
+                      />
+                    </div>
+                  )}
+                </>
+              )}
+
+              {stageGateModal.targetStage === 'Dealing_Closed_Won' && (
+                <div>
+                  <label className="block text-[11px] font-bold text-emerald-400 uppercase tracking-wider mb-1.5">Final Volume (MMBTU) <span className="text-rose-400">*</span></label>
+                  <input
+                    type="number"
+                    value={stageFormData.estimated_volume_mmbtu}
+                    onChange={(e) => setStageFormData(p => ({ ...p, estimated_volume_mmbtu: Number(e.target.value) }))}
+                    className="w-full bg-slate-800 border border-slate-700 text-white rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                  />
+                </div>
+              )}
+
+              {stageGateModal.targetStage === 'Dealing_Closed_Lost' && (
+                <div>
+                  <label className="block text-[11px] font-bold text-rose-400 uppercase tracking-wider mb-1.5">Lost Reason <span className="text-rose-400">*</span></label>
+                  <input
+                    type="text"
+                    required
+                    value={stageFormData.lost_reason}
+                    onChange={(e) => setStageFormData(p => ({ ...p, lost_reason: e.target.value }))}
+                    placeholder="e.g. Kalah harga, Batal project..."
+                    className="w-full bg-slate-800 border border-slate-700 text-white rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-rose-500 placeholder:text-slate-500"
+                  />
+                </div>
+              )}
+            </div>
+
+            <div className="flex items-center justify-end gap-3 mt-6">
+              <button onClick={() => setStageGateModal(null)} className="px-5 py-2.5 rounded-xl text-sm font-bold text-slate-400 hover:text-white hover:bg-slate-800 transition-all">
+                Cancel
+              </button>
+              <button
+                onClick={handleStageSubmit}
+                disabled={!stageFormData.notes.trim() || isPending || (stageGateModal.targetStage === 'Dealing_Closed_Lost' && !stageFormData.lost_reason.trim())}
+                className="px-5 py-2.5 rounded-xl text-sm font-bold bg-purple-500 hover:bg-purple-600 text-white transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+              >
+                {isPending && <Icon name="ArrowPathIcon" size={14} className="animate-spin" />}
+                Confirm Stage
               </button>
             </div>
           </div>
