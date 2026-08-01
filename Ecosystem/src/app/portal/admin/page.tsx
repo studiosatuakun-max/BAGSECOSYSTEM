@@ -9,6 +9,7 @@ import {
   ShieldCheckIcon,
   ChevronDownIcon
 } from '@heroicons/react/24/outline';
+import PortalHeader from '@/components/PortalHeader';
 
 const DUMMY_METRICS = [
   { id: 1, title: 'Total Registered Users', value: '1,248', icon: UsersIcon, color: 'text-blue-400' },
@@ -42,8 +43,18 @@ export default function AdminCommandCenter() {
   if (!mounted) return null;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-black relative overflow-hidden font-sans text-slate-200">
+    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-black relative overflow-hidden font-sans text-slate-200 flex flex-col">
       
+      <PortalHeader
+        title="Super Admin Command Center"
+        subtitle="EXECUTIVE STRATEGIC CONSOLE - GLOBAL ECOSYSTEM"
+        roleBadge="Root Access"
+        roleColor="indigo"
+        backUrl="/"
+        backText="Exit Portal"
+        showInbox={true}
+      />
+
       {/* Background Glowing Orbs (PT BaGS Logo Colors) */}
       <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-sky-500/20 blur-[120px] pointer-events-none" />
       <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] rounded-full bg-lime-500/20 blur-[120px] pointer-events-none" />
