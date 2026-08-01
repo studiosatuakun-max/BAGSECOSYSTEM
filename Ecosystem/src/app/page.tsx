@@ -88,17 +88,17 @@ function LoginContent() {
       <div className="relative z-10 w-full max-w-7xl mx-auto flex flex-col xl:flex-row gap-12 lg:gap-20 items-center justify-between">
 
         {/* Left Side: Login Form (Bento Style) */}
-        <div className="w-full xl:w-[450px] flex-shrink-0 flex flex-col gap-8">
+        <div className="w-full xl:w-[450px] flex-shrink-0 flex flex-col items-center gap-5">
           
           {/* Header Elegance (Outside the Box) */}
-          <div className="flex items-center gap-4 z-10 px-2">
-            <img src="/assets/images/logo.png" alt="BaGS Logo" className="h-32 w-auto object-contain drop-shadow-xl" />
-            <h1 className="text-4xl font-extrabold text-white tracking-tight drop-shadow-md">
+          <div className="flex flex-col items-center gap-2 z-10 px-2 text-center">
+            <img src="/assets/images/logo.png" alt="BaGS Logo" className="h-28 w-auto object-contain drop-shadow-xl" />
+            <h1 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight drop-shadow-md">
               BaGS <span className="text-indigo-400">Ecosystem</span>
             </h1>
           </div>
 
-          <div className="backdrop-blur-md bg-white/10 border border-white/20 p-8 sm:p-10 rounded-[2.5rem] relative overflow-hidden group shadow-2xl">
+          <div className="w-full backdrop-blur-md bg-white/10 border border-white/20 p-8 sm:p-10 rounded-[2.5rem] relative overflow-hidden group shadow-2xl text-left">
             <div className="absolute -top-32 -left-32 w-64 h-64 bg-indigo-500/20 rounded-full blur-3xl pointer-events-none" />
 
             <div className="mb-8">
