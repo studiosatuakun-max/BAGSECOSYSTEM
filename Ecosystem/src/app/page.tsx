@@ -212,6 +212,19 @@ function LoginContent() {
         </div>
 
       </div>
+
+      {/* Footer */}
+      <div className="relative z-10 mt-16 w-full flex flex-col items-center text-center text-xs text-slate-400 gap-1.5 opacity-80">
+        <p className="font-semibold text-slate-300">© 2026 PT Baskara Asri Ghas</p>
+        <p>Baskara Ecosystem Engine v1</p>
+        <div className="flex items-center gap-2 mt-1">
+          <a href="#" className="hover:text-white transition-colors">Privacy</a>
+          <span>&bull;</span>
+          <a href="#" className="hover:text-white transition-colors">Terms</a>
+          <span>&bull;</span>
+          <a href="#" className="hover:text-white transition-colors">Support</a>
+        </div>
+      </div>
     </div>
   );
 }
