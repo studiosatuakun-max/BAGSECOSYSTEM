@@ -33,12 +33,19 @@ export async function createSalesLead(payload: {
   notes?: string;
 }): Promise<{ data: Record<string, unknown> | null; error: string | null }> {
   const supabase = await createSupabaseServerClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  
   const { data, error } = await supabase
     .from('sales_leads')
-    .insert({ ...payload, pipeline_stage: payload.pipeline_stage ?? 'Perkenalan_Awal' })
+    .insert({ 
+      ...payload, 
+      pipeline_stage: payload.pipeline_stage ?? 'Perkenalan_Awal',
+      sales_rep_id: user?.id 
+    })
     .select()
     .single();
 
+  if (error) console.error('[createSalesLead] Error:', error);
   if (!error) revalidatePath('/portal/pemasaran');
   return { data, error: error?.message ?? null };
 }
@@ -140,12 +147,15 @@ export async function createMarketingCampaign(payload: {
   notes?: string;
 }): Promise<{ data: Record<string, unknown> | null; error: string | null }> {
   const supabase = await createSupabaseServerClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  
   const { data, error } = await supabase
     .from('marketing_campaigns')
-    .insert(payload)
+    .insert({ ...payload, created_by: user?.id })
     .select()
     .single();
 
+  if (error) console.error('[createMarketingCampaign] Error:', error);
   if (!error) revalidatePath('/portal/pemasaran');
   return { data, error: error?.message ?? null };
 }
