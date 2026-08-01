@@ -488,3 +488,100 @@ export async function seedKeuanganData() {
   revalidatePath('/portal/keuangan');
   return { success: !e1 && !e2, errors: [e1, e2] };
 }
+
+// ─── Reporting Engine ─────────────────────────────────────────────────────────
+
+export async function generateLaporanKas() {
+  const supabase = createSupabaseAdmin();
+  
+  const { data: indData } = await supabase
+    .from('invoices_industri')
+    .select('invoice_date, customer_name, total_amount_idr')
+    .eq('status', 'Paid');
+    
+  const { data: horData } = await supabase
+    .from('invoices_horeca')
+    .select('invoice_date, customer_name, total_amount_idr')
+    .eq('status', 'Paid');
+    
+  const { data: opexData } = await supabase
+    .from('operating_expenses')
+    .select('date, category, description, amount_idr');
+
+  const rows: any[] = [];
+  
+  (indData || []).forEach(d => {
+    rows.push({ date: d.invoice_date, description: `Invoice Industri - ${d.customer_name}`, type: 'Debit', amount_idr: d.total_amount_idr });
+  });
+  (horData || []).forEach(d => {
+    rows.push({ date: d.invoice_date, description: `Invoice Horeca - ${d.customer_name}`, type: 'Debit', amount_idr: d.total_amount_idr });
+  });
+  (opexData || []).forEach(d => {
+    rows.push({ date: d.date, description: `Opex - ${d.category}: ${d.description}`, type: 'Kredit', amount_idr: d.amount_idr });
+  });
+
+  return rows.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+}
+
+export async function generateRekapPajak() {
+  const supabase = createSupabaseAdmin();
+  
+  const { data: indData } = await supabase
+    .from('invoices_industri')
+    .select('invoice_no, customer_name, subtotal_usd, tax_amount_usd, exchange_rate_idr');
+    
+  const { data: horData } = await supabase
+    .from('invoices_horeca')
+    .select('invoice_no, customer_name, subtotal_idr, tax_amount_idr');
+
+  const rows: any[] = [];
+  
+  (indData || []).forEach(d => {
+    const rate = d.exchange_rate_idr || 15000;
+    rows.push({ 
+      invoice_no: d.invoice_no, 
+      customer_name: d.customer_name, 
+      subtotal_idr: (d.subtotal_usd || 0) * rate, 
+      tax_amount_idr: (d.tax_amount_usd || 0) * rate 
+    });
+  });
+  (horData || []).forEach(d => {
+    rows.push({ 
+      invoice_no: d.invoice_no, 
+      customer_name: d.customer_name, 
+      subtotal_idr: d.subtotal_idr, 
+      tax_amount_idr: d.tax_amount_idr 
+    });
+  });
+
+  return rows;
+}
+
+export async function generateAuditSkid() {
+  const supabase = createSupabaseAdmin();
+  const { data } = await supabase
+    .from('custody_transfer_slips')
+    .select('date_wib, fob_no, customer_name, no_gtm, volume_mmbtu, status');
+  return data || [];
+}
+
+export async function generateProyeksiRevenue() {
+  const supabase = createSupabaseAdmin();
+  
+  const { data: leads } = await supabase
+    .from('sales_leads')
+    .select('company_name, segment, pipeline_stage, estimated_volume_mmbtu, estimated_value_idr');
+    
+  const rows: any[] = [];
+  (leads || []).forEach(d => {
+    rows.push({
+      company_name: d.company_name,
+      segment: d.segment,
+      pipeline_stage: d.pipeline_stage,
+      estimated_volume_mmbtu: d.estimated_volume_mmbtu,
+      estimated_value_idr: d.estimated_value_idr
+    });
+  });
+  
+  return rows;
+}
