@@ -125,7 +125,12 @@ export default function CRMPipelineTableCard({ industriLeads: initialIndustri, h
   const handleCreateLead = () => {
     if (!formData.company_name.trim()) return;
     startTransition(async () => {
-      const { data } = await createSalesLead(formData);
+      const { data, error } = await createSalesLead(formData);
+      if (error) {
+        alert(`Gagal menyimpan data: ${error}\n\nPastikan Anda memiliki role marketing_ae.`);
+        setIsModalOpen(false);
+        return;
+      }
       if (data) {
         if (formData.segment === 'Industri') {
           setLocalIndustri(prev => [data as RawLead, ...prev]);
