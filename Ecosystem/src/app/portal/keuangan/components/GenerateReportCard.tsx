@@ -7,7 +7,7 @@ type ReportType = 'monthly' | 'quarterly' | 'annual' | 'tax';
 
 const reportOptions: { value: ReportType; label: string; desc: string }[] = [
   { value: 'monthly', label: 'Laporan Kas Mother Station', desc: 'Ringkasan Juli 2026 (MMBTU vs IDR)' },
-  { value: 'quarterly', label: 'Audit Custody Transfer Q2', desc: 'Rekap volume & penagihan CNG' },
+  { value: 'quarterly', label: 'Audit Rekonsiliasi Tagihan Q2', desc: 'Revenue Assurance (Fisik MMBTU vs Invoiced)' },
   { value: 'annual', label: 'Proyeksi Revenue HBA Index', desc: 'Analisa keekonomian FY 2026' },
   { value: 'tax', label: 'Rekap E-Faktur PPN 11% & PPh', desc: 'Kewajiban pajak MIGAS DGT' },
 ];

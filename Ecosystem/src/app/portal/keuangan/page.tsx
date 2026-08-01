@@ -87,7 +87,7 @@ export default async function FinanceDashboardPage() {
             </div>
             <div className="flex items-center gap-2 px-5 py-3 bg-gradient-to-r from-amber-500 to-orange-600 text-white rounded-2xl text-xs sm:text-sm font-extrabold shadow-amber-500/30 shrink-0">
               <CheckCircle2 size={18} className="text-white" />
-              <span>Supabase Connected</span>
+              <span>Live ERP Synchronized</span>
             </div>
           </div>
 

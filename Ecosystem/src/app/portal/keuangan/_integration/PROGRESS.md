@@ -26,6 +26,7 @@ Membangun portal eksekutif CFO yang menangani skema tagihan ganda (Industri/FOB 
   - Penambahan identitas *Customer Name* di tabel tagihan.
   - Penerapan *inner scrollbar* (`max-h`) pada tabel panjang agar tinggi UI (*Bento Grid*) tetap mewah dan konsisten.
 - [x] **DevSecOps & Caching Fixes**: Menghapus sistem *caching* statis bawaan Next.js App Router (`force-dynamic`) agar data di Dashboard selalu *real-time* setelah submit form modal, dan memperbaiki *Constraint Violation Bug* (Reset *Payment Term* Horeca).
+- [x] **UI/UX Copywriting Update**: Melakukan *polishing* istilah bisnis pada Modul Keuangan (mengubah badge menjadi "Live ERP Synchronized" dan label laporan menjadi "Audit Rekonsiliasi Tagihan Q2" / "Revenue Assurance").
 
 ## 📈 Financial Metrics Summary
 
