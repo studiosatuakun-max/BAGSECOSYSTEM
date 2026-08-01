@@ -2,8 +2,7 @@
 
 import React, { useState } from 'react';
 import { FileText, Download, Loader2, CheckCircle, ChevronDown, Sparkles } from 'lucide-react';
-import { generateLaporanKas, generateRekapPajak, generateAuditSkid, generateProyeksiRevenue } from '../_integration/actions';
-
+import { useRouter } from 'next/navigation';
 type ReportType = 'monthly' | 'quarterly' | 'annual' | 'tax';
 
 const reportOptions: { value: ReportType; label: string; desc: string }[] = [
@@ -14,6 +13,7 @@ const reportOptions: { value: ReportType; label: string; desc: string }[] = [
 ];
 
 export default function GenerateReportCard() {
+  const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [selectedType, setSelectedType] = useState<ReportType>('monthly');
@@ -21,70 +21,8 @@ export default function GenerateReportCard() {
 
   const selected = reportOptions.find((r) => r.value === selectedType)!;
 
-  async function handleGenerate() {
-    setLoading(true);
-    setSuccess(false);
-
-    try {
-      let data: any[] = [];
-      let filename = 'laporan.csv';
-
-      if (selectedType === 'monthly') {
-        data = await generateLaporanKas();
-        filename = `Laporan_Kas_MotherStation_${Date.now()}.csv`;
-      } else if (selectedType === 'quarterly') {
-        data = await generateAuditSkid();
-        filename = `Audit_Rekonsiliasi_Tagihan_${Date.now()}.csv`;
-      } else if (selectedType === 'annual') {
-        data = await generateProyeksiRevenue();
-        filename = `Proyeksi_Revenue_${Date.now()}.csv`;
-      } else if (selectedType === 'tax') {
-        data = await generateRekapPajak();
-        filename = `Rekap_EFaktur_Pajak_${Date.now()}.csv`;
-      }
-
-      if (data && data.length > 0) {
-        const headers = Object.keys(data[0]).join(',');
-        const rows = data.map(row => 
-          Object.values(row).map(val => `"${String(val || '').replace(/"/g, '""')}"`).join(',')
-        ).join('\n');
-        
-        const csvContent = headers + '\n' + rows;
-        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-        const url = URL.createObjectURL(blob);
-        const link = document.createElement('a');
-        link.setAttribute('href', url);
-        link.setAttribute('download', filename);
-        link.style.visibility = 'hidden';
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-      } else {
-        // Handle empty data by generating only headers
-        let headers = '';
-        if (selectedType === 'monthly') headers = 'date,description,type,amount_idr';
-        else if (selectedType === 'quarterly') headers = 'date_wib,fob_no,customer_name,no_gtm,volume_mmbtu,status';
-        else if (selectedType === 'annual') headers = 'company_name,segment,pipeline_stage,estimated_volume_mmbtu,estimated_value_idr';
-        else if (selectedType === 'tax') headers = 'invoice_no,customer_name,subtotal_idr,tax_amount_idr';
-        
-        const blob = new Blob([headers + '\n'], { type: 'text/csv;charset=utf-8;' });
-        const url = URL.createObjectURL(blob);
-        const link = document.createElement('a');
-        link.setAttribute('href', url);
-        link.setAttribute('download', filename);
-        link.style.visibility = 'hidden';
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-      }
-      
-      setSuccess(true);
-      setTimeout(() => setSuccess(false), 3500);
-    } catch (error) {
-      console.error("Generate report failed:", error);
-    } finally {
-      setLoading(false);
-    }
+  function handleGenerate() {
+    router.push(`/portal/keuangan/print-report/${selectedType}`);
   }
 
   return (
