@@ -184,8 +184,8 @@ function LoginContent() {
             </span>
           </div>
           <h2 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight mb-8 drop-shadow-md">
-            Select a division role to auto-fill <br className="hidden md:block" />
-            and sign in automatically.
+            Select a division role <br className="hidden md:block" />
+            to auto-fill and sign in automatically.
           </h2>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-5">
