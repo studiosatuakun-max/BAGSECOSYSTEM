@@ -2,8 +2,8 @@
 
 import React, { useState, useTransition } from 'react';
 import Icon from '@/components/ui/AppIcon';
-import { Search, Plus, Users, CheckCircle2, Phone, Briefcase, MapPin, TrendingUp, HelpCircle } from 'lucide-react';
-import { updateLeadStage } from '../_integration/actions';
+import { Search, Plus, Users, CheckCircle2, Phone, Briefcase, MapPin, TrendingUp, HelpCircle, X } from 'lucide-react';
+import { updateLeadStage, createSalesLead } from '../_integration/actions';
 import type { SalesLead } from '../_integration/types';
 
 type RawLead = SalesLead;
@@ -47,6 +47,51 @@ export default function CRMPipelineTableCard({ industriLeads: initialIndustri, h
     lead.contact_person.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [formData, setFormData] = useState({
+    company_name: '',
+    contact_person: '',
+    phone_number: '',
+    segment: 'Industri' as 'Industri' | 'Horeca',
+    estimated_volume_mmbtu: 0,
+    cluster_location: ''
+  });
+
+  const handleStageChange = (id: string, company_name: string, newStage: string, segment: 'Industri' | 'Horeca') => {
+    startTransition(async () => {
+      // Optimistic update
+      if (segment === 'Industri') {
+        setLocalIndustri(prev => prev.map(l => l.id === id ? { ...l, pipeline_stage: newStage } : l));
+      } else {
+        setLocalHoreca(prev => prev.map(l => l.id === id ? { ...l, pipeline_stage: newStage } : l));
+      }
+      await updateLeadStage(id, newStage, company_name);
+    });
+  };
+
+  const handleCreateLead = () => {
+    if (!formData.company_name.trim()) return;
+    startTransition(async () => {
+      const { data } = await createSalesLead(formData);
+      if (data) {
+        if (formData.segment === 'Industri') {
+          setLocalIndustri(prev => [data as RawLead, ...prev]);
+        } else {
+          setLocalHoreca(prev => [data as RawLead, ...prev]);
+        }
+      }
+      setIsModalOpen(false);
+      setFormData({
+        company_name: '',
+        contact_person: '',
+        phone_number: '',
+        segment: 'Industri',
+        estimated_volume_mmbtu: 0,
+        cluster_location: ''
+      });
+    });
+  };
+
   return (
     <div className="col-span-full rounded-2xl border border-white/10 bg-slate-900/60 backdrop-blur-md p-6 shadow-xl flex flex-col h-full relative overflow-hidden group">
       {/* Background Gradients */}
@@ -75,7 +120,7 @@ export default function CRMPipelineTableCard({ industriLeads: initialIndustri, h
               className="w-full bg-slate-800/50 border border-slate-700/50 text-white placeholder:text-slate-500 rounded-xl pl-10 pr-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500/50 transition-all"
             />
           </div>
-          <button className="flex items-center gap-2 px-4 py-2 bg-purple-500 hover:bg-purple-600 text-white rounded-xl text-sm font-bold transition-all shadow-[0_0_20px_rgba(168,85,247,0.3)] whitespace-nowrap shrink-0">
+          <button onClick={() => setIsModalOpen(true)} className="flex items-center gap-2 px-4 py-2 bg-purple-500 hover:bg-purple-600 text-white rounded-xl text-sm font-bold transition-all shadow-[0_0_20px_rgba(168,85,247,0.3)] whitespace-nowrap shrink-0">
             <Plus size={18} />
             <span className="hidden sm:inline">Add Lead</span>
           </button>
@@ -135,10 +180,16 @@ export default function CRMPipelineTableCard({ industriLeads: initialIndustri, h
                     {lead.sales_rep_id}
                   </td>
                   <td className="p-4 whitespace-nowrap">
-                    <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium border ${stageBadgeClass(lead.pipeline_stage)}`}>
-                      {lead.pipeline_stage === 'Dealing_Closed_Won' ? <CheckCircle2 size={12} /> : <TrendingUp size={12} />}
-                      {STAGE_LABELS[lead.pipeline_stage] ?? lead.pipeline_stage.replace(/_/g, ' ')}
-                    </span>
+                    <select
+                      value={lead.pipeline_stage}
+                      onChange={(e) => handleStageChange(lead.id, lead.company_name, e.target.value, 'Industri')}
+                      disabled={isPending}
+                      className={`text-xs font-medium px-2.5 py-1 rounded-full border cursor-pointer focus:outline-none appearance-none ${stageBadgeClass(lead.pipeline_stage)}`}
+                    >
+                      {Object.entries(STAGE_LABELS).map(([val, label]) => (
+                        <option key={val} value={val} className="text-slate-900">{label}</option>
+                      ))}
+                    </select>
                   </td>
                 </tr>
               ))}
@@ -184,9 +235,16 @@ export default function CRMPipelineTableCard({ industriLeads: initialIndustri, h
                     )}
                   </td>
                   <td className="p-4 whitespace-nowrap">
-                    <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold border ${stageBadgeClass(lead.pipeline_stage)}`}>
-                      {STAGE_LABELS[lead.pipeline_stage] ?? lead.pipeline_stage.replace(/_/g, ' ')}
-                    </span>
+                    <select
+                      value={lead.pipeline_stage}
+                      onChange={(e) => handleStageChange(lead.id, lead.company_name, e.target.value, 'Horeca')}
+                      disabled={isPending}
+                      className={`text-[10px] font-bold px-2.5 py-1 rounded-full border cursor-pointer focus:outline-none appearance-none ${stageBadgeClass(lead.pipeline_stage)}`}
+                    >
+                      {Object.entries(STAGE_LABELS).map(([val, label]) => (
+                        <option key={val} value={val} className="text-slate-900">{label}</option>
+                      ))}
+                    </select>
                   </td>
                 </tr>
               ))}
@@ -194,6 +252,105 @@ export default function CRMPipelineTableCard({ industriLeads: initialIndustri, h
           </table>
         )}
       </div>
+
+      {/* Add Lead Modal */}
+      {isModalOpen && (
+        <div className="fixed inset-0 z-[200] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+          <div className="bg-slate-900 border border-slate-700 rounded-2xl p-6 w-full max-w-md shadow-2xl">
+            <div className="flex items-center justify-between mb-5">
+              <h3 className="text-lg font-bold text-white">Add New Lead</h3>
+              <button onClick={() => setIsModalOpen(false)} className="p-1.5 text-slate-400 hover:text-white hover:bg-slate-700 rounded-lg">
+                <X size={18} />
+              </button>
+            </div>
+
+            <div className="space-y-4">
+              <div>
+                <label className="block text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1.5">Company Name</label>
+                <input
+                  type="text"
+                  value={formData.company_name}
+                  onChange={(e) => setFormData((p) => ({ ...p, company_name: e.target.value }))}
+                  placeholder="e.g. PT Indofood CBP"
+                  className="w-full bg-slate-800 border border-slate-700 text-white rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500 placeholder:text-slate-500"
+                />
+              </div>
+
+              <div>
+                <label className="block text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1.5">Segment</label>
+                <select
+                  value={formData.segment}
+                  onChange={(e) => setFormData((p) => ({ ...p, segment: e.target.value as 'Industri' | 'Horeca' }))}
+                  className="w-full bg-slate-800 border border-slate-700 text-white rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
+                >
+                  <option value="Industri">Industri</option>
+                  <option value="Horeca">Horeca</option>
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1.5">Contact Person</label>
+                <input
+                  type="text"
+                  value={formData.contact_person}
+                  onChange={(e) => setFormData((p) => ({ ...p, contact_person: e.target.value }))}
+                  placeholder="PIC Name"
+                  className="w-full bg-slate-800 border border-slate-700 text-white rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500 placeholder:text-slate-500"
+                />
+              </div>
+              
+              <div>
+                <label className="block text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1.5">Phone Number</label>
+                <input
+                  type="text"
+                  value={formData.phone_number}
+                  onChange={(e) => setFormData((p) => ({ ...p, phone_number: e.target.value }))}
+                  placeholder="+62 8..."
+                  className="w-full bg-slate-800 border border-slate-700 text-white rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500 placeholder:text-slate-500"
+                />
+              </div>
+
+              {formData.segment === 'Industri' && (
+                <div>
+                  <label className="block text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1.5">Estimated Volume (MMBTU)</label>
+                  <input
+                    type="number"
+                    value={formData.estimated_volume_mmbtu}
+                    onChange={(e) => setFormData((p) => ({ ...p, estimated_volume_mmbtu: Number(e.target.value) }))}
+                    className="w-full bg-slate-800 border border-slate-700 text-white rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
+                  />
+                </div>
+              )}
+
+              {formData.segment === 'Horeca' && (
+                <div>
+                  <label className="block text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1.5">Cluster / Area</label>
+                  <input
+                    type="text"
+                    value={formData.cluster_location}
+                    onChange={(e) => setFormData((p) => ({ ...p, cluster_location: e.target.value }))}
+                    className="w-full bg-slate-800 border border-slate-700 text-white rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
+                  />
+                </div>
+              )}
+            </div>
+
+            <div className="flex items-center justify-end gap-3 mt-6">
+              <button onClick={() => setIsModalOpen(false)} className="px-5 py-2.5 rounded-xl text-sm font-bold text-slate-400 hover:text-white hover:bg-slate-800 transition-all">
+                Cancel
+              </button>
+              <button
+                onClick={handleCreateLead}
+                disabled={!formData.company_name.trim() || isPending}
+                className="px-5 py-2.5 rounded-xl text-sm font-bold bg-purple-500 hover:bg-purple-600 text-white transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+              >
+                {isPending && <Icon name="ArrowPathIcon" size={14} className="animate-spin" />}
+                Add Lead
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

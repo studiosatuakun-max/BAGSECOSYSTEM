@@ -7,21 +7,24 @@ import CampaignROIChart from './components/CampaignROIChart';
 import AcquisitionFunnel from './components/AcquisitionFunnel';
 import TopClientsTable from './components/TopClientsTable';
 import MarketingClientUI from './components/MarketingClientUI';
-import { getSalesLeads, getMarketingCampaigns } from './_integration/actions';
+import { getSalesLeads, getMarketingCampaigns, getPemasaranKPIs } from './_integration/actions';
 import { CheckCircle2 } from 'lucide-react';
 
 export default async function MarketingDashboardPage() {
   // Fetch real data from Supabase — graceful fallback to empty arrays if not configured
   let allLeads: Record<string, unknown>[] = [];
   let campaigns: Record<string, unknown>[] = [];
+  let kpiData = { totalLeads: 0, winRate: 0, cacEfficiency: 0 };
 
   try {
-    const [leadsResult, campaignsResult] = await Promise.all([
+    const [leadsResult, campaignsResult, kpis] = await Promise.all([
       getSalesLeads(),
       getMarketingCampaigns(),
+      getPemasaranKPIs()
     ]);
     allLeads = leadsResult.data ?? [];
     campaigns = campaignsResult.data ?? [];
+    kpiData = kpis;
   } catch {
     // Supabase not configured — show empty state
   }
@@ -90,12 +93,12 @@ export default async function MarketingDashboardPage() {
                 </span>
               </div>
               <div className="text-3xl sm:text-4xl font-black text-white tracking-tight tabular-nums my-1">
-                1,240 <span className="text-sm font-bold text-pink-400 uppercase">Leads</span>
+                {kpiData.totalLeads.toLocaleString()} <span className="text-sm font-bold text-pink-400 uppercase">Leads</span>
               </div>
             </div>
             <div className="mt-4 pt-3 border-t border-pink-800/60 flex items-center justify-between text-xs text-slate-300 font-medium">
               <span>Q3 Target: 1,500</span>
-              <span className="text-emerald-400 font-bold">82.6% Achieved</span>
+              <span className="text-emerald-400 font-bold">{((kpiData.totalLeads / 1500) * 100).toFixed(1)}% Achieved</span>
             </div>
           </div>
 
@@ -113,7 +116,7 @@ export default async function MarketingDashboardPage() {
                 </span>
               </div>
               <div className="text-3xl sm:text-4xl font-black text-white tracking-tight tabular-nums my-1">
-                7.6% <span className="text-sm font-bold text-purple-400 uppercase">Win Rate</span>
+                {kpiData.winRate.toFixed(1)}% <span className="text-sm font-bold text-purple-400 uppercase">Win Rate</span>
               </div>
             </div>
             <div className="mt-4 pt-3 border-t border-purple-800/60 flex items-center justify-between text-xs text-slate-300 font-medium">
@@ -159,7 +162,7 @@ export default async function MarketingDashboardPage() {
                 </span>
               </div>
               <div className="text-3xl sm:text-4xl font-black text-white tracking-tight tabular-nums my-1">
-                Rp 1.45 <span className="text-sm font-bold text-rose-400 uppercase">Jt / Deal</span>
+                Rp {(kpiData.cacEfficiency / 1_000_000).toFixed(2)} <span className="text-sm font-bold text-rose-400 uppercase">Jt / Deal</span>
               </div>
             </div>
             <div className="mt-4 pt-3 border-t border-rose-800/60 flex items-center justify-between text-xs text-slate-300 font-medium">

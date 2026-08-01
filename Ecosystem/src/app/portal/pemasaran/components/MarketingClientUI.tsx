@@ -8,7 +8,7 @@ import {
   Plus,
   X,
 } from 'lucide-react';
-import { updateCampaignStatus } from '../_integration/actions';
+import { updateCampaignStatus, createMarketingCampaign, updateCampaign } from '../_integration/actions';
 
 interface Campaign {
   id: string;
@@ -86,28 +86,37 @@ export default function MarketingClientUI({ initialCampaigns }: Props) {
 
   const handleSave = () => {
     if (!formData.campaign_name.trim()) return;
-    if (modalMode === 'create') {
-      setCampaigns((prev) => [
-        {
-          id: `CMP-${Date.now()}`,
+    startTransition(async () => {
+      if (modalMode === 'create') {
+        const payload = {
           campaign_name: formData.campaign_name,
           campaign_type: formData.campaign_type,
-          status: 'Draft',
+          segment_target: 'Both',
+          start_date: new Date().toISOString().split('T')[0],
           budget_idr: formData.budget_idr,
           leads_generated: formData.leads_generated,
-        },
-        ...prev,
-      ]);
-    } else if (editingId) {
-      setCampaigns((prev) =>
-        prev.map((c) =>
-          c.id === editingId
-            ? { ...c, campaign_name: formData.campaign_name, campaign_type: formData.campaign_type, budget_idr: formData.budget_idr, leads_generated: formData.leads_generated }
-            : c
-        )
-      );
-    }
-    handleCloseModal();
+        };
+        const { data } = await createMarketingCampaign(payload);
+        if (data) {
+          setCampaigns((prev) => [data as Campaign, ...prev]);
+        }
+      } else if (editingId) {
+        await updateCampaign(editingId, {
+          campaign_name: formData.campaign_name,
+          campaign_type: formData.campaign_type,
+          budget_idr: formData.budget_idr,
+          leads_generated: formData.leads_generated,
+        });
+        setCampaigns((prev) =>
+          prev.map((c) =>
+            c.id === editingId
+              ? { ...c, campaign_name: formData.campaign_name, campaign_type: formData.campaign_type, budget_idr: formData.budget_idr, leads_generated: formData.leads_generated }
+              : c
+          )
+        );
+      }
+      handleCloseModal();
+    });
   };
 
   const handleDelete = (id: string) => {
