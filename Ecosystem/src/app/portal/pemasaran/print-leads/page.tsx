@@ -2,8 +2,6 @@ import React from 'react';
 import Image from 'next/image';
 import AutoPrint from '../../keuangan/print/[type]/[id]/AutoPrint';
 import { getSalesLeads } from '../_integration/actions';
-import { format } from 'date-fns';
-import { id as localeID } from 'date-fns/locale';
 
 export default async function PrintLeadsPage() {
   const { data: leads } = await getSalesLeads();
@@ -47,7 +45,7 @@ export default async function PrintLeadsPage() {
           <div className="text-right">
             <h2 className="text-lg font-bold text-slate-800">CRM PIPELINE DOSSIER</h2>
             <p className="text-sm text-slate-500">
-              Dicetak: {format(new Date(), "dd MMMM yyyy HH:mm", { locale: localeID })}
+              Dicetak: {new Date().toLocaleString('id-ID', { day: '2-digit', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' })}
             </p>
           </div>
         </div>
