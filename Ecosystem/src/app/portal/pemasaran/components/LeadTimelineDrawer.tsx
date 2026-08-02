@@ -42,9 +42,8 @@ export default function LeadTimelineDrawer({ isOpen, onClose, leadId, companyNam
   if (!isOpen || !mounted) return null;
 
   return createPortal(
-    <>
-      <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[9998]" onClick={onClose} />
-      <div className="fixed top-0 right-0 h-full w-full max-w-md bg-slate-900 border-l border-slate-700 z-[9999] shadow-2xl flex flex-col transform transition-transform duration-300">
+    <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4" onClick={onClose}>
+      <div className="bg-slate-900 border border-slate-700 rounded-2xl w-full max-w-2xl shadow-2xl flex flex-col max-h-[85vh]" onClick={(e) => e.stopPropagation()}>
         
         {/* Header */}
         <div className="flex items-center justify-between p-6 border-b border-slate-800">
@@ -116,7 +115,7 @@ export default function LeadTimelineDrawer({ isOpen, onClose, leadId, companyNam
           )}
         </div>
       </div>
-    </>,
+    </div>,
     document.body
   );
 }
