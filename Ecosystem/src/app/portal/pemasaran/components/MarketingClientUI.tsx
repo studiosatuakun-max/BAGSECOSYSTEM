@@ -194,7 +194,7 @@ export default function MarketingClientUI({ initialCampaigns }: Props) {
           </button>
         </div>
 
-        <div className="overflow-x-auto relative z-10">
+        <div className="overflow-x-auto overflow-y-auto max-h-[220px] relative z-10">
           <table className="w-full text-left border-collapse">
             <thead>
               <tr className="text-[11px] uppercase text-slate-400 border-b border-slate-700/50">
