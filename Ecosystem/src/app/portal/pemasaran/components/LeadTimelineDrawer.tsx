@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useEffect, useState, useTransition } from 'react';
+import { createPortal } from 'react-dom';
 import { X, Activity, FileText, PhoneCall, Calendar } from 'lucide-react';
 import { getLeadActivities } from '../_integration/actions';
 
@@ -23,6 +24,10 @@ export default function LeadTimelineDrawer({ isOpen, onClose, leadId, companyNam
   const [activities, setActivities] = useState<ActivityRecord[]>([]);
   const [isPending, startTransition] = useTransition();
 
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => setMounted(true), []);
+
   useEffect(() => {
     if (isOpen && leadId) {
       startTransition(async () => {
@@ -34,9 +39,9 @@ export default function LeadTimelineDrawer({ isOpen, onClose, leadId, companyNam
     }
   }, [isOpen, leadId]);
 
-  if (!isOpen) return null;
+  if (!isOpen || !mounted) return null;
 
-  return (
+  return createPortal(
     <>
       <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[9998]" onClick={onClose} />
       <div className="fixed top-0 right-0 h-full w-full max-w-md bg-slate-900 border-l border-slate-700 z-[9999] shadow-2xl flex flex-col transform transition-transform duration-300">
@@ -111,6 +116,7 @@ export default function LeadTimelineDrawer({ isOpen, onClose, leadId, companyNam
           )}
         </div>
       </div>
-    </>
+    </>,
+    document.body
   );
 }
