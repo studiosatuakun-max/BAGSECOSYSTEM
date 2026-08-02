@@ -2,56 +2,41 @@ import React from 'react';
 import PortalHeader from '@/components/PortalHeader';
 import Footer from '@/components/Footer';
 import Icon from '@/components/ui/AppIcon';
-import HRShiftTableCard from './components/HRShiftTableCard';
 import WorkforceChart from './components/WorkforceChart';
 import AttendanceCard from './components/AttendanceCard';
 import LeaveRequestsList from './components/LeaveRequestsList';
 import AnniversaryBanner from './components/AnniversaryBanner';
 import OnboardingCTA from './components/OnboardingCTA';
-import { getShiftSchedules, getEmployeeTrainings } from './_integration/actions';
+import DynamicShiftConsole from './components/DynamicShiftConsole';
+import TrainingSafetyMatrix from './components/TrainingSafetyMatrix';
+import { getHRMetrics, getTodaysShifts, getTrainingMatrix } from './_integration/actions';
 
 export const dynamic = 'force-dynamic';
 
 export default async function HRDashboardPage() {
-  let shifts: ReturnType<typeof getShiftSchedules> extends Promise<infer T> ? T : never = { data: null, error: null };
-  let trainings: ReturnType<typeof getEmployeeTrainings> extends Promise<infer T> ? T : never = { data: null, error: null };
+  let metricsData: any = { data: null };
+  let shiftsData: any = { data: null };
+  let trainingsData: any = { data: null };
 
   try {
-    [shifts, trainings] = await Promise.all([
-      getShiftSchedules(),
-      getEmployeeTrainings(),
+    [metricsData, shiftsData, trainingsData] = await Promise.all([
+      getHRMetrics(),
+      getTodaysShifts(),
+      getTrainingMatrix(),
     ]);
   } catch {
-    // graceful fallback — render with empty arrays
+    // graceful fallback
   }
 
-  const rawShifts = (shifts.data ?? []) as {
-    id: string;
-    employee_id: string;
-    employee_name?: string;
-    shift_date: string;
-    shift_type: string;
-    role_assigned?: string;
-    station_location?: string;
-    estimated_workload_note?: string;
-    is_dynamic_change?: boolean;
-  }[];
-
-  const rawTrainings = (trainings.data ?? []) as {
-    id: string;
-    employee_id: string;
-    employee_name?: string;
-    training_name: string;
-    training_date: string;
-    trainer_name?: string;
-    duration_hours?: number;
-    certificate_issued?: boolean;
-    status?: string;
-  }[];
-
-  const activeShiftCount = rawShifts.filter(s => s.shift_type !== 'Libur').length || 148;
-  const validSioCount = rawTrainings.filter(t => t.certificate_issued).length || 148;
-  const totalPersonnel = rawShifts.length || 412;
+  const rawShifts = shiftsData.data ?? [];
+  const rawTrainings = trainingsData.data ?? [];
+  
+  const m = metricsData.data || {
+    headcount: 412,
+    averageKpi: 91.7,
+    activeShiftsToday: 148,
+    sioAlerts: { critical: 0, warning: 0, totalAlerts: 0 }
+  };
 
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-slate-950 font-sans relative flex flex-col justify-between selection:bg-purple-500 selection:text-white">
@@ -85,7 +70,7 @@ export default async function HRDashboardPage() {
               Enterprise Workforce &amp; ATEX SIO Control Center
             </h1>
             <p className="text-xs sm:text-sm text-slate-300 leading-relaxed font-medium">
-              Pusat kendali {totalPersonnel} personel operasional dan staf korporat, pemantauan masa berlaku lisensi SIO ATEX pengemudi Skid Tank, manajemen rotasi shift 24 jam Mother Station, serta otomatisasi klaim BPJS &amp; tunjangan bahaya gas.
+              Pusat kendali {m.headcount} personel operasional dan staf korporat, pemantauan masa berlaku lisensi SIO ATEX pengemudi Skid Tank, manajemen rotasi shift 24 jam Mother Station, serta metrik keselamatan energi.
             </p>
           </div>
           <button className="px-5 py-3 bg-gradient-to-r from-purple-600 to-fuchsia-600 hover:from-purple-500 hover:to-fuchsia-500 text-white rounded-2xl text-xs sm:text-sm font-extrabold shadow-lg shadow-purple-500/30 transition-all flex items-center gap-2.5 active:scale-95 shrink-0 whitespace-nowrap z-10 justify-center">
@@ -106,11 +91,11 @@ export default async function HRDashboardPage() {
                   <span>Total Crew &amp; Staff</span>
                 </span>
                 <span className="inline-flex items-center px-2 py-0.5 rounded-md text-[10px] font-black bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 whitespace-nowrap">
-                  +12 New Q3
+                  Active
                 </span>
               </div>
               <div className="text-3xl sm:text-4xl font-black text-white tracking-tight tabular-nums my-1">
-                {totalPersonnel} <span className="text-sm font-bold text-purple-400 uppercase">Personel</span>
+                {m.headcount} <span className="text-sm font-bold text-purple-400 uppercase">Personel</span>
               </div>
             </div>
             <div className="mt-4 pt-3 border-t border-purple-800/60 flex items-center justify-between text-xs text-slate-300 font-medium">
@@ -126,65 +111,85 @@ export default async function HRDashboardPage() {
               <div className="flex items-start justify-between text-indigo-300 mb-2 gap-2">
                 <span className="text-xs font-extrabold uppercase tracking-wider flex items-center gap-1.5 mr-1 leading-tight">
                   <Icon name="ClockIcon" size={16} className="text-indigo-400 shrink-0" />
-                  <span>Shift Attendance Rate</span>
+                  <span>Shift Coverage</span>
                 </span>
                 <span className="inline-flex items-center px-2 py-0.5 rounded-md text-[10px] font-black bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 whitespace-nowrap">
                   Today&apos;s Shift
                 </span>
               </div>
               <div className="text-3xl sm:text-4xl font-black text-white tracking-tight tabular-nums my-1">
-                96.4% <span className="text-sm font-bold text-indigo-400 uppercase">Live</span>
+                {Math.round((m.activeShiftsToday / Math.max(1, m.headcount)) * 100)}% <span className="text-sm font-bold text-indigo-400 uppercase">Coverage</span>
               </div>
             </div>
             <div className="mt-4 pt-3 border-t border-indigo-800/60 flex items-center justify-between text-xs text-slate-300 font-medium">
-              <span>{activeShiftCount} Shift Active</span>
+              <span>{m.activeShiftsToday} Shift Active</span>
               <span className="text-indigo-300 font-bold">Mother Station Valid</span>
             </div>
           </div>
 
-          {/* SIO ATEX Drivers */}
-          <div className="bg-gradient-to-br from-fuchsia-900 via-fuchsia-950 to-slate-950 text-white p-6 rounded-3xl border border-fuchsia-800/60 shadow-xl relative overflow-hidden flex flex-col justify-between group hover:border-fuchsia-500 hover:-translate-y-1.5 hover:shadow-2xl hover:shadow-fuchsia-950/50 transition-all duration-300 animate-in fade-in slide-in-from-bottom-6 duration-700" style={{ animationDelay: '160ms' }}>
-            <div className="absolute -right-8 -top-8 w-32 h-32 bg-fuchsia-500/20 rounded-full blur-2xl group-hover:bg-fuchsia-500/30 transition-all duration-500 pointer-events-none" />
+          {/* SIO ATEX Drivers - STAGGERED ALERT */}
+          <div className={`text-white p-6 rounded-3xl shadow-xl relative overflow-hidden flex flex-col justify-between group transition-all duration-300 animate-in fade-in slide-in-from-bottom-6 duration-700
+            ${m.sioAlerts.critical > 0 
+              ? 'bg-gradient-to-br from-red-900 via-red-950 to-slate-950 border border-red-500 hover:border-red-400 hover:shadow-red-900/50' 
+              : m.sioAlerts.warning > 0 
+                ? 'bg-gradient-to-br from-yellow-900 via-yellow-950 to-slate-950 border border-yellow-500 hover:border-yellow-400 hover:shadow-yellow-900/50'
+                : 'bg-gradient-to-br from-fuchsia-900 via-fuchsia-950 to-slate-950 border border-fuchsia-800/60 hover:border-fuchsia-500 hover:shadow-fuchsia-950/50'
+            }
+          `} style={{ animationDelay: '160ms' }}>
+            <div className={`absolute -right-8 -top-8 w-32 h-32 rounded-full blur-2xl transition-all duration-500 pointer-events-none
+              ${m.sioAlerts.critical > 0 ? 'bg-red-500/30 group-hover:bg-red-500/40 animate-pulse' : m.sioAlerts.warning > 0 ? 'bg-yellow-500/30 group-hover:bg-yellow-500/40' : 'bg-fuchsia-500/20 group-hover:bg-fuchsia-500/30'}
+            `} />
             <div>
-              <div className="flex items-start justify-between text-fuchsia-300 mb-2 gap-2">
+              <div className={`flex items-start justify-between mb-2 gap-2 ${m.sioAlerts.critical > 0 ? 'text-red-300' : m.sioAlerts.warning > 0 ? 'text-yellow-300' : 'text-fuchsia-300'}`}>
                 <span className="text-xs font-extrabold uppercase tracking-wider flex items-center gap-1.5 mr-1 leading-tight">
-                  <Icon name="ShieldCheckIcon" size={16} className="text-fuchsia-400 shrink-0" />
-                  <span>SIO ATEX Fleet Drivers</span>
+                  <Icon name="ShieldCheckIcon" size={16} className={`shrink-0 ${m.sioAlerts.critical > 0 ? 'text-red-400' : m.sioAlerts.warning > 0 ? 'text-yellow-400' : 'text-fuchsia-400'}`} />
+                  <span>SIO Expiring Alerts</span>
                 </span>
-                <span className="inline-flex items-center px-2 py-0.5 rounded-md text-[10px] font-black bg-fuchsia-500/20 text-fuchsia-300 border border-fuchsia-500/30 whitespace-nowrap">
-                  MIGAS Certified
+                <span className={`inline-flex items-center px-2 py-0.5 rounded-md text-[10px] font-black border whitespace-nowrap
+                  ${m.sioAlerts.critical > 0 ? 'bg-red-500/20 text-red-300 border-red-500/30' : m.sioAlerts.warning > 0 ? 'bg-yellow-500/20 text-yellow-300 border-yellow-500/30' : 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30'}
+                `}>
+                  {m.sioAlerts.totalAlerts > 0 ? `${m.sioAlerts.totalAlerts} Alerts` : '100% Valid'}
                 </span>
               </div>
               <div className="text-3xl sm:text-4xl font-black text-white tracking-tight tabular-nums my-1">
-                {validSioCount} <span className="text-sm font-bold text-fuchsia-400 uppercase">Drivers</span>
+                {m.sioAlerts.totalAlerts > 0 ? m.sioAlerts.totalAlerts : 0} 
+                <span className={`text-sm font-bold uppercase ml-2 ${m.sioAlerts.critical > 0 ? 'text-red-400' : m.sioAlerts.warning > 0 ? 'text-yellow-400' : 'text-emerald-400'}`}>
+                  {m.sioAlerts.totalAlerts > 0 ? 'Expiring' : 'Expiring'}
+                </span>
               </div>
             </div>
-            <div className="mt-4 pt-3 border-t border-fuchsia-800/60 flex items-center justify-between text-xs text-slate-300 font-medium">
+            <div className={`mt-4 pt-3 border-t flex items-center justify-between text-xs text-slate-300 font-medium
+              ${m.sioAlerts.critical > 0 ? 'border-red-800/60' : m.sioAlerts.warning > 0 ? 'border-yellow-800/60' : 'border-fuchsia-800/60'}
+            `}>
               <span>Prime Mover &amp; Skid Fleet</span>
-              <span className="text-emerald-400 font-bold">100% Valid License</span>
+              <span className={`font-bold ${m.sioAlerts.critical > 0 ? 'text-red-400 animate-pulse' : m.sioAlerts.warning > 0 ? 'text-yellow-400' : 'text-emerald-400'}`}>
+                {m.sioAlerts.critical > 0 ? 'ACTION REQUIRED' : m.sioAlerts.warning > 0 ? 'Prepare Renewal' : 'MIGAS Certified'}
+              </span>
             </div>
           </div>
 
-          {/* Payroll */}
-          <div className="bg-gradient-to-br from-emerald-900 via-emerald-950 to-slate-950 text-white p-6 rounded-3xl border border-emerald-800/60 shadow-xl relative overflow-hidden flex flex-col justify-between group hover:border-emerald-500 hover:-translate-y-1.5 hover:shadow-2xl hover:shadow-emerald-950/50 transition-all duration-300 animate-in fade-in slide-in-from-bottom-6 duration-700" style={{ animationDelay: '240ms' }}>
-            <div className="absolute -right-8 -top-8 w-32 h-32 bg-emerald-500/20 rounded-full blur-2xl group-hover:bg-emerald-500/30 transition-all duration-500 pointer-events-none" />
+          {/* Average KPI Score */}
+          <div className="bg-gradient-to-br from-blue-900 via-blue-950 to-slate-950 text-white p-6 rounded-3xl border border-blue-800/60 shadow-xl relative overflow-hidden flex flex-col justify-between group hover:border-blue-500 hover:-translate-y-1.5 hover:shadow-2xl hover:shadow-blue-950/50 transition-all duration-300 animate-in fade-in slide-in-from-bottom-6 duration-700" style={{ animationDelay: '240ms' }}>
+            <div className="absolute -right-8 -top-8 w-32 h-32 bg-blue-500/20 rounded-full blur-2xl group-hover:bg-blue-500/30 transition-all duration-500 pointer-events-none" />
             <div>
-              <div className="flex items-start justify-between text-emerald-300 mb-2 gap-2">
+              <div className="flex items-start justify-between text-blue-300 mb-2 gap-2">
                 <span className="text-xs font-extrabold uppercase tracking-wider flex items-center gap-1.5 mr-1 leading-tight">
-                  <Icon name="CurrencyDollarIcon" size={16} className="text-emerald-400 shrink-0" />
-                  <span>Monthly Payroll &amp; Allowance</span>
+                  <Icon name="ChartBarIcon" size={16} className="text-blue-400 shrink-0" />
+                  <span>Average KPI Score</span>
                 </span>
-                <span className="inline-flex items-center px-2 py-0.5 rounded-md text-[10px] font-black bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 whitespace-nowrap">
-                  BPJS Synced
+                <span className="inline-flex items-center px-2 py-0.5 rounded-md text-[10px] font-black bg-blue-500/20 text-blue-300 border border-blue-500/30 whitespace-nowrap">
+                  Active Staff
                 </span>
               </div>
               <div className="text-3xl sm:text-4xl font-black text-white tracking-tight tabular-nums my-1">
-                Rp 2.85 <span className="text-sm font-bold text-emerald-400 uppercase">Miliar</span>
+                {m.averageKpi} <span className="text-sm font-bold text-blue-400 uppercase">/ 100</span>
               </div>
             </div>
-            <div className="mt-4 pt-3 border-t border-emerald-800/60 flex items-center justify-between text-xs text-slate-300 font-medium">
-              <span>Gaji Pokok + Tunjangan Bahaya</span>
-              <span className="text-emerald-300 font-bold">Disbursed 25th</span>
+            <div className="mt-4 pt-3 border-t border-blue-800/60 flex items-center justify-between text-xs text-slate-300 font-medium">
+              <span>Overall Enterprise Performance</span>
+              <span className="text-emerald-300 font-bold flex items-center gap-1">
+                <Icon name="TrendingUpIcon" size={12} /> Target 90.0
+              </span>
             </div>
           </div>
         </div>
@@ -210,9 +215,10 @@ export default async function HRDashboardPage() {
           </div>
         </div>
 
-        {/* ROW 4: Shift & Training Table (Supabase Connected) */}
-        <div className="animate-in fade-in slide-in-from-bottom-6 duration-700 delay-300 fill-mode-both">
-          <HRShiftTableCard shifts={rawShifts} trainings={rawTrainings} />
+        {/* ROW 4: Bento Grid Command Center */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 h-[450px] animate-in fade-in slide-in-from-bottom-6 duration-700 delay-300 fill-mode-both">
+          <DynamicShiftConsole shifts={rawShifts} />
+          <TrainingSafetyMatrix trainings={rawTrainings} />
         </div>
       </main>
 

@@ -118,3 +118,31 @@ export async function updatePermitStatus(
   if (!error) revalidatePath('/portal/legal');
   return { error: error?.message ?? null };
 }
+
+// ─── Cross-Module Integration ──────────────────────────────────────────────────
+
+export async function processClosedWonLead(
+  leadId: string
+): Promise<{ success: boolean; data?: any; error: string | null }> {
+  try {
+    const supabase = await createSupabaseServerClient();
+    
+    // Get user session to pass as auth_uid if needed by RPC (though RPC is SECURITY DEFINER, it's good practice)
+    const { data: { user } } = await supabase.auth.getUser();
+    
+    // Call the RPC function
+    const { data, error } = await supabase.rpc('process_closed_won_lead', {
+      p_lead_id: leadId,
+      p_auth_uid: user?.id || null
+    });
+
+    if (error) throw new Error(error.message);
+
+    revalidatePath('/portal/legal');
+    revalidatePath('/portal/pemasaran');
+    
+    return { success: true, data, error: null };
+  } catch (err: any) {
+    return { success: false, error: err.message || 'Failed to process lead.' };
+  }
+}

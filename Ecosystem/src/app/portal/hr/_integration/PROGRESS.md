@@ -75,5 +75,29 @@ Connected to tables: `employees`, `employee_trainings`, `shift_schedules`
 | EMP-006 | Dewi Rahayu | QHSE Lead | SIO-HSE-2023-441 | Nov 2026 |
 
 ---
+
+## 🛠️ Implementation Plan: HR Command Center (ATEX/Migas Focus)
+
+### 1. Database Integration & Server Actions (`actions.ts`)
+- **`getHRMetrics()`**: Mengambil *total active headcount*, persentase *shift coverage*, *SIO expiring count* (< 30 hari), dan *average KPI score*.
+- **`getTodaysShifts()`**: Mengambil jadwal shift hari ini (join `shift_schedules` dengan `employees`).
+- **`getTrainingMatrix()`**: Mengambil data training terkait keselamatan (khusus tipe `ATEX` dan `MIGAS`) dari `employee_trainings`.
+
+### 2. Frontend UI Modifications (`page.tsx`)
+- Menghubungkan 4 kartu KPI di bagian atas (Headcount, Shift Coverage, SIO Expiring Alerts, Average KPI Score) dengan data dinamis.
+- Mengubah warna KPI SIO menjadi menyala merah/kuning (animasi *pulse*) jika ada sertifikasi yang kedaluwarsa atau mendekati masa tenggang.
+- Membuat desain *Bento Grid 2:1* untuk komponen utama baru di bawahnya.
+
+### 3. Komponen Baru
+- **`DynamicShiftConsole.tsx`**: Komponen antarmuka berbasis tabel dinamis yang mengelompokkan shift (Pagi/Siang/Malam) dan menyoroti status kehadiran.
+- **`TrainingSafetyMatrix.tsx`**: Matriks pemantauan untuk sertifikasi dan pelatihan keselamatan, menandai *training* yang kadaluarsa atau akan *expired*.
+
+### ❓ Open Questions (Mohon Klarifikasi)
+1. **Aturan Shift**: Apakah ada jam operasional spesifik untuk *Pagi*, *Siang*, dan *Malam* yang harus dicek saat validasi absensi (seperti batas toleransi keterlambatan)?
+2. **Alert SIO**: Apakah batas < 30 hari sudah cukup untuk industri migas? Ataukah butuh *staggered alert* (Kuning = 60 hari, Merah = 30 hari) untuk waktu pembaruan?
+3. **Data SIO**: Apakah referensi `sio_expiry` di tabel `employees` harus selalu menjadi patokan utama, atau harus dicocokkan kembali dengan log di `employee_trainings`?
+4. **Perhitungan Rata-Rata KPI**: Apakah kita hanya me-rata-ratakan `kpi_score` dari seluruh staf dengan status `Active`?
+
+---
 *Diperbarui secara otomatis oleh sistem saat ada perubahan di modul ini.*
-*Dokumen finalisasi: 2026-07-29 — Modul siap presentasi HR Director & Direksi.*
+*Dokumen finalisasi: 2026-08-02 — Fase Lanjutan Modul HR (ATEX/Migas).*

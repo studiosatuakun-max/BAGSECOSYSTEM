@@ -195,7 +195,6 @@ export default async function LegalDashboardPage() {
         <div className="animate-in fade-in slide-in-from-bottom-6 duration-700 delay-300 fill-mode-both">
           <LegalComplianceTableCard
             contracts={contracts as Parameters<typeof LegalComplianceTableCard>[0]['contracts']}
-            permits={permits as Parameters<typeof LegalComplianceTableCard>[0]['permits']}
           />
         </div>
       </main>

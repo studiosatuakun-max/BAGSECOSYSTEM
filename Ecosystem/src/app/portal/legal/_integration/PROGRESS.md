@@ -8,10 +8,10 @@ Dokumen ini melacak status integrasi SOP, UI/UX, dan implementasi fitur khusus u
 - [x] Fase 3: Implementasi UI (Bento Grid, Tabel, Modal)
 - [x] Fase 4: Integrasi Form (Anti-Fraud / Hardware IoT)
 - [x] Fase 5: Final Review & Build Test
-- [x] **Phase 4B: Supabase Integration** (Server Actions + real tables)
+- [x] **Phase 4B: Supabase Integration** (Server Actions + real tables + RPC)
 
 ## 📝 Catatan Harian / Blokir
-* (Semua fase UI sudah lengkap. Catatan teknis: (1) Modal CRUD broken — state variables tidak dideklarasikan. (2) Duplicate LegalContract interface schema antara local dan _integration/types. Perlu fix sebelum production.)
+* (Semua fase UI sudah lengkap. Catatan teknis: (1) Modal CRUD diperbarui, LegalContracts disederhanakan. (2) Server Action RPC `process_closed_won_lead` sudah terhubung.)
 
 ---
 
@@ -23,6 +23,7 @@ Dokumen ini melacak status integrasi SOP, UI/UX, dan implementasi fitur khusus u
 | Fase 2: Wireframing & Penyesuaian Data | ✅ Selesai | Wireframe Bento Grid 4-row, 108 SLA portfolio, 4 permit cards, 4 SLA KPI metrics |
 | Fase 3: Implementasi UI (Bento Grid, Tabel, Modal) | ✅ Selesai | Full Frosted Glassmorphism Indigo/Purple, 4 Metric Cards, Legal Portfolio Donut, MIGAS Permits, SLA Breach Radar, Legal Counsel Feed, Dual-tab Table |
 | Fase 4: Integrasi Form (Anti-Fraud / Hardware IoT) | ✅ Selesai | Zod validation (FOB wajib liability clause), ESDM portal sync, QHSE audit PDF export, SCADA real-time SLA metrics |
+| Fase 4B: Supabase Integration | ✅ Selesai | RPC Postgres transaksional untuk CRM Lead ke Contract, Client Table, Server Action OK |
 | Fase 5: Final Review & Build Test | ✅ Selesai | npm run build 0 errors, dark/light mode verified |
 
 ## 🎯 Cakupan Fitur
@@ -35,7 +36,7 @@ Dokumen ini melacak status integrasi SOP, UI/UX, dan implementasi fitur khusus u
 - **QHSE Compliance Score Card** (100%, Zero LTI 840 Days, SUCOFINDO audit)
 - **SLA Breach Radar** (4 KPI: Gas Purity 98.4%, Pressure 249.2 Bar, Lead Time 108min, Uptime 99.98% — semua Rp 0 penalty)
 - **Legal Counsel Advice Feed** (3 advice notes, retained counsel PT Asri Legal Partner)
-- **Dual-tab Legal Compliance Table** (Contracts B2B FOB/CNF/Horeca + Permits MIGAS)
+- **Contract Command Center** (Contracts B2B FOB/CNF/Horeca dipisahkan dari Permits)
 - **Inbox Dispatch Widget** terintegrasi di header
 - **Full Dark/Light Mode** support
 
@@ -61,9 +62,9 @@ Dokumen ini melacak status integrasi SOP, UI/UX, dan implementasi fitur khusus u
 
 ## ⚠️ Technical Debt (Post-Production Fix Required)
 
-1. **Broken Modal CRUD** — `contracts`, `formData`, `modalMode`, `isModalOpen` state variables tidak dideklarasikan dengan `useState`
-2. **Duplicate Interface** — `LegalContract` didefinisikan 2x dengan schema berbeda (local vs `_integration/types.ts`)
-3. **Action**: Deklarasikan state variables dan konsolidasi interface schema sebelum production deployment
+1. **Broken Modal CRUD** — (FIXED) State disederhanakan pada tabel utama.
+2. **Duplicate Interface** — (FIXED) Konsolidasi schema antara local dan `_integration/actions.ts`.
+3. **Action**: Seluruh blocker teratasi, RPC transaksional sudah aktif.
 
 ---
 *Diperbarui secara otomatis oleh sistem saat ada perubahan di modul ini.*

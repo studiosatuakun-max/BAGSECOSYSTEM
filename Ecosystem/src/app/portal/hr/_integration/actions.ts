@@ -137,3 +137,84 @@ export async function updateShiftSchedule(
   if (!error) revalidatePath('/portal/hr');
   return { error: error?.message ?? null };
 }
+
+// ─── ATEX & Migas HR Command Center ──────────────────────────────────────────
+
+export async function getHRMetrics() {
+  const supabase = await createSupabaseServerClient();
+  
+  // 1. Headcount & KPI
+  const { data: employees } = await supabase
+    .from('employees')
+    .select('id, kpi_score, sio_expiry')
+    .eq('status', 'Active');
+    
+  const headcount = employees?.length || 0;
+  const averageKpi = employees && headcount > 0
+    ? employees.reduce((sum, emp) => sum + (Number(emp.kpi_score) || 0), 0) / headcount
+    : 0;
+    
+  const today = new Date();
+  let criticalSio = 0;
+  let warningSio = 0;
+  
+  employees?.forEach(emp => {
+    if (emp.sio_expiry) {
+      const expiryDate = new Date(emp.sio_expiry);
+      const diffTime = expiryDate.getTime() - today.getTime();
+      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+      
+      if (diffDays <= 30) {
+        criticalSio++;
+      } else if (diffDays <= 60) {
+        warningSio++;
+      }
+    }
+  });
+
+  // 2. Today's Shifts (Not 'Off')
+  const todayStr = new Date().toISOString().split('T')[0];
+  const { count: shiftCount } = await supabase
+    .from('shift_schedules')
+    .select('*', { count: 'exact', head: true })
+    .eq('shift_date', todayStr)
+    .neq('shift_type', 'Off');
+
+  return {
+    data: {
+      headcount,
+      averageKpi: Number(averageKpi.toFixed(1)),
+      activeShiftsToday: shiftCount || 0,
+      sioAlerts: {
+        critical: criticalSio,
+        warning: warningSio,
+        totalAlerts: criticalSio + warningSio
+      }
+    }
+  };
+}
+
+export async function getTodaysShifts() {
+  const supabase = await createSupabaseServerClient();
+  const todayStr = new Date().toISOString().split('T')[0];
+  
+  const { data, error } = await supabase
+    .from('shift_schedules')
+    .select('*, employees(full_name, role_title, department)')
+    .eq('shift_date', todayStr)
+    .order('shift_type', { ascending: true });
+    
+  return { data, error: error?.message ?? null };
+}
+
+export async function getTrainingMatrix() {
+  const supabase = await createSupabaseServerClient();
+  
+  const { data, error } = await supabase
+    .from('employee_trainings')
+    .select('*, employees(full_name, role_title, department)')
+    .in('training_type', ['ATEX', 'MIGAS', 'HSE'])
+    .order('expiry_date', { ascending: true });
+    
+  return { data, error: error?.message ?? null };
+}
