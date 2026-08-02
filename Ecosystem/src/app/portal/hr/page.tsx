@@ -28,8 +28,51 @@ export default async function HRDashboardPage() {
     // graceful fallback
   }
 
-  const rawShifts = shiftsData.data ?? [];
-  const rawTrainings = trainingsData.data ?? [];
+  let rawShifts = shiftsData.data ?? [];
+  let rawTrainings = trainingsData.data ?? [];
+
+  if (rawShifts.length === 0) {
+    rawShifts = Array.from({ length: 15 }).map((_, i) => ({
+      id: `shift-dummy-${i}`,
+      shift_type: i % 3 === 0 ? 'Pagi' : i % 3 === 1 ? 'Siang' : 'Malam',
+      attendance_status: i % 4 === 0 ? 'Late' : i % 5 === 0 ? 'Absent' : 'Present',
+      attendance_in: '07:15:00',
+      role_assigned: 'Skid Fleet Driver',
+      employees: {
+        full_name: `Pegawai Dummy ${i + 1}`,
+        role_title: 'Driver',
+        department: 'Skid Fleet & Drivers (ATEX)',
+      }
+    }));
+  }
+
+  if (rawTrainings.length === 0) {
+    rawTrainings = Array.from({ length: 12 }).map((_, i) => {
+      const today = new Date();
+      // Generate some dates: expired, critical, warning, and valid
+      let diffDays = 0;
+      if (i % 4 === 0) diffDays = -5; // Expired
+      else if (i % 4 === 1) diffDays = 15; // Critical
+      else if (i % 4 === 2) diffDays = 45; // Warning
+      else diffDays = 120; // Valid
+      
+      const expiry = new Date(today);
+      expiry.setDate(expiry.getDate() + diffDays);
+
+      return {
+        id: `train-dummy-${i}`,
+        training_type: i % 2 === 0 ? 'ATEX' : 'MIGAS',
+        training_name: i % 2 === 0 ? 'Advanced ATEX Handling' : 'MIGAS Safety Compliance',
+        expiry_date: expiry.toISOString(),
+        status: 'Completed',
+        employees: {
+          full_name: `Pegawai Dummy ${i + 1}`,
+          role_title: 'Operator',
+          department: 'Mother Station Operations',
+        }
+      };
+    });
+  }
   
   const m = metricsData.data || {
     headcount: 412,

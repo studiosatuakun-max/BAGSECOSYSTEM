@@ -42,7 +42,7 @@ export default function DynamicShiftConsole({ shifts }: { shifts: ShiftRecord[] 
   };
 
   return (
-    <div className="bg-slate-900/50 backdrop-blur-2xl border border-white/10 rounded-3xl p-6 shadow-2xl flex flex-col h-full group hover:border-indigo-500/30 transition-colors">
+    <div className="bg-slate-950/90 backdrop-blur-2xl border border-white/10 rounded-3xl p-6 shadow-2xl flex flex-col h-full group hover:border-indigo-500/30 transition-colors">
       <div className="flex items-center justify-between mb-6">
         <div>
           <h2 className="text-xl font-black text-white flex items-center gap-2">
@@ -54,7 +54,7 @@ export default function DynamicShiftConsole({ shifts }: { shifts: ShiftRecord[] 
           </p>
         </div>
         
-        <div className="flex bg-slate-800/50 p-1 rounded-xl border border-white/5">
+        <div className="flex bg-slate-800/80 p-1 rounded-xl border border-white/5">
           {shiftTypes.map((tab) => (
             <button
               key={tab}
@@ -71,7 +71,7 @@ export default function DynamicShiftConsole({ shifts }: { shifts: ShiftRecord[] 
         </div>
       </div>
 
-      <div className="flex-1 overflow-auto rounded-2xl border border-white/5 bg-black/20">
+      <div className="flex-1 overflow-y-auto rounded-2xl border border-white/5 bg-black/40">
         <table className="w-full text-left text-sm whitespace-nowrap">
           <thead className="bg-white/5 text-slate-300 text-xs uppercase tracking-wider font-extrabold sticky top-0 backdrop-blur-md z-10">
             <tr>
@@ -87,7 +87,7 @@ export default function DynamicShiftConsole({ shifts }: { shifts: ShiftRecord[] 
               filteredShifts.map((shift) => (
                 <tr
                   key={shift.id}
-                  className="hover:bg-white/[0.02] transition-colors group/row"
+                  className="hover:bg-white/[0.04] transition-colors group/row"
                 >
                   <td className="px-4 py-3">
                     <div className="font-bold text-white group-hover/row:text-indigo-300 transition-colors">
@@ -125,7 +125,7 @@ export default function DynamicShiftConsole({ shifts }: { shifts: ShiftRecord[] 
               ))
             ) : (
               <tr>
-                <td colSpan={5} className="px-4 py-8 text-center text-slate-500">
+                <td colSpan={5} className="px-4 py-12 text-center text-slate-500">
                   No shift data available for this selection.
                 </td>
               </tr>

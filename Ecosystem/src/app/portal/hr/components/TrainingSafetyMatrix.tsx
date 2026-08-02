@@ -40,7 +40,7 @@ export default function TrainingSafetyMatrix({ trainings }: { trainings: Trainin
   };
 
   return (
-    <div className="bg-slate-900/50 backdrop-blur-2xl border border-white/10 rounded-3xl p-6 shadow-2xl flex flex-col h-full group hover:border-fuchsia-500/30 transition-colors">
+    <div className="bg-slate-950/90 backdrop-blur-2xl border border-white/10 rounded-3xl p-6 shadow-2xl flex flex-col h-full group hover:border-fuchsia-500/30 transition-colors">
       <div className="flex items-center justify-between mb-6">
         <div>
           <h2 className="text-xl font-black text-white flex items-center gap-2">
@@ -52,16 +52,16 @@ export default function TrainingSafetyMatrix({ trainings }: { trainings: Trainin
           </p>
         </div>
         <div className="flex items-center gap-2">
-           <span className="flex items-center gap-1.5 text-[10px] text-slate-400 font-bold bg-white/5 px-2 py-1 rounded-md">
+           <span className="flex items-center gap-1.5 text-[10px] text-slate-400 font-bold bg-white/5 border border-white/5 px-2 py-1 rounded-md">
              <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse" /> Critical
            </span>
-           <span className="flex items-center gap-1.5 text-[10px] text-slate-400 font-bold bg-white/5 px-2 py-1 rounded-md">
+           <span className="flex items-center gap-1.5 text-[10px] text-slate-400 font-bold bg-white/5 border border-white/5 px-2 py-1 rounded-md">
              <span className="w-2 h-2 rounded-full bg-yellow-500" /> Warning
            </span>
         </div>
       </div>
 
-      <div className="flex-1 overflow-auto rounded-2xl border border-white/5 bg-black/20">
+      <div className="flex-1 overflow-y-auto rounded-2xl border border-white/5 bg-black/40">
         <table className="w-full text-left text-sm whitespace-nowrap">
           <thead className="bg-white/5 text-slate-300 text-xs uppercase tracking-wider font-extrabold sticky top-0 backdrop-blur-md z-10">
             <tr>
@@ -79,7 +79,7 @@ export default function TrainingSafetyMatrix({ trainings }: { trainings: Trainin
                 return (
                   <tr
                     key={training.id}
-                    className="hover:bg-white/[0.02] transition-colors group/row"
+                    className="hover:bg-white/[0.04] transition-colors group/row"
                   >
                     <td className="px-4 py-3">
                       <div className="font-bold text-white group-hover/row:text-fuchsia-300 transition-colors">
@@ -118,7 +118,7 @@ export default function TrainingSafetyMatrix({ trainings }: { trainings: Trainin
               })
             ) : (
               <tr>
-                <td colSpan={5} className="px-4 py-8 text-center text-slate-500">
+                <td colSpan={5} className="px-4 py-12 text-center text-slate-500">
                   No safety training data available.
                 </td>
               </tr>
