@@ -28,6 +28,38 @@ const upcomingAnniversaries = [
     years: 4,
     milestone: 'Silver Dedication',
   },
+  {
+    id: 'ann-04',
+    name: 'Rizal Firmansyah',
+    role: 'Skid Fleet Driver',
+    date: '15 Sep 2026',
+    years: 2,
+    milestone: 'Bronze Milestone',
+  },
+  {
+    id: 'ann-05',
+    name: 'Siti Aminah',
+    role: 'HSE Coordinator',
+    date: '22 Sep 2026',
+    years: 6,
+    milestone: 'Gold Loyalty Badge',
+  },
+  {
+    id: 'ann-06',
+    name: 'Joko Widodo',
+    role: 'Senior Maintenance Engineer',
+    date: '01 Oct 2026',
+    years: 10,
+    milestone: 'Platinum Leadership',
+  },
+  {
+    id: 'ann-07',
+    name: 'Bagus Setiawan',
+    role: 'Fleet Dispatcher',
+    date: '12 Oct 2026',
+    years: 3,
+    milestone: 'Silver Dedication',
+  }
 ];
 
 export default function AnniversaryBanner() {
@@ -48,7 +80,7 @@ export default function AnniversaryBanner() {
         </div>
       </div>
 
-      <div className="flex flex-col gap-2.5">
+      <div className="flex flex-col gap-2.5 overflow-y-auto max-h-[180px] pr-1">
         {upcomingAnniversaries.map((a) => (
           <div
             key={a.id}
