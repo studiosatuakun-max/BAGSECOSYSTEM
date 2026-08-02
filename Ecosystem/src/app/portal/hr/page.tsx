@@ -99,7 +99,7 @@ export default async function HRDashboardPage() {
             <span className="text-xs font-bold text-slate-900 dark:text-white">09:32:15 WIB</span>
             <span className="text-[10px] text-purple-600 dark:text-purple-400 font-extrabold flex items-center gap-1 justify-end">
               <span className="w-1.5 h-1.5 rounded-full bg-purple-500 animate-ping" />
-              Supabase Connected
+              Baskara Node Active
             </span>
           </div>
         }

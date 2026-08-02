@@ -64,13 +64,13 @@ const upcomingAnniversaries = [
 
 export default function AnniversaryBanner() {
   return (
-    <div className="rounded-3xl bg-gradient-to-br from-purple-900 via-purple-950 to-slate-950 p-6 text-white shadow-xl flex flex-col justify-between h-full relative overflow-hidden border border-purple-800/60 group hover:border-purple-500 transition-all duration-300">
+    <div className="rounded-3xl bg-gradient-to-br from-purple-900 via-purple-950 to-slate-950 p-6 text-white shadow-xl flex flex-col relative overflow-hidden border border-purple-800/60 group hover:border-purple-500 transition-all duration-300">
       {/* Background decoration */}
       <div className="absolute top-0 right-0 w-36 h-36 bg-purple-500/15 rounded-full blur-2xl group-hover:bg-purple-500/25 transition-all duration-500 pointer-events-none" />
       <div className="absolute bottom-0 left-0 w-28 h-28 bg-fuchsia-500/10 rounded-full blur-xl pointer-events-none" />
 
-      <div className="relative z-10 flex flex-col h-full min-h-0">
-        <div className="flex items-center gap-3 mb-5 pb-4 border-b border-purple-800/60">
+      <div className="relative z-10 flex flex-col">
+        <div className="flex items-center gap-3 mb-5 pb-4 border-b border-purple-800/60 shrink-0">
           <div className="w-10 h-10 rounded-2xl bg-amber-500/20 backdrop-blur-md border border-amber-500/30 flex items-center justify-center shrink-0 text-amber-300 font-bold">
             <Gift size={20} />
           </div>
@@ -84,7 +84,7 @@ export default function AnniversaryBanner() {
           </div>
         </div>
 
-        <div className="flex flex-col gap-3 flex-1 min-h-0 overflow-y-auto pr-2 custom-scrollbar">
+        <div className="flex flex-col gap-3 overflow-y-auto max-h-[290px] pr-2 custom-scrollbar">
           {upcomingAnniversaries.map((a) => (
             <div
               key={a.id}
