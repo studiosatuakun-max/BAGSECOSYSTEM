@@ -61,7 +61,7 @@ export default function TrainingSafetyMatrix({ trainings }: { trainings: Trainin
         </div>
       </div>
 
-      <div className="flex-1 overflow-y-auto rounded-2xl border border-white/5 bg-black/40">
+      <div className="overflow-y-auto max-h-[260px] rounded-2xl border border-white/5 bg-black/40">
         <table className="w-full text-left text-sm whitespace-nowrap">
           <thead className="bg-white/5 text-slate-300 text-xs uppercase tracking-wider font-extrabold sticky top-0 backdrop-blur-md z-10">
             <tr>

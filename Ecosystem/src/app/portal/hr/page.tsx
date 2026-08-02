@@ -31,6 +31,12 @@ export default async function HRDashboardPage() {
   let rawShifts = shiftsData.data ?? [];
   let rawTrainings = trainingsData.data ?? [];
 
+  const dummyNames = [
+    'Rizal Firmansyah', 'Dian Prasetyo', 'Bagus Setiawan', 'Ahmad Fauzi', 'Dewi Rahayu', 
+    'Budi Santoso', 'Siti Aminah', 'Wahyu Hidayat', 'Agus Sulistyo', 'Tri Handayani', 
+    'Eko Prabowo', 'Dwi Saputra', 'Rina Melati', 'Hendra Wijaya', 'Sinta Nuriyah'
+  ];
+
   if (rawShifts.length === 0) {
     rawShifts = Array.from({ length: 15 }).map((_, i) => ({
       id: `shift-dummy-${i}`,
@@ -39,7 +45,7 @@ export default async function HRDashboardPage() {
       attendance_in: '07:15:00',
       role_assigned: 'Skid Fleet Driver',
       employees: {
-        full_name: `Pegawai Dummy ${i + 1}`,
+        full_name: dummyNames[i],
         role_title: 'Driver',
         department: 'Skid Fleet & Drivers (ATEX)',
       }
@@ -49,7 +55,6 @@ export default async function HRDashboardPage() {
   if (rawTrainings.length === 0) {
     rawTrainings = Array.from({ length: 12 }).map((_, i) => {
       const today = new Date();
-      // Generate some dates: expired, critical, warning, and valid
       let diffDays = 0;
       if (i % 4 === 0) diffDays = -5; // Expired
       else if (i % 4 === 1) diffDays = 15; // Critical
@@ -66,7 +71,7 @@ export default async function HRDashboardPage() {
         expiry_date: expiry.toISOString(),
         status: 'Completed',
         employees: {
-          full_name: `Pegawai Dummy ${i + 1}`,
+          full_name: dummyNames[i],
           role_title: 'Operator',
           department: 'Mother Station Operations',
         }
@@ -259,7 +264,7 @@ export default async function HRDashboardPage() {
         </div>
 
         {/* ROW 4: Bento Grid Command Center */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 h-[450px] animate-in fade-in slide-in-from-bottom-6 duration-700 delay-300 fill-mode-both">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 animate-in fade-in slide-in-from-bottom-6 duration-700 delay-300 fill-mode-both">
           <DynamicShiftConsole shifts={rawShifts} />
           <TrainingSafetyMatrix trainings={rawTrainings} />
         </div>
