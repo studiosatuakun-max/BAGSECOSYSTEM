@@ -10,6 +10,7 @@ Dokumen ini melacak status integrasi SOP, UI/UX, dan implementasi fitur khusus u
 - [x] Fase 5: Final Review & Build Test
 - [x] **Phase 6: Production Supabase Migration** (Server Actions, Real-time CRUD, KPI Aggregation, Cross-Module Triggers)
 - [x] **Phase 7: Stage-Gate & Reporting Optimization** (Stage-Gate Validation, Modal Notes, Competitor Input, HTML-to-PDF Dossier Export)
+- [x] **Phase 8: Faktor "WOW" CRM Pemasaran** (Timeline History Modal, Automated Cron Reminders, Dynamic PDF Quotation Generator)
 
 ## 📝 Catatan Harian / Blokir
 * (2026-08-01: Berhasil memigrasi Modul Pemasaran dari Dummy UI ke Production-ready menggunakan Supabase dan Next.js 15 Server Actions. Menambahkan fitur validasi Stage-Gate (wajib mengisi Catatan Lapangan, Kompetitor, Volume) serta fitur ekspor PDF Dossier Pipeline menggunakan `window.print()`.)
@@ -56,11 +57,8 @@ Dokumen ini melacak status integrasi SOP, UI/UX, dan implementasi fitur khusus u
 | Industrial Bulk CNG Awareness | Google Ads | Paused | Rp 60J | 280 | 7.1% |
 | Skid Tube Trailer Expansion | Email B2B | Draft | Rp 15J | 128 | 14.2% |
 
-## 🚀 Next Action Plan (Fitur "WOW" untuk Phase 8)
-*(Dijadwalkan untuk iterasi berikutnya)*
-1. **Activity Timeline & History Log (Database):** Membuat tabel relasional `lead_activities` dan komponen `LeadTimelineDrawer` agar tiap *update notes* terekam secara kronologis.
-2. **Automated Reminder Engine (Cron Jobs):** Mengintegrasikan sistem *Background Job* untuk mengirim notifikasi H-30 sebelum kontrak kompetitor habis (Horeca) atau jadwal *follow-up* (Industri).
-3. **Dynamic Quotation Generator:** Menambahkan tombol "Generate Penawaran" yang secara dinamis mencetak "Surat Penawaran Harga PT BaGS" dalam format PDF A4, dihitung berdasarkan volume MMBTU.
+## 🚀 Next Action Plan
+*(Modul Pemasaran telah mencapai target MVP & Ekspektasi WOW. Siap untuk presentasi final.)*
 
 ---
 *Diperbarui secara otomatis oleh sistem saat ada perubahan di modul ini.*
