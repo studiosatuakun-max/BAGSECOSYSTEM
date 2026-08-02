@@ -78,7 +78,8 @@ export async function updateLeadStage(
       activityNote += ` Notes: ${payload.notes}`;
     }
 
-    const { error: activityError } = await supabase.from('lead_activities').insert({
+    const adminSupabase = createSupabaseAdmin();
+    const { error: activityError } = await adminSupabase.from('lead_activities').insert({
       lead_id: id,
       activity_type: 'Stage_Change',
       notes: activityNote,
@@ -97,12 +98,14 @@ export async function updateLeadStage(
 }
 
 export async function getLeadActivities(leadId: string): Promise<{ data: Record<string, unknown>[] | null; error: string | null }> {
-  const supabase = await createSupabaseServerClient();
-  const { data, error } = await supabase
+  const adminSupabase = createSupabaseAdmin();
+  const { data, error } = await adminSupabase
     .from('lead_activities')
-    .select('*, auth_user:created_by ( email )')
+    .select('*')
     .eq('lead_id', leadId)
     .order('created_at', { ascending: false });
+
+  if (error) console.error('[getLeadActivities] Error:', error);
 
   return { data, error: error?.message ?? null };
 }
