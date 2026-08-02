@@ -213,7 +213,7 @@ export default function CRMPipelineTableCard({ industriLeads: initialIndustri, h
       </div>
 
       {/* Tables */}
-      <div className="overflow-x-auto overflow-y-auto max-h-[500px] rounded-xl border border-slate-800/60 bg-slate-900/40 relative z-10">
+      <div className="overflow-x-auto overflow-y-auto max-h-[280px] rounded-xl border border-slate-800/60 bg-slate-900/40 relative z-10">
         {activeTab === 'Industri' ? (
           <table className="w-full text-left border-collapse">
             <thead>
