@@ -64,12 +64,29 @@ export async function updateLeadStage(
   }
 ): Promise<{ error: string | null }> {
   const supabase = await createSupabaseServerClient();
+  const { data: { user } } = await supabase.auth.getUser();
+
   const { error } = await supabase
     .from('sales_leads')
     .update({ ...payload, updated_at: new Date().toISOString() })
     .eq('id', id);
 
   if (!error) {
+    // 2. Insert into lead_activities (Sequential Transaction)
+    let activityNote = `Stage moved to ${payload.pipeline_stage}.`;
+    if (payload.notes) {
+      activityNote += ` Notes: ${payload.notes}`;
+    }
+
+    const { error: activityError } = await supabase.from('lead_activities').insert({
+      lead_id: id,
+      activity_type: 'Stage_Change',
+      notes: activityNote,
+      created_by: user?.id
+    });
+    
+    if (activityError) console.error('[updateLeadStage] Failed to insert activity:', activityError);
+
     if (payload.pipeline_stage === 'Dealing_Closed_Won') {
       await triggerLegalContract(id, payload.company_name || 'Unknown Company');
     }
@@ -77,6 +94,17 @@ export async function updateLeadStage(
     revalidatePath('/portal/pemasaran');
   }
   return { error: error?.message ?? null };
+}
+
+export async function getLeadActivities(leadId: string): Promise<{ data: Record<string, unknown>[] | null; error: string | null }> {
+  const supabase = await createSupabaseServerClient();
+  const { data, error } = await supabase
+    .from('lead_activities')
+    .select('*, auth_user:created_by ( email )')
+    .eq('lead_id', leadId)
+    .order('created_at', { ascending: false });
+
+  return { data, error: error?.message ?? null };
 }
 
 export async function deleteSalesLead(id: string): Promise<{ error: string | null }> {

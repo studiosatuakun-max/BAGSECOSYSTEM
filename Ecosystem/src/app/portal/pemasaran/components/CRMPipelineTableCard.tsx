@@ -3,8 +3,9 @@
 import React, { useState, useTransition, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import Icon from '@/components/ui/AppIcon';
-import { Search, Plus, Users, CheckCircle2, Phone, Briefcase, MapPin, TrendingUp, HelpCircle, X, Printer } from 'lucide-react';
+import { Search, Plus, Users, CheckCircle2, Phone, Briefcase, MapPin, TrendingUp, HelpCircle, X, Printer, FileText } from 'lucide-react';
 import { updateLeadStage, createSalesLead } from '../_integration/actions';
+import LeadTimelineDrawer from './LeadTimelineDrawer';
 import type { SalesLead } from '../_integration/types';
 
 type RawLead = SalesLead;
@@ -73,6 +74,12 @@ export default function CRMPipelineTableCard({ industriLeads: initialIndustri, h
     competitor_contract_end_date: '',
     estimated_volume_mmbtu: 0,
     lost_reason: ''
+  });
+
+  const [drawerState, setDrawerState] = useState<{ isOpen: boolean; leadId: string | null; companyName: string }>({
+    isOpen: false,
+    leadId: null,
+    companyName: ''
   });
 
   const [mounted, setMounted] = useState(false);
@@ -222,9 +229,12 @@ export default function CRMPipelineTableCard({ industriLeads: initialIndustri, h
               {filteredIndustri.map((lead) => (
                 <tr key={lead.id} className="hover:bg-slate-800/30 transition-colors">
                   <td className="p-4 whitespace-nowrap">
-                    <div className="font-semibold text-white text-sm flex items-center gap-2">
-                      <Briefcase size={14} className="text-purple-400" /> {lead.company_name}
-                    </div>
+                    <button 
+                      onClick={() => setDrawerState({ isOpen: true, leadId: lead.id!, companyName: lead.company_name })}
+                      className="font-semibold text-white text-sm flex items-center gap-2 hover:text-purple-400 transition-colors cursor-pointer text-left"
+                    >
+                      <Briefcase size={14} className="text-purple-400 shrink-0" /> {lead.company_name}
+                    </button>
                     <div className="text-[10px] text-slate-500 mt-1">Added: {lead.created_at}</div>
                   </td>
                   <td className="p-4 whitespace-nowrap">
@@ -272,7 +282,12 @@ export default function CRMPipelineTableCard({ industriLeads: initialIndustri, h
               {filteredHoreca.map((lead) => (
                 <tr key={lead.id} className="hover:bg-slate-800/30 transition-colors">
                   <td className="p-4 whitespace-nowrap">
-                    <div className="font-semibold text-white text-sm">{lead.company_name}</div>
+                    <button 
+                      onClick={() => setDrawerState({ isOpen: true, leadId: lead.id!, companyName: lead.company_name })}
+                      className="font-semibold text-white text-sm hover:text-purple-400 transition-colors cursor-pointer text-left"
+                    >
+                      {lead.company_name}
+                    </button>
                     <div className="text-[10px] text-slate-500 mt-1">Rep: {lead.sales_rep_id}</div>
                   </td>
                   <td className="p-4 whitespace-nowrap">
@@ -504,10 +519,22 @@ export default function CRMPipelineTableCard({ industriLeads: initialIndustri, h
               )}
             </div>
 
-            <div className="flex items-center justify-end gap-3 mt-6">
-              <button onClick={() => setStageGateModal(null)} className="px-5 py-2.5 rounded-xl text-sm font-bold text-slate-400 hover:text-white hover:bg-slate-800 transition-all">
-                Cancel
-              </button>
+            <div className="flex items-center justify-between mt-6">
+              <div>
+                {(stageGateModal.targetStage === 'Penawaran' || stageGateModal.targetStage === 'Penyampaian_Kontrak') && (
+                  <button
+                    onClick={() => window.open(`/portal/pemasaran/quotation/${stageGateModal.leadId}`, '_blank')}
+                    className="px-4 py-2.5 rounded-xl text-xs font-bold bg-amber-500/10 text-amber-400 border border-amber-500/30 hover:bg-amber-500/20 transition-all flex items-center gap-2"
+                  >
+                    <FileText size={14} />
+                    Generate Quotation
+                  </button>
+                )}
+              </div>
+              <div className="flex gap-3">
+                <button onClick={() => setStageGateModal(null)} className="px-5 py-2.5 rounded-xl text-sm font-bold text-slate-400 hover:text-white hover:bg-slate-800 transition-all">
+                  Cancel
+                </button>
               <button
                 onClick={handleStageSubmit}
                 disabled={!stageFormData.notes.trim() || isPending || (stageGateModal.targetStage === 'Dealing_Closed_Lost' && !stageFormData.lost_reason.trim())}
@@ -516,11 +543,19 @@ export default function CRMPipelineTableCard({ industriLeads: initialIndustri, h
                 {isPending && <Icon name="ArrowPathIcon" size={14} className="animate-spin" />}
                 Confirm Stage
               </button>
+              </div>
             </div>
           </div>
         </div>,
         document.body
       )}
+
+      <LeadTimelineDrawer
+        isOpen={drawerState.isOpen}
+        onClose={() => setDrawerState({ ...drawerState, isOpen: false })}
+        leadId={drawerState.leadId}
+        companyName={drawerState.companyName}
+      />
     </div>
   );
 }
