@@ -49,7 +49,7 @@ const SHIFT_BADGE: Record<string, { bg: string; text: string }> = {
 export default function HRShiftTableCard({ shifts, trainings }: Props) {
   const [activeTab, setActiveTab] = useState<'Shifts' | 'Trainings'>('Shifts');
   const [searchTerm, setSearchTerm] = useState('');
-  const socket = useSocket();
+  const { socket } = useSocket();
 
   useEffect(() => {
     if (!socket) return;

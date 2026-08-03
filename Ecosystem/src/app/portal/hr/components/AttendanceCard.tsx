@@ -34,7 +34,7 @@ const CustomTooltip = ({ active, payload, label }: { active?: boolean; payload?:
 
 export default function AttendanceCard() {
   const [presentCount, setPresentCount] = useState(397);
-  const socket = useSocket();
+  const { socket } = useSocket();
 
   useEffect(() => {
     if (!socket) return;

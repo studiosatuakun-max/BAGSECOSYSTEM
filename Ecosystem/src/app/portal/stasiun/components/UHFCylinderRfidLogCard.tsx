@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Scan, CheckCircle2, AlertCircle, Clock, Package, ChevronRight, Tag, Wifi } from 'lucide-react';
+import { Scan, CheckCircle2, AlertCircle, Clock, Package, ChevronRight, Tag, Wifi, Cpu, BookOpen, WifiOff } from 'lucide-react';
 import Icon from '@/components/ui/AppIcon';
 import { useSocket } from '@/hooks/useSocket';
 import { toast } from 'sonner';
@@ -65,7 +65,11 @@ export default function UHFCylinderRfidLogCard() {
   const [searchQuery, setSearchQuery] = useState('');
   const [scans, setScans] = useState<CylinderScan[]>([]);
   const [isScanning, setIsScanning] = useState(false);
-  const socket = useSocket();
+  const { socket, isAntennaConnected } = useSocket();
+  const [deviceInfo, setDeviceInfo] = useState<string | null>(null);
+  const [isQueryingDevice, setIsQueryingDevice] = useState(false);
+  const [isReadingTag, setIsReadingTag] = useState(false);
+  const [readResult, setReadResult] = useState<string | null>(null);
 
   // Write Tag Modal States
   const [isWriteModalOpen, setIsWriteModalOpen] = useState(false);
@@ -76,6 +80,10 @@ export default function UHFCylinderRfidLogCard() {
   const handleExecuteWriteTag = () => {
     if (!socket) {
       toast.error('Edge Gateway socket not connected!');
+      return;
+    }
+    if (!isAntennaConnected) {
+      toast.error('Antenna CT-i607 is offline!', { description: 'Wait for reconnection before writing.' });
       return;
     }
 
@@ -91,6 +99,35 @@ export default function UHFCylinderRfidLogCard() {
         toast.error('Failed to Write Tag', {
           description: response?.error || 'Unknown error'
         });
+      }
+    });
+  };
+
+  const handleQueryDeviceInfo = () => {
+    if (!socket || !isAntennaConnected) return;
+    setIsQueryingDevice(true);
+    socket.emit('query_device_info', {}, (response: any) => {
+      setIsQueryingDevice(false);
+      if (response?.success) {
+        setDeviceInfo(`FW v${response.firmware} | ${response.deviceType}`);
+        toast.success('Antenna Responded!', { description: `Firmware: v${response.firmware}, Type: ${response.deviceType}` });
+      } else {
+        toast.error('Device Info Failed', { description: response?.error });
+      }
+    });
+  };
+
+  const handleReadTagMemory = () => {
+    if (!socket || !isAntennaConnected) return;
+    setIsReadingTag(true);
+    setReadResult(null);
+    socket.emit('read_tag_memory', { membank: 1, startAddress: 2, wordLen: 6 }, (response: any) => {
+      setIsReadingTag(false);
+      if (response?.success) {
+        setReadResult(response.data);
+        toast.success('Tag Memory Read OK!', { description: `EPC Bank Data: ${response.data}` });
+      } else {
+        toast.error('Read Tag Failed', { description: response?.error });
       }
     });
   };
@@ -122,10 +159,19 @@ export default function UHFCylinderRfidLogCard() {
       setTimeout(() => setIsScanning(false), 1000);
     };
 
+    const handleTagWritten = (data: any) => {
+      toast.success('Tag Written Confirmation!', {
+        description: `EPC ${data.epc} encoded at ${new Date(data.timestamp).toLocaleTimeString('en-US')}`,
+        icon: '✅'
+      });
+    };
+
     socket.on('cng_cylinder_scanned', handleCylinderScanned);
+    socket.on('tag_written_success', handleTagWritten);
 
     return () => {
       socket.off('cng_cylinder_scanned', handleCylinderScanned);
+      socket.off('tag_written_success', handleTagWritten);
     };
   }, [socket]);
 
@@ -153,32 +199,60 @@ export default function UHFCylinderRfidLogCard() {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-2xl bg-indigo-50 dark:bg-indigo-950/50 border border-indigo-200 dark:border-indigo-800 flex items-center justify-center shrink-0 relative overflow-hidden">
-            <Wifi size={20} className="text-indigo-600 dark:text-indigo-400 z-10" />
+            {isAntennaConnected ? (
+              <Wifi size={20} className="text-emerald-500 z-10" />
+            ) : (
+              <WifiOff size={20} className="text-rose-500 z-10" />
+            )}
             {isScanning && <div className="absolute inset-0 bg-indigo-400/30 animate-ping rounded-2xl" />}
           </div>
           <div>
             <h2 className="text-sm font-black text-slate-900 dark:text-white leading-tight">UHF RFID HORECA 12Kg Scanner</h2>
-            <p className="text-xs text-indigo-600 dark:text-indigo-400 font-bold mt-0.5 flex items-center gap-1">
-              <span>Cardteck CT-i607 / Alien H3 Tags</span>
-              {isScanning && <span className="animate-pulse">· Scanning...</span>}
+            <p className="text-xs font-bold mt-0.5 flex items-center gap-1">
+              <span className={isAntennaConnected ? 'text-emerald-500' : 'text-rose-500'}>
+                {isAntennaConnected ? '● Connected' : '○ Disconnected'}
+              </span>
+              <span className="text-slate-500">·</span>
+              <span className="text-indigo-600 dark:text-indigo-400">CT-i607</span>
+              {deviceInfo && <span className="text-slate-500">· {deviceInfo}</span>}
+              {isScanning && <span className="animate-pulse text-indigo-400">· Scanning...</span>}
             </p>
           </div>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1.5 flex-wrap justify-end">
+          <button
+            onClick={handleQueryDeviceInfo}
+            disabled={isQueryingDevice || !isAntennaConnected}
+            className="px-2.5 py-1.5 bg-slate-500/10 hover:bg-slate-500/20 text-slate-400 hover:text-white font-bold rounded-lg text-[10px] border border-slate-700/50 transition-all active:scale-95 flex items-center gap-1 disabled:opacity-30"
+            title="Query Device Info (0x40)"
+          >
+            <Cpu size={12} />
+            <span>Info</span>
+          </button>
+          <button
+            onClick={handleReadTagMemory}
+            disabled={isReadingTag || !isAntennaConnected}
+            className="px-2.5 py-1.5 bg-amber-500/10 hover:bg-amber-500/20 text-amber-400 hover:text-amber-300 font-bold rounded-lg text-[10px] border border-amber-700/50 transition-all active:scale-95 flex items-center gap-1 disabled:opacity-30"
+            title="Read Tag Memory (0x31)"
+          >
+            <BookOpen size={12} />
+            <span>Read</span>
+          </button>
           <button
             onClick={() => setIsWriteModalOpen(true)}
-            className="px-3.5 py-2 bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-600 dark:text-emerald-300 font-extrabold rounded-xl text-xs border border-emerald-500/30 transition-all active:scale-95 flex items-center gap-1.5"
+            disabled={!isAntennaConnected}
+            className="px-3 py-1.5 bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-600 dark:text-emerald-300 font-extrabold rounded-lg text-[10px] border border-emerald-500/30 transition-all active:scale-95 flex items-center gap-1 disabled:opacity-30"
           >
-            <Tag size={14} />
-            <span>Encode Tag</span>
+            <Tag size={12} />
+            <span>Encode</span>
           </button>
           <button
             onClick={simulateBatchScan}
             disabled={isScanning}
-            className="px-4 py-2 bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-400 hover:to-purple-500 text-white font-extrabold rounded-xl text-xs shadow-md transition-all active:scale-95 flex items-center gap-2 disabled:opacity-50"
+            className="px-3 py-1.5 bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-400 hover:to-purple-500 text-white font-extrabold rounded-lg text-[10px] shadow-md transition-all active:scale-95 flex items-center gap-1.5 disabled:opacity-50"
           >
-            <Scan size={14} className={isScanning ? 'animate-spin' : ''} />
-            {isScanning ? 'Reading EPC Gen2...' : 'Simulate Batch Scan'}
+            <Scan size={12} className={isScanning ? 'animate-spin' : ''} />
+            {isScanning ? 'Reading...' : 'Batch Scan'}
           </button>
         </div>
       </div>
@@ -271,11 +345,20 @@ export default function UHFCylinderRfidLogCard() {
       </div>
 
       {/* Footer */}
+      {/* Read Result Display */}
+      {readResult && (
+        <div className="p-3 bg-amber-950/30 border border-amber-800/50 rounded-2xl">
+          <div className="text-[10px] font-bold text-amber-400 uppercase mb-1">Tag Memory Read (EPC Bank)</div>
+          <div className="text-xs font-mono text-white break-all">{readResult}</div>
+        </div>
+      )}
+
+      {/* Footer */}
       <div className="pt-3 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-[11px] font-bold text-slate-400">
         <span>Reader: <strong className="text-slate-700 dark:text-slate-300 font-mono">CT-i607 [TCP/IP]</strong></span>
-        <span className="text-indigo-600 dark:text-indigo-400 font-extrabold flex items-center gap-1">
-          <span className="w-1.5 h-1.5 rounded-full bg-indigo-500 animate-pulse" />
-          <span>Antenna Active (868-928Mhz)</span>
+        <span className={`font-extrabold flex items-center gap-1 ${isAntennaConnected ? 'text-emerald-500' : 'text-rose-500'}`}>
+          <span className={`w-1.5 h-1.5 rounded-full ${isAntennaConnected ? 'bg-emerald-500 animate-pulse' : 'bg-rose-500'}`} />
+          <span>{isAntennaConnected ? 'Antenna Active (868-928MHz)' : 'Antenna Offline'}</span>
         </span>
       </div>
 
@@ -331,7 +414,7 @@ export default function UHFCylinderRfidLogCard() {
               </button>
               <button
                 onClick={handleExecuteWriteTag}
-                disabled={isWriting || !writeHex.trim()}
+                disabled={isWriting || !writeHex.trim() || !isAntennaConnected}
                 className="px-5 py-2 rounded-xl text-xs font-extrabold bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 text-white shadow-lg active:scale-95 disabled:opacity-50 flex items-center gap-2"
               >
                 {isWriting ? 'Encoding Frame 0x30...' : 'Write To Tag Now'}
