@@ -69,7 +69,7 @@ export default async function LegalDashboardPage() {
 
           <div className="flex items-center gap-2 px-5 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-2xl text-xs sm:text-sm font-extrabold shadow-indigo-500/30 shrink-0">
             <CheckCircle2 size={18} className="text-white" />
-            <span>Supabase Connected</span>
+            <span>ESDM & MIGAS Portal Synced</span>
           </div>
         </div>
 
