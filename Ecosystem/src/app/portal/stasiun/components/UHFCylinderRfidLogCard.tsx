@@ -70,6 +70,7 @@ export default function UHFCylinderRfidLogCard() {
   const [isQueryingDevice, setIsQueryingDevice] = useState(false);
   const [isReadingTag, setIsReadingTag] = useState(false);
   const [readResult, setReadResult] = useState<string | null>(null);
+  const [lastReadEpc, setLastReadEpc] = useState<string | null>(null);
 
   // Write Tag Modal States
   const [isWriteModalOpen, setIsWriteModalOpen] = useState(false);
@@ -88,7 +89,13 @@ export default function UHFCylinderRfidLogCard() {
     }
 
     setIsWriting(true);
-    socket.emit('write_tag', { membank: writeBank, hexData: writeHex }, (response: any) => {
+    socket.emit('write_tag', { membank: writeBank, hexData: writeHex });
+  };
+
+  // Handle write result via event (not Socket.io ack — more reliable)
+  useEffect(() => {
+    if (!socket) return;
+    const handleWriteResult = (response: any) => {
       setIsWriting(false);
       if (response?.success) {
         toast.success('Tag Encoded Successfully!', {
@@ -100,8 +107,10 @@ export default function UHFCylinderRfidLogCard() {
           description: response?.error || 'Unknown error'
         });
       }
-    });
-  };
+    };
+    socket.on('write_result', handleWriteResult);
+    return () => { socket.off('write_result', handleWriteResult); };
+  }, [socket, writeBank]);
 
   const handleQueryDeviceInfo = () => {
     if (!socket || !isAntennaConnected) return;
@@ -124,8 +133,14 @@ export default function UHFCylinderRfidLogCard() {
     socket.emit('read_tag_memory', { membank: 1, startAddress: 2, wordLen: 6 }, (response: any) => {
       setIsReadingTag(false);
       if (response?.success) {
-        setReadResult(response.data);
-        toast.success('Tag Memory Read OK!', { description: `EPC Bank Data: ${response.data}` });
+        const epcData = response.data || '';
+        setReadResult(epcData);
+        setLastReadEpc(epcData);
+        // Auto-fill Write modal with the read data
+        if (epcData) {
+          setWriteHex(epcData);
+        }
+        toast.success('Tag Memory Read OK!', { description: `EPC Bank Data: ${epcData}` });
       } else {
         toast.error('Read Tag Failed', { description: response?.error });
       }
@@ -402,13 +417,28 @@ export default function UHFCylinderRfidLogCard() {
                   className="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-white font-mono placeholder:text-slate-600"
                 />
                 <p className="text-[10px] text-slate-500 mt-1">Must be valid Hexadecimal characters (0-9, A-F).</p>
+                {lastReadEpc && (
+                  <p className="text-[10px] text-emerald-400 mt-1 flex items-center gap-1">
+                    <span>Auto-filled from Read — click Read first to get actual tag data</span>
+                  </p>
+                )}
               </div>
             </div>
+
+            {isWriting && (
+              <div className="bg-emerald-500/10 border border-emerald-500/30 rounded-xl p-3 text-center">
+                <p className="text-xs font-bold text-emerald-400 animate-pulse">
+                  Sending Frame 0x30 to antenna — waiting for response...
+                </p>
+                <p className="text-[10px] text-emerald-300/60 mt-1">Do not move tag while writing.</p>
+              </div>
+            )}
 
             <div className="pt-2 flex items-center gap-2 justify-end">
               <button
                 onClick={() => setIsWriteModalOpen(false)}
-                className="px-4 py-2 rounded-xl text-xs font-bold text-slate-400 hover:bg-slate-800"
+                disabled={isWriting}
+                className="px-4 py-2 rounded-xl text-xs font-bold text-slate-400 hover:bg-slate-800 disabled:opacity-30"
               >
                 Cancel
               </button>
@@ -417,7 +447,12 @@ export default function UHFCylinderRfidLogCard() {
                 disabled={isWriting || !writeHex.trim() || !isAntennaConnected}
                 className="px-5 py-2 rounded-xl text-xs font-extrabold bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 text-white shadow-lg active:scale-95 disabled:opacity-50 flex items-center gap-2"
               >
-                {isWriting ? 'Encoding Frame 0x30...' : 'Write To Tag Now'}
+                {isWriting ? (
+                  <>
+                    <span className="w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin shrink-0" />
+                    Writing...
+                  </>
+                ) : 'Write To Tag Now'}
               </button>
             </div>
           </div>

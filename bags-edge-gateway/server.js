@@ -145,24 +145,24 @@ io.on('connection', (socket) => {
   socket.emit('antenna_status', { connected: isAntennaConnected });
 
   // --- Write Tag (0x30) ---
-  socket.on('write_tag', (payload, callback) => {
+  socket.on('write_tag', (payload) => {
     console.log(`[WRITE REQUEST] Bank: ${payload.membank}, Hex: ${payload.hexData}`);
-    
+
     if (!isAntennaConnected || !client || !client.writable) {
       console.error('[WRITE ERROR] Antenna not connected. Cannot write.');
-      if (callback) callback({ success: false, error: 'Antenna not connected. Please wait for reconnection.' });
+      io.emit('write_result', { success: false, error: 'Antenna not connected. Please wait for reconnection.' });
       return;
     }
 
     if (pendingWritePayload) {
-      if (callback) callback({ success: false, error: 'Another write operation is already in progress.' });
+      io.emit('write_result', { success: false, error: 'Another write operation is already in progress.' });
       return;
     }
 
     try {
       const cleanHex = payload.hexData.replace(/[^0-9A-Fa-f]/g, '');
       let dataBuf = Buffer.from(cleanHex, 'hex');
-      
+
       // Word alignment (2 bytes per word)
       if (dataBuf.length % 2 !== 0) {
         dataBuf = Buffer.concat([dataBuf, Buffer.from([0x00])]);
@@ -171,7 +171,7 @@ io.on('connection', (socket) => {
       const wordLen = dataBuf.length / 2;
       const membank = payload.membank || 1; // 1 = EPC, 3 = USER
       const startAddr = payload.startAddress || (membank === 1 ? 2 : 0);
-      
+
       const frame = buildWriteTagFrame(membank, startAddr, wordLen, dataBuf);
       console.log(`[BINARY FRAME 0x30] Hex: ${frame.toString('hex').toUpperCase()}`);
 
@@ -179,14 +179,12 @@ io.on('connection', (socket) => {
       const writeTimeout = setTimeout(() => {
         if (pendingWritePayload) {
           console.error('[WRITE SEQ] Timeout waiting for 0x30 response (5s).');
-          if (pendingWritePayload.callback) {
-            pendingWritePayload.callback({ success: false, error: 'Antenna did not respond to Write command within 5 seconds. Tag may be locked or out of range.' });
-          }
+          io.emit('write_result', { success: false, error: 'Antenna did not respond to Write command within 5 seconds. Tag may be locked or out of range.' });
           pendingWritePayload = null;
         }
       }, 5000);
 
-      pendingWritePayload = { frame, cleanHex, callback, timeoutId: writeTimeout };
+      pendingWritePayload = { frame, cleanHex, timeoutId: writeTimeout };
 
       // Step 1: Stop any active inventory, then send Write after response
       console.log('[WRITE SEQ] Sending Stop Inventory (0x23) before Write...');
@@ -195,7 +193,7 @@ io.on('connection', (socket) => {
 
     } catch (err) {
       console.error('[WRITE ERROR]', err);
-      if (callback) callback({ success: false, error: err.message });
+      io.emit('write_result', { success: false, error: err.message });
       pendingWritePayload = null;
     }
   });
@@ -367,23 +365,23 @@ function parseBuffer() {
       // --- Response to Write Tag (0x30) ---
       else if (frameCode === 0x30) {
         if (pendingWritePayload) {
-          const { cleanHex, callback, timeoutId } = pendingWritePayload;
+          const { cleanHex, timeoutId } = pendingWritePayload;
           clearTimeout(timeoutId);
           pendingWritePayload = null;
-          
+
           // Check status TLV (0x07) in response
           const statusByte = extractStatusFromResponse(frameData, paramLength);
-          
+
           if (statusByte === 0x00) {
             console.log(`[WRITE SEQ] ✅ Write Tag SUCCESS! EPC: ${cleanHex}`);
-            if (callback) callback({ success: true, message: 'Tag encoded successfully via CT-i607!', epc: cleanHex });
+            io.emit('write_result', { success: true, message: 'Tag encoded successfully via CT-i607!', epc: cleanHex });
             io.emit('tag_written_success', { epc: cleanHex, timestamp: new Date().toISOString() });
           } else {
             const errMsg = getStatusMessage(statusByte);
             console.error(`[WRITE SEQ] ❌ Write Tag FAILED! Status: 0x${statusByte.toString(16).toUpperCase()} (${errMsg})`);
-            if (callback) callback({ success: false, error: `Write failed: ${errMsg} (0x${statusByte.toString(16).toUpperCase()})` });
+            io.emit('write_result', { success: false, error: `Write failed: ${errMsg} (0x${statusByte.toString(16).toUpperCase()})` });
           }
-          
+
           // Resume polling
           scheduleNextPoll();
         }
@@ -614,7 +612,7 @@ function createNewClient() {
     // Fail any pending operations
     if (pendingWritePayload) {
       if (pendingWritePayload.timeoutId) clearTimeout(pendingWritePayload.timeoutId);
-      if (pendingWritePayload.callback) pendingWritePayload.callback({ success: false, error: 'TCP connection closed.' });
+      io.emit('write_result', { success: false, error: 'TCP connection closed.' });
       pendingWritePayload = null;
     }
     if (pendingReadPayload) {
