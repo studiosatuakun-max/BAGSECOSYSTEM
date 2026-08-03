@@ -520,12 +520,12 @@ function createNewClient() {
       console.error('[TCP TX] Socket not writable!');
       return;
     }
+    console.log(`[TCP TX] Hex: ${data.toString('hex').toUpperCase()}`);
     tcpClient.write(data);
   };
 
   return tcpClient;
 }
-
 function connectTCP() {
   if (reconnectTimer) { clearTimeout(reconnectTimer); reconnectTimer = null; }
 
