@@ -18,35 +18,24 @@ const io = new Server(server, {
 const WS_PORT = process.env.WS_PORT || 4001;
 
 // ===== PROTOCOL HELPERS =====
-function calculateChecksum(buffer) {
+// IMPORTANT: SDK C# sends commands WITHOUT paramLength bytes when no payload.
+// - No payload:  RF + 0x00 + 0x00 + 0x00 + frameCode + checksum  (7 bytes)
+// - With TLV payload: RF + 0x00 + 0x00 + 0x00 + frameCode + paramLen(2) + TLV + checksum
+
+function calculateChecksum(buffer, length) {
   let sum = 0;
-  for (let i = 0; i < buffer.length; i++) {
+  for (let i = 0; i < length; i++) {
     sum += buffer[i];
   }
   return (~sum + 1) & 0xFF;
 }
 
-function buildCommandFrame(frameCode, tlvPayload = null) {
-  // Builds a complete command frame: RF + 0x00(cmd) + 0x0000(addr) + frameCode + paramLen + [tlv] + checksum
-  const paramLength = tlvPayload ? tlvPayload.length : 0;
-  const totalLen = 8 + paramLength;
-  const frame = Buffer.alloc(totalLen);
-  
-  frame[0] = 0x52; // R
-  frame[1] = 0x46; // F
-  frame[2] = 0x00; // Command Frame
-  frame[3] = 0x00; // Addr MSB
-  frame[4] = 0x00; // Addr LSB
-  frame[5] = frameCode;
-  frame[6] = (paramLength >> 8) & 0xFF;
-  frame[7] = paramLength & 0xFF;
-  
-  if (tlvPayload) {
-    tlvPayload.copy(frame, 8);
-  }
-  
-  const checksum = calculateChecksum(frame);
-  return Buffer.concat([frame, Buffer.from([checksum])]);
+// No-payload commands: 7 bytes (RF + addr + code + checksum)
+function buildSimpleCommandFrame(frameCode) {
+  // RF(2) + 0x00 + 0x00 + frameCode(1) = 6 bytes header
+  const header = Buffer.from([0x52, 0x46, 0x00, 0x00, 0x00, frameCode]);
+  const checksum = calculateChecksum(header, 6);
+  return Buffer.concat([header, Buffer.from([checksum])]); // 7 bytes total
 }
 
 function buildWriteTagFrame(membank, startAddress, wordLen, writeDataBuffer, password = Buffer.from([0,0,0,0])) {
@@ -188,7 +177,7 @@ io.on('connection', (socket) => {
 
       // Step 1: Stop any active inventory, then send Write after response
       console.log('[WRITE SEQ] Sending Stop Inventory (0x23) before Write...');
-      const stopCmd = buildCommandFrame(0x23);
+      const stopCmd = buildSimpleCommandFrame(0x23);
       client.write(stopCmd);
 
     } catch (err) {
@@ -233,7 +222,7 @@ io.on('connection', (socket) => {
 
       // Stop inventory first, then send read after 0x23 response
       console.log('[READ SEQ] Sending Stop Inventory (0x23) before Read...');
-      const stopCmd = buildCommandFrame(0x23);
+      const stopCmd = buildSimpleCommandFrame(0x23);
       client.write(stopCmd);
 
       // After stop is acknowledged, we send the read frame (handled in parseBuffer)
@@ -255,7 +244,7 @@ io.on('connection', (socket) => {
       return;
     }
 
-    const infoCmd = buildCommandFrame(0x40);
+    const infoCmd = buildSimpleCommandFrame(0x40);
     console.log(`[BINARY FRAME 0x40] Hex: ${infoCmd.toString('hex').toUpperCase()}`);
     
     pendingDeviceInfoCallback = callback;
@@ -568,7 +557,7 @@ function scheduleNextPoll() {
   inventoryPollTimer = setTimeout(() => {
     if (isAntennaConnected && client && client.writable && !pendingWritePayload && !pendingReadPayload) {
       waitingForInventoryResponse = true;
-      const invOnceCmd = buildCommandFrame(0x22);
+      const invOnceCmd = buildSimpleCommandFrame(0x22);
       client.write(invOnceCmd);
     }
   }, 300); // 300ms delay between polls (response-gated, not blind interval)
@@ -662,7 +651,7 @@ function connectToAntenna() {
     io.emit('antenna_status', { connected: true });
     
     // Clear any stuck state by sending Stop Inventory (0x23) first
-    const stopCmd = buildCommandFrame(0x23);
+    const stopCmd = buildSimpleCommandFrame(0x23);
     client.write(stopCmd);
     console.log(`[TCP] Sent Stop Inventory (0x23) to clear state.`);
     
