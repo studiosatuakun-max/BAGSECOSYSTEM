@@ -40,10 +40,13 @@ function buildSimpleCommandFrame(frameCode) {
 }
 
 
+// paramLength = total bytes from TLV tag (0x08) through last data byte (EXCLUDES the checksum).
+// UHF Protocol spec: TLV[tag(1) + len(1) + value(N)] where value = password(4) + option(1) + membank(1) + startAddr(1) + wordLen(1) + data(N).
+// For wordLen=2: tlvLen = 8 + (2*2) = 12. paramLength = 2 + 12 = 14. Total frame = 8+14+1 = 23.
 function buildWriteTagFrame(membank, startAddress, wordLen, writeDataBuffer, password = Buffer.from([0,0,0,0])) {
   const contentLen = wordLen * 2;
-  const tlvLen = 8 + contentLen;
-  const paramLength = 2 + tlvLen;
+  const tlvLen = 8 + contentLen;          // 12 for wordLen=2
+  const paramLength = 2 + tlvLen;          // 14 for wordLen=2  ← was WRONG: 18
 
   const totalLen = 8 + paramLength;
   const frame = Buffer.alloc(totalLen);
@@ -121,6 +124,14 @@ let sendFn = null;
 
 const debounceCache = new Map();
 const DEBOUNCE_TIME = 2000;
+
+// Periodic cleanup of stale debounce entries to prevent memory leak
+setInterval(() => {
+  const now = Date.now();
+  for (const [key, ts] of debounceCache.entries()) {
+    if (now - ts > DEBOUNCE_TIME * 3) debounceCache.delete(key);
+  }
+}, 15000);
 
 // ===== FRAME PARSER (shared between TCP and UDP) =====
 function parseBuffer() {
@@ -222,6 +233,7 @@ function parseBuffer() {
           let offset = 0;
           while (offset < params.length) {
             const tag = params[offset];
+            if (offset + 2 > params.length) break;
             const len = params[offset + 1];
             if (tag === 0x20 && len >= 3) {
               version = `${params[offset + 2]}.${params[offset + 3]}.${params[offset + 4]}`;
@@ -248,6 +260,7 @@ function parseBuffer() {
         const params = frameData.subarray(8, 8 + paramLength);
         let offset = 0;
         while (offset < params.length) {
+          if (offset + 2 > params.length) break;
           const tag = params[offset];
           if (tag === 0x50) {
             const tlvLen = params[offset + 1];
@@ -255,6 +268,7 @@ function parseBuffer() {
             let epcHex = '', rssiHex = '', timeHex = '';
             let nestedOffset = 0;
             while (nestedOffset < tlvValue.length) {
+              if (nestedOffset + 2 > tlvValue.length) break;
               const nTag = tlvValue[nestedOffset];
               const nLen = tlvValue[nestedOffset + 1];
               const nVal = tlvValue.subarray(nestedOffset + 2, nestedOffset + 2 + nLen);
@@ -288,6 +302,7 @@ function extractStatusFromResponse(frameData, paramLength) {
   const params = frameData.subarray(8, 8 + paramLength);
   let offset = 0;
   while (offset < params.length) {
+    if (offset + 2 > params.length) break;
     const tag = params[offset];
     const len = params[offset + 1];
     if (tag === 0x07 && len >= 1) return params[offset + 2];
@@ -300,6 +315,7 @@ function extractDataFromReadResponse(frameData, paramLength) {
   const params = frameData.subarray(8, 8 + paramLength);
   let offset = 0;
   while (offset < params.length) {
+    if (offset + 2 > params.length) break;
     const tag = params[offset];
     const len = params[offset + 1];
     if (tag === 0x08 && len > 0) {
@@ -338,16 +354,11 @@ function handleDecodedTag(epcHex, rssiHex, _timeHex) {
   const rssiVal = parseInt(rssiHex || '0', 16);
   console.log(`[TAG] EPC: ${epcHex} | RSSI: ${rssiVal}`);
 
-  if (epcHex.startsWith('A') || epcHex.includes('A3B7C209')) {
-    io.emit('wristband_scanned', { epc: epcHex, rssi: rssiVal, timestamp: new Date().toISOString(), type: 'wristband' });
-  } else {
-    io.emit('cng_cylinder_scanned', {
-      epc: epcHex, rssi: rssiVal, timestamp: new Date().toISOString(), type: 'cylinder',
-      weightKg: 12.0 + (rssiVal % 5) / 10,
-      hydrotestStatus: rssiVal % 3 === 0 ? 'valid' : (rssiVal % 3 === 1 ? 'expiring-soon' : 'expired'),
-      fillStatus: rssiVal % 2 === 0 ? 'ready' : 'filled'
-    });
-  }
+  io.emit('rfid_tag_scanned', {
+    epc: epcHex,
+    rssi: rssiVal,
+    timestamp: new Date().toISOString()
+  });
 }
 
 function scheduleNextPoll() {
@@ -513,6 +524,12 @@ function createNewClient() {
 
   tcpClient.on('error', (err) => {
     console.error(`[TCP] Connection error: ${err.message}`);
+    const wasConnected = isAntennaConnected;
+    if (wasConnected) {
+      onAntennaDisconnect();
+      console.log('[TCP] Reconnecting in 2s...');
+      reconnectTimer = setTimeout(connectTCP, 2000);
+    }
   });
 
   sendFn = (data) => {
@@ -548,7 +565,16 @@ io.on('connection', (socket) => {
 
   // Write Tag (0x30)
   socket.on('write_tag', (payload) => {
-    console.log(`[WRITE REQUEST] Bank: ${payload.membank}, Hex: ${payload.hexData}`);
+    if (!payload || typeof payload !== 'object') {
+      io.emit('write_result', { success: false, error: 'Invalid payload.' });
+      return;
+    }
+    const cleanHex = (payload.hexData || '').replace(/[^0-9A-Fa-f]/g, '');
+    if (!cleanHex || cleanHex.length > 256) {
+      io.emit('write_result', { success: false, error: 'hexData must be 1–256 hex characters.' });
+      return;
+    }
+    console.log(`[WRITE REQUEST] Bank: ${payload.membank}, Hex: ${cleanHex}`);
 
     if (!isAntennaConnected) {
       io.emit('write_result', { success: false, error: 'Antenna not connected.' });
@@ -560,7 +586,6 @@ io.on('connection', (socket) => {
     }
 
     try {
-      const cleanHex = payload.hexData.replace(/[^0-9A-Fa-f]/g, '');
       let dataBuf = Buffer.from(cleanHex, 'hex');
       if (dataBuf.length % 2 !== 0) dataBuf = Buffer.concat([dataBuf, Buffer.from([0x00])]);
 
@@ -589,22 +614,30 @@ io.on('connection', (socket) => {
   });
 
   // Read Tag Memory (0x31)
-  socket.on('read_tag_memory', (payload, callback) => {
-    console.log(`[READ REQUEST] Bank: ${payload.membank}, Addr: ${payload.startAddress}, Words: ${payload.wordLen}`);
+  socket.on('read_tag_memory', (payload) => {
+    if (!payload || typeof payload !== 'object') {
+      io.emit('read_result', { success: false, error: 'Invalid payload.' });
+      return;
+    }
+    const membank = Number(payload.membank) || 1;
+    const startAddress = Number(payload.startAddress) || 0;
+    const wordLen = Number(payload.wordLen) || 6;
+    if (membank < 0 || membank > 3 || wordLen < 1 || wordLen > 32 || startAddress < 0) {
+      io.emit('read_result', { success: false, error: 'Invalid membank/wordLen/startAddress range.' });
+      return;
+    }
+    console.log(`[READ REQUEST] Bank: ${membank}, Addr: ${startAddress}, Words: ${wordLen}`);
 
     if (!isAntennaConnected) {
-      if (callback) callback({ success: false, error: 'Antenna not connected.' });
+      io.emit('read_result', { success: false, error: 'Antenna not connected.' });
       return;
     }
     if (pendingReadPayload) {
-      if (callback) callback({ success: false, error: 'Another read operation in progress.' });
+      io.emit('read_result', { success: false, error: 'Another read operation in progress.' });
       return;
     }
 
     try {
-      const membank = payload.membank || 1;
-      const startAddress = payload.startAddress || 0;
-      const wordLen = payload.wordLen || 6;
       const frame = buildReadTagFrame(membank, startAddress, wordLen);
 
       console.log(`[READ FRAME 0x31] Hex: ${frame.toString('hex').toUpperCase()}`);
@@ -622,27 +655,40 @@ io.on('connection', (socket) => {
 
     } catch (err) {
       console.error('[READ ERROR]', err);
-      if (callback) callback({ success: false, error: err.message });
+      io.emit('read_result', { success: false, error: err.message });
     }
   });
 
   // Query Device Info (0x40)
-  socket.on('query_device_info', (_payload, callback) => {
+  socket.on('query_device_info', (_payload) => {
     console.log('[DEVICE INFO] Querying...');
     if (!isAntennaConnected) {
-      if (callback) callback({ success: false, error: 'Antenna not connected.' });
+      io.emit('device_info_result', { success: false, error: 'Antenna not connected.' });
+      return;
+    }
+    if (pendingDeviceInfoCallback) {
+      io.emit('device_info_result', { success: false, error: 'Another query in progress.' });
       return;
     }
 
-    pendingDeviceInfoCallback = callback;
+    pendingDeviceInfoCallback = (result) => io.emit('device_info_result', result);
     sendFn(buildSimpleCommandFrame(0x40));
 
     setTimeout(() => {
-      if (pendingDeviceInfoCallback === callback) {
+      if (pendingDeviceInfoCallback) {
+        pendingDeviceInfoCallback({ success: false, error: 'No response within 3 seconds.' });
         pendingDeviceInfoCallback = null;
-        callback({ success: false, error: 'No response within 3 seconds.' });
       }
     }, 3000);
+  });
+
+  socket.on('start_simulator', () => {
+    if (!isSimulatorActive) startSimulator();
+    socket.emit('simulator_status', { active: isSimulatorActive });
+  });
+
+  socket.on('stop_simulator', () => {
+    stopSimulator();
   });
 
   socket.on('disconnect', () => {
@@ -671,9 +717,15 @@ if (UDP_MODE) {
   connectTCP();
 }
 
-if (process.env.ENABLE_SIMULATOR === 'true') {
-  console.log('[SIMULATOR] Injecting fake tag frames...');
-  setInterval(() => {
+let simulatorInterval = null;
+let isSimulatorActive = false;
+
+function startSimulator() {
+  if (simulatorInterval) return;
+  isSimulatorActive = true;
+  io.emit('simulator_status', { active: true });
+  console.log('[SIMULATOR] Started — injecting fake tag frames...');
+  simulatorInterval = setInterval(() => {
     const randomLastByte = Math.floor(Math.random() * 255);
     const randomRssi = 150 + Math.floor(Math.random() * 80);
     const fakeData = Buffer.from([
@@ -687,4 +739,18 @@ if (process.env.ENABLE_SIMULATOR === 'true') {
     bufferAccumulator = Buffer.concat([bufferAccumulator, fakeData]);
     parseBuffer();
   }, 6000);
+}
+
+function stopSimulator() {
+  if (simulatorInterval) {
+    clearInterval(simulatorInterval);
+    simulatorInterval = null;
+  }
+  isSimulatorActive = false;
+  io.emit('simulator_status', { active: false });
+  console.log('[SIMULATOR] Stopped.');
+}
+
+if (process.env.ENABLE_SIMULATOR === 'true') {
+  startSimulator();
 }

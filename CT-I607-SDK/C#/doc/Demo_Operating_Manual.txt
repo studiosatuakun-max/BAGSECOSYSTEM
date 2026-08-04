@@ -1,0 +1,181 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Rfid UHF Demo Manual
+							           V4.1.0
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	•	Introduction
+This document guide user how to use demo to control RFID reader. The demo will show you inventorying tags, setting parameter and TCP Server for receiving data from readers. 
+
+
+	•	Runtime Environment
+Operation System: Windows7, Windows 8, Windows10
+.Net Framework require: .net framework 4.0 or later
+Data Wire: a serial port line (USB change to Serial Port if your PC does not have COM)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	•	Operation
+	•	Connection
+Firstly, you need create a physical connection through personal computer before controlling reader. 
+
+2.1.1 Serial Port Connection
+
+Fresh Button: Search local serial port interface.
+	Connection Setup:
+	•	Select serial port number
+	•	Click “Connect” button
+A new interface will display once connection is ok.
+
+
+2.1.2 Scan Reader
+
+If the device and the host running the program are on the same LAN, you can use the scan function to find the IP address of the device. After clicking the "Scan" button, the following interface will be displayed.
+
+	•	Select the Ethernet Interface if your computer has multiple network cards.
+	•	Click “Scan” to start Scanning reader.
+	•	The follow figure will be displayed if a reader exists.
+
+The reader’s IP is 192.168.1.195, receiving port is 9000.And the transfer type is RS232, it means the reader is transmitting tag data via RS232, so you can see the tag data if you connect reader via RS232.
+
+
+2.1.3 UDP Connection
+You can connect to the reader to set the relevant parameters of the device through UDP. If you want to see the tag data, please confirm whether the transmission mode of the reader is UDP, and the remote IP and port are correctly filled out. 
+	•	Fill in the IP and port of the reader and select the UDP transmission method. You can get the UDP receiving port from the scanning function, or use the default scanning port 6000.
+	•	Click “Connect” button, if you successfully communicate with the reader, you will see the following interface.
+
+
+
+
+2.1.4 TCP Client Connection
+You can connect to the reader to set the relevant parameters of the device through TCP Client. If you want to see the tag data, please confirm whether the transmission mode of the reader is TCP Server, and the remote IP and port are correctly filled out.
+	•	Fill in the IP and port of the reader and select the TCP Client transmission method. You can get the reader’s listen port from the scanning function.
+	•	Click “Connect” button, if you successfully communicate with the reader, you will see the following interface.
+
+	•	Inventory
+Inventory is a function that the reader will continue to read tags. The reader is in this state when it is power on.
+
+
+“Clear” button: clear the tag data log received.
+“Start” button: Notify the reader start inventorying tags if it does not read before.
+“Stop” button: Notify the reader stop inventorying tags.
+“ID”: The EPC data of tag reader detect. 
+“RSSI”: Received Signal Strength Indication
+“Count”: the count reader has read tag.
+
+
+	•	Work Parameter
+
+Power: The signal strength indication reader radiates. The stronger the signal intensity is, the further reader can detect tag.
+Tag Filter Time: The transfer tag’s data once reader detect. If the filter time is not zero, the reader will save the data in internal buffer. If reader detect the same data during filter time, it will discard the data and does not upload.
+Read Interval Time: The reading frequency.
+Beep: To control the buzzer whether it work or not when reader detect one tag.
+Device Address: ID of reader, one upload to host with tag include the device ID to figure out which reader detect this tag.
+Trigger Time: Now the reader does not support trigger mode.
+
+
+
+2.4 Transmission Parameter
+
+The transmission parameter is used to choose how the tag upload to host.
+
+
+2.4.1 Transfer Mode
+
+	RS232: After reading the tag, select RS232 as the interface for data upload.
+	RS485: After reading the tag, select RS485 as the interface for data upload.
+	Wiegand: Choose Wiegand as the interface for data upload when reader detects one tag.
+	UDP: Choose UDP as the interface for transferring tag data.
+	TCP Client: The reader act as TCP Client, and the host is TCP Server. Reader will auto connect to host and send the tag data detected. It will affect reading frequency if the remote IP or remote port is not available. 
+	TCP Server: Reader act as TCP Server, and the host is TCP Client.
+
+2.4.2 Wiegand
+Before using Wiegand as the transmission channel to host. Please make clear that the interface value is Wiegand.
+Protocol: now the reader support Wiegand 26, Wiegand 32, Wiegand 34 protocol.
+Pulse Width: Pulse width of Wiegand. The union of the time 10us.
+Pulse Period: Pulse period of Wiegand. The union of the time is 100us.
+Transfer Interval: The interval time for transferring Wiegand signal.
+Output location: The starting output position of the data in the tag.
+
+2.4.3 TCP/IP Parameter
+MAC: Media Access Control Address for reader.
+Local IP: Reader’s IP address.
+Local Port: Reader’s port.
+	If the interface is TCP server, the ‘Local IP’ and ‘Local Port’ is listen address.
+	If the interface is UDP, the ‘Local IP’ and ‘Local port’ is the address receive data and send the data.
+	In DHCP, if reader get address from DHCP server, ‘Local IP’ and ‘Local Port’ is the address server supply.
+Remote IP, Remote Port:
+	In TCP client interface, the reader will connect to remote address and send the data.
+	In UDP interface, the reader will send the tag data to remote address.
+DNS: the DNS server address. Now reader does not support hostname mode.
+Hear beat: send “hello” to remote address that to keep alive the network. Its union is second.
+
+
+
+2.5 Advance Parameter
+	
+The advance parameter is mainly to set the air interface protocol parameters. If you are not an expert in this area, please don’t it at will.
+
+
+TCP Server
+
+As shown in the figure, if you click “TCP Server”, the demo will be a TCP Server and receives connections from multiple readers. Before you use this function, please check your reader’s TCP parameter.
+
+	•	Make sure your transfer Mode is TCP Client.
+	•	Make sure the remote IP and remote port is the same interface and listen port.
+
+
+If reader detect tag, it will upload the data to demo, as is show:
+

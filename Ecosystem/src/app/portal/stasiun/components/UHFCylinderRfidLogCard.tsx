@@ -5,6 +5,7 @@ import { Scan, CheckCircle2, AlertCircle, Clock, Package, ChevronRight, Tag, Wif
 import Icon from '@/components/ui/AppIcon';
 import { useSocket } from '@/hooks/useSocket';
 import { toast } from 'sonner';
+import { lookupRfidTag } from '../actions';
 
 interface CylinderScan {
   id: string;
@@ -115,63 +116,62 @@ export default function UHFCylinderRfidLogCard() {
   const handleQueryDeviceInfo = () => {
     if (!socket || !isAntennaConnected) return;
     setIsQueryingDevice(true);
-    socket.emit('query_device_info', {}, (response: any) => {
-      setIsQueryingDevice(false);
-      if (response?.success) {
-        setDeviceInfo(`FW v${response.firmware} | ${response.deviceType}`);
-        toast.success('Antenna Responded!', { description: `Firmware: v${response.firmware}, Type: ${response.deviceType}` });
-      } else {
-        toast.error('Device Info Failed', { description: response?.error });
-      }
-    });
+    socket.emit('query_device_info', {});
   };
 
   const handleReadTagMemory = () => {
     if (!socket || !isAntennaConnected) return;
     setIsReadingTag(true);
     setReadResult(null);
-    socket.emit('read_tag_memory', { membank: 1, startAddress: 2, wordLen: 6 }, (response: any) => {
-      setIsReadingTag(false);
-      if (response?.success) {
-        const epcData = response.data || '';
-        setReadResult(epcData);
-        setLastReadEpc(epcData);
-        // Auto-fill Write modal with the read data
-        if (epcData) {
-          setWriteHex(epcData);
-        }
-        toast.success('Tag Memory Read OK!', { description: `EPC Bank Data: ${epcData}` });
-      } else {
-        toast.error('Read Tag Failed', { description: response?.error });
-      }
-    });
+    socket.emit('read_tag_memory', { membank: 1, startAddress: 2, wordLen: 6 });
   };
 
   useEffect(() => {
     if (!socket) return;
 
-    const handleCylinderScanned = (data: any) => {
+    const handleTagScanned = async (data: any) => {
       setIsScanning(true);
       
-      const newScan: CylinderScan = {
-        id: `cyl-live-${Date.now()}`,
-        cylinderSerial: `CYL-26-CNG-${data.epc.substring(data.epc.length - 4)}`, // Mock serial from last 4 digits of EPC
-        rfidEpc: `EPC:ALIEN:H3:${data.epc}`,
-        weightKg: data.weightKg,
-        scanTime: new Date(data.timestamp).toLocaleTimeString('id-ID', { hour12: false }),
-        operator: 'Edge-Gateway',
-        hydrotestExpiry: '2029-12-31',
-        hydrotestStatus: data.hydrotestStatus,
-        fillStatus: data.fillStatus
-      };
+      try {
+        const result = await lookupRfidTag(data.epc);
+        
+        if (result.error || !result.data) {
+           toast.error('Unknown Tag Scanned', { description: `Unregistered EPC: ${data.epc}` });
+        } else {
+           const tagData = result.data;
+           if (tagData.tag_type === 'wristband') {
+             toast.info('Operator Wristband Scanned', { description: `Tag: ${tagData.epc_hex}` });
+           } else {
+             const expiryDate = new Date(tagData.hydrotest_expiry);
+             const now = new Date();
+             const daysUntilExpiry = Math.floor((expiryDate.getTime() - now.getTime()) / (1000 * 3600 * 24));
+             let hStatus: 'valid' | 'expiring-soon' | 'expired' = 'valid';
+             if (daysUntilExpiry < 0) hStatus = 'expired';
+             else if (daysUntilExpiry < 90) hStatus = 'expiring-soon';
+             
+             const newScan: CylinderScan = {
+               id: `cyl-live-${Date.now()}`,
+               cylinderSerial: tagData.cylinder_serial || 'UNKNOWN',
+               rfidEpc: `EPC:ALIEN:H3:${data.epc}`,
+               weightKg: tagData.weight_kg || 0,
+               scanTime: new Date(data.timestamp).toLocaleTimeString('id-ID', { hour12: false }),
+               operator: 'Edge-Gateway',
+               hydrotestExpiry: tagData.hydrotest_expiry,
+               hydrotestStatus: hStatus,
+               fillStatus: tagData.fill_status as 'ready' | 'filled' | 'rejected'
+             };
 
-      setScans(prev => {
-        const filtered = prev.filter(s => s.rfidEpc !== newScan.rfidEpc);
-        return [newScan, ...filtered];
-      });
-
-      // Stop animation after 1s
-      setTimeout(() => setIsScanning(false), 1000);
+             setScans(prev => {
+               const filtered = prev.filter(s => s.rfidEpc !== newScan.rfidEpc);
+               return [newScan, ...filtered];
+             });
+           }
+        }
+      } catch (err) {
+        console.error('Error looking up RFID tag:', err);
+      } finally {
+        setTimeout(() => setIsScanning(false), 1000);
+      }
     };
 
     const handleTagWritten = (data: any) => {
@@ -181,14 +181,48 @@ export default function UHFCylinderRfidLogCard() {
       });
     };
 
-    socket.on('cng_cylinder_scanned', handleCylinderScanned);
+    const handleDeviceInfoResult = (response: any) => {
+      setIsQueryingDevice(false);
+      if (response?.success) {
+        setDeviceInfo(`FW v${response.firmware} | ${response.deviceType}`);
+        toast.success('Antenna Responded!', { description: `Firmware: v${response.firmware}, Type: ${response.deviceType}` });
+      } else {
+        toast.error('Device Info Failed', { description: response?.error });
+      }
+    };
+
+    const handleReadResult = (response: any) => {
+      setIsReadingTag(false);
+      if (response?.success) {
+        const epcData = response.data || '';
+        setReadResult(epcData);
+        setLastReadEpc(epcData);
+        if (epcData) setWriteHex(epcData);
+        toast.success('Tag Memory Read OK!', { description: `EPC Bank Data: ${epcData}` });
+      } else {
+        toast.error('Read Tag Failed', { description: response?.error });
+      }
+    };
+
+    socket.on('rfid_tag_scanned', handleTagScanned);
     socket.on('tag_written_success', handleTagWritten);
+    socket.on('device_info_result', handleDeviceInfoResult);
+    socket.on('read_result', handleReadResult);
+    socket.on('simulator_status', (data: { active: boolean }) => {
+      setIsSimulatorActive(data.active);
+    });
+
+    socket.on('disconnect', () => setIsSimulatorActive(false));
 
     return () => {
-      socket.off('cng_cylinder_scanned', handleCylinderScanned);
+      socket.off('rfid_tag_scanned', handleTagScanned);
       socket.off('tag_written_success', handleTagWritten);
+      socket.off('device_info_result', handleDeviceInfoResult);
+      socket.off('read_result', handleReadResult);
+      socket.off('simulator_status');
+      socket.off('disconnect');
     };
-  }, [socket]);
+  }, [socket, setDeviceInfo, setLastReadEpc, setIsQueryingDevice, setIsReadingTag]);
 
   const filteredScans = scans.filter(
     (c) =>
@@ -199,7 +233,19 @@ export default function UHFCylinderRfidLogCard() {
   const validCount = scans.filter((c) => c.hydrotestStatus === 'valid').length;
   const rejectedCount = scans.filter((c) => c.fillStatus === 'rejected').length;
 
+  const [isSimulatorActive, setIsSimulatorActive] = useState(false);
+
+  const handleSimulatorToggle = () => {
+    if (!socket) return;
+    if (isSimulatorActive) {
+      socket.emit('stop_simulator');
+    } else {
+      socket.emit('start_simulator');
+    }
+  };
+
   const simulateBatchScan = () => {
+    if (isSimulatorActive) return;
     setIsScanning(true);
     // Simulate Cardteck i607 reading 27 tags at once (we'll just load the mock 4 for demo)
     setTimeout(() => {
@@ -263,11 +309,24 @@ export default function UHFCylinderRfidLogCard() {
           </button>
           <button
             onClick={simulateBatchScan}
-            disabled={isScanning}
+            disabled={isScanning || isSimulatorActive}
             className="px-3 py-1.5 bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-400 hover:to-purple-500 text-white font-extrabold rounded-lg text-[10px] shadow-md transition-all active:scale-95 flex items-center gap-1.5 disabled:opacity-50"
           >
             <Scan size={12} className={isScanning ? 'animate-spin' : ''} />
             {isScanning ? 'Reading...' : 'Batch Scan'}
+          </button>
+          <button
+            onClick={handleSimulatorToggle}
+            disabled={isScanning}
+            className={`px-2.5 py-1.5 font-extrabold rounded-lg text-[10px] border transition-all active:scale-95 flex items-center gap-1 ${
+              isSimulatorActive
+                ? 'bg-red-500/20 hover:bg-red-500/30 border-red-500/50 text-red-400'
+                : 'bg-cyan-500/10 hover:bg-cyan-500/20 border-cyan-500/50 text-cyan-400'
+            }`}
+            title={isSimulatorActive ? 'Stop Simulator' : 'Start Simulator'}
+          >
+            <Cpu size={12} className={isSimulatorActive ? 'animate-pulse' : ''} />
+            <span>{isSimulatorActive ? 'Stop Sim' : 'Sim'}</span>
           </button>
         </div>
       </div>

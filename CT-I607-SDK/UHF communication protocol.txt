@@ -1,0 +1,330 @@
+          
+
+
+
+
+
+
+
+
+
+
+
+
+UHF RFID Communication Protocol
+
+UHF RFID reader communication protocol
+Used to all of CPH UHF RFID Readers
+
+Version： 4.0.1
+Data： 2019-07-02
+
+
+
+
+
+
+Communication frame format introduction
+Frame format definition
+A frame is a data unit for transmitting data between a host and an RFID reader. All interactions are in units of frames.
+HeaderFrame typeAddressFrame CodeParam LengthParametersChecksum‘R’ ‘F’1 byteMSB LSB1 byteMSB     LSBN bytes1byteHeader:The original mark of the data frame, consisting of the character 'R' and the character 'F'.
+Frame type:The type of the frame, it indicates that the data frame is a command, response, or notification type of data frame.
+Command frame：The data is 0，The command frame is usually used by the upper control device to send commands to the RFID reader to control reading and writing, query/set parameters, etc.
+Response frame：The data is 1，he RFID reader sends a response to the execution result after executing the command of the host.
+Notification frame：The data is 2，The RFID device actively sends data to the host without receiving the host command. For example, the RFID reader automatically uploads the data to the host after reading the data in the active reading mode.
+Address：RFID device address, consisting of 2 bytes, MSB is in front of the frame, LSB is behind the frame.As an identifier of the device, the device will respond only if the address in the command frame is the same as the address in the RFID reader. Otherwise, the RFID reader will not execute the command of the host if the address is inconsistent.
+Frame Code：The identification code of the frame, the Frame Code in the command frame indicates what command is used for the command frame, and the response frame indicates the response to what command.
+Param Length：The parameter length of the frame (N in N bytes) consists of two bytes, the MSB byte is in front and the LSB is behind the frame.
+Parameters：The parameters of the data frame, the data type of the parameter are expressed in the format of TLV. 
+TLV：标签(Tag)，长度(Length)，值(Value)。In addition to the basic TLV, the remaining TLVs can be nested.
+Checksum：The checksum of the frame,it can guarantee the integrity of the data frame. The calculation starts from the Header until the end of the previous byte of Checksum. If the checksum calculated by the host and the RFID reader is inconsistent, the frame will be lost directly.
+
+
+
+Calculation method of checksum
+RFID_UINT8 caculate_checksum(RFID_UINT8 *buff_ptr,RFID_UINT8 len)
+{
+    RFID_UINT8 index = 0;
+    RFID_UINT8 check_sum = 0;
+    for (index = 0; index < len ; index++)
+    {
+        check_sum += buff_ptr[index];
+    }
+    check_sum = ~check_sum + 1;
+    return check_sum;
+}
+
+
+
+
+
+
+
+Introduction of the Frame
+Querying Device Software Version and Other Information
+Used to query the firmware version number of the device, device type
+HeaderFrame typeAddressFrame CodeParam LengthChecksum‘R’ ‘F’
+0x00
+MSB LSB
+0x40
+0x00     0x00
+1byte
+For example: 52 46 00 00 00 40 00 00 28
+
+The response format is as follows：
+HeaderFrame typeAddressFrame CodeParam LengthStatus tlvSfotware version
+TLVDevice Type TLVChecksum‘R’ ‘F’0x01MSB LSB0x40MSB  LSB1byteFor example: 52 46 01 00 00 40 00 0B 07 01 00 20 03 04 00 01 21 01 05 C5
+Software Version TLV & Device Type TLV will be introduced in the back of protocol.
+
+
+Start Inventory tags
+Inventory tags：The command device starts to read the tag continuously until it stops receiving the command.
+HeaderFrame typeAddressFrame CodeParam LengthChecksum‘R’ ‘F’
+0x00
+MSB LSB
+0x21
+0x00     0x00
+1byte
+Response format：
+HeaderFrame typeAddressFrame CodeParam LengthStatus tlvChecksum‘R’ ‘F’0x01MSB LSB0x21MSB LSB1byteStatus TLV indicates whether the command was executed successfully.
+Host  Reader: 52 46 00 00 00 21 00 00 47
+Host  Reader: 52 46 01 00 00 21 00 03 07 01 00 3B
+
+
+Active Inventory tags
+In some cases, we don't want the device to always store the label. Instead, we send the command once to read the device. If the command is sent, the device will stop after the label is saved.
+HeaderFrame typeAddressFrame CodeParam LengthChecksum‘R’ ‘F’
+0x00
+MSB LSB
+0x22
+0x00     0x00
+1byte
+Response format：For the format, please refer to the upload of 3.1 tag.
+Host  Reader: 52 46 00 00 00 22 00 00 46
+
+Stop Inventory tags
+Notify the device to stop the inventory tags.
+HeaderFrame typeAddressFrame CodeParam LengthChecksum‘R’ ‘F’
+0x00
+MSB LSB
+0x23
+0x00     0x00
+1byte
+Response format：
+HeaderFrame typeAddressFrame CodeParam LengthStatus tlvChecksum‘R’ ‘F’0x01MSB LSB0x23MSB LSB1byteStatus TLV indicates whether the command was executed successfully
+Host  Reader: 52 46 00 00 00 23 00 00 45
+Host  Reader: 52 46 01 00 00 23 00 03 07 01 00 39
+
+Set a single parameter
+HeaderFrame typeAddressFrame CodeParam LengthTLVChecksum‘R’ ‘F’0x00MSB LSB0x48Length of tlvSingle Parameter tlv1byteFor example: 52 46 00 00 00 48 00 05 26 03 01 09 C4 24
+26 03 01 09 C4
+	26:TLV type value for a single parameter
+	03:3 bytes in length
+	01:The type of this parameter is power
+	09 C4:The value of power, the decimal value of 0x09C4 is 2500, indicating that the value of power is 25dbm
+Response format：
+HeaderFrame typeAddressFrame CodeParam LengthStatus TLVChecksum‘R’ ‘F’0x01MSB LSB0x480x00 0x030x07 0x01 0x001byteStatus code:0x00 stands for “success”.
+Query a single parameter value
+HeaderFrame typeAddressFrame CodeParam LengthTLVChecksum‘R’ ‘F’0x00MSB LSB0x49Length of tlvSingle Parameter tlv1byteFor example: 52 46 00 00 00 49 00 03 26 01 01 F4
+26 01 01:Query a single parameter, the type of this parameter is 0x01 (power)
+The passive mode is as follows:
+HeaderFrame typeAddressFrame CodeParam LengthStatus TLVTLVChecksum‘R’ ‘F’0x00MSB LSB0x49Length of tlvstautsSingle Parameter tlv1byte52 46 00 00 00 49 00 08 07 01 00 26 03 01 09 C4 18
+07 01 00: status
+26 03 01 09 C4: power TLV
+
+Restart the device
+Notify the device to stop the inventory tags.
+HeaderFrame typeAddressFrame CodeParam LengthChecksum‘R’ ‘F’
+0x00
+MSB LSB
+0x10
+0x00     0x00
+1byte
+Response format：
+HeaderFrame typeAddressFrame CodeParam LengthStatus tlvChecksum‘R’ ‘F’0x01MSB LSB0x10MSB LSB1byteStatus TLV indicates whether the command was executed successfully
+Host  Reader: 52 46 00 00 00 10 00 00 58
+Host  Reader: 52 46 01 00 00 10 00 03 07 01 00 4C
+
+Prompt frame introduction
+Currently, it is only used as a message mechanism for the reader to notify the device without receiving a command, for example, uploading tag data after reading the tag.
+The format of the response frame is as follows：
+HeaderFrame typeAddressFrame CodeParam LengthParametersChecksum‘R’ ‘F’0x02MSB LSB1 byteMSB     LSBN bytes1byte
+3.1 Tags Uploaded
+HeaderFrame typeAddressFrame CodeParam LengthTLVChecksum‘R’ ‘F’0x02MSB LSB0x80Length of tlvTag TLV1byteFor example:Received the following data：
+52 46 02 00 00 80 00 19 50 17 01 0C E2 00 00 17 02 17 01 99 23 90 21 7D 05 01 C3 06 04 3D 00 00 00 4C
+50(hex):Single Tag TLVd’s initial position，which of the length is 0x17
+EPC TLV :01 0C E2 00 00 17 02 17 01 99 23 90 21 7D (绿色为标签的数据)
+RSSI:05 01 C3
+Time TLV:06 04 3D 00 00 00
+
+TLV Introduction
+The parameters and return values in the interaction data are represented by TLV，which of the format is as follows：
+Attribute Type
+Attribute Value Length
+Attribute Value
+    1 byte
+N 
+N bytes
+
+
+3.1 Status
+Mainly used to return the execution result of the command
+Attribute Type
+Length
+Value
+0x07
+0x01
+Status code
+Status Code’s value is as follows:
+
+ItemValueNameDescription1
+
+0x00
+SUCCESS
+Command completed successfully
+2
+
+0x14
+Parameter unsupport
+Unsupported parameters, such as setting a single parameter with a parameter type that does not support setting.
+3
+
+0x15
+Parameter len error
+The length of the parameter is incorrectly filled out
+4
+
+0x16
+Parameter context error
+The content of the parameter is incorrectly filled out
+5
+
+0x17
+Unsupport command
+Unsupported command
+6
+
+0x18
+Device Address error
+The device address in the command does not match the address in the command.
+7
+
+0x20
+Check Sum error
+Check- code error
+8
+
+0x21
+Unsupport TLV Type
+Internal error for the reader
+9
+
+0x22
+Flash Error
+Write flash error when storing parameters
+10
+
+0xFF
+Internal Error
+Internal Error
+3.2 Software Version
+Attribute Type
+Attribute Length
+Attribute Value
+0x20
+0x03
+Main Vsersion, Sub Version,Modify Version
+For example:Data: 20 03 04 00 01, Firmware’s version is:4.0.1
+
+3.3 Device Type
+Type used to tag devices
+Attribute Type
+Attribute Length
+Attribute Value
+0x21
+0x03
+1 byte(device type)
+
+
+
+3.4 Single Parameter
+Indicates the value in setting a single parameter
+Attribute Type
+Attribute Length
+Attribute Value
+0x26
+Length
+1 byte(paraemter type)
+Parameter value
+Parameter type:The type of parameter to be set
+Parameter Type
+Parameter Value
+Description
+0x01
+MSB LSB
+Set the power，Max3000，it stands for 30dbm
+0x02
+1 byte
+0：Turn on buzzer  1:Turn off buzzer
+0x03
+1 byte
+Label filtering time, 1~255, the unit is s.
+0x04
+Mixer Gain
+IF AMP Gain
+MSB Threshold
+LSB Threshold
+Mixer Gain:The default is 9
+IF AMP Gain:The default is 36
+Threshold:Signal threshold, the higher the value, the closer the card reading distance is. The default value is 0x00A0.
+For example:Set the power: 52 46 00 00 00 48 00 05 26 03 01 09 C4 24     09 C4The two-byte conversion decimal value is 3000, then the command is to set the power to 30dbm.
+Turn on buzzer:52 46 00 00 00 48 00 04 26 02 02 01 F1     01 indicates to turn on the buzzer, 00 to turn off the buzzer
+Set modem data：52 46 00 00 00 48 00 07 26 05 04 09 24 00 A0 1D   mixer gain:0x09  IF AMP Gain: 0x24 threshold:0x00A0
+3.5 EPC
+Attribute Type
+Attribute Length
+Attribute Value
+0x01
+length
+EPC data
+Since the length of the EPC data can be modified, the value of length is not fixed.
+3.6 RSSI
+Attribute Type
+Attribute Length
+Attribute Value
+0x05
+0x01
+RSSI
+
+3.6 Time
+Attribute Type
+Attribute Length
+Attribute Value
+0x06
+0x04
+4 bytes
+
+3.5 Single Tag
+The data format of a single label. The data format can contain data such as EPC data, RSSI, timestamp, TID, etc., not necessarily for each TLV attribute. It may only be EPC TLV or TID TLV.
+Attribute Type
+Attribute Length
+Attribute Value
+0x50
+length
+[EPC TLV] [RSSI TLV] [Time TLV] [TID TLV] …….
+For example:Received the following data：
+52 46 02 00 00 80 00 19 50 17 01 0C E2 00 00 17 02 17 01 99 23 90 21 7D 05 01 C3 06 04 3D 00 00 00 4C
+50(hex):Single Tag TLVd’s initial position，which of the length is 0x17
+EPC TLV :01 0C E2 00 00 17 02 17 01 99 23 90 21 7D (Green is tag’s data)
+RSSI:05 01 C3
+Time TLV:06 04 3D 00 00 00
+                                UHF RFID Protocol
+
+PAGE  
+
+
+PAGE  9
+文档版本 4.0.1 （19-07-02)             商业机密请勿转发
+
+
+

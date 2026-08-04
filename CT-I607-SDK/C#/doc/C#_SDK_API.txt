@@ -1,0 +1,339 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+C# SDK API
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	•	Introduction
+This document will help developers quickly develop RFID-related applications. This development kit is based on the C# language. We provide the source code, you can modify it according to your needs.
+
+	•	Tag reading process
+
+	•	Create RfidReaderManager object, it is responsible for adding, deleting reader. 
+	•	RfidReaderManager object also have a thread to travers each reader to receive data. Once receiving data from reader, the manager will notify to application.
+	•	If you don’t need to receive data any more, please release the resource of reader.
+	•	You can do some operations like setting parameters through RfidReader object.
+
+
+
+
+
+
+	•	Class Function Description
+2.1 RfidReader
+RfidReader is abstract class. The object it instantiates will be added to RfidReaderManager.
+
+2.2 RfidReaderManager
+RfidReaderManager class manager reader object and receive data from serial port or net, it is single in program. The following is a description of the method of the class:
+
+2.2.1 Instance
+public static RfidReaderManager Instance()
+Description
+Get the instance of RfidReaderManager
+Parameter
+N/A
+Return
+The instance of RfidReaderManager
+
+2.2.2 CreateReaderInSerialPort
+Public RfidReader CreateReaderInSerialPort(String portName,int baudRate
+,RfidReaderRspNotify notify)
+Description
+Create a RfidReader object, the object uses serial port to connect to reader
+Parameter
+portName: Serial port name, like COM1, COM11
+baudRate: The baud rate of serial port, most of reader’s serial port is 115200
+notify: If a response is received, it is reported by the method of the notify.
+Return
+Success: A reader object   
+Fail: null
+
+
+
+
+
+
+
+2.2.3 CreateReaderInNet
+public RfidReader CreateReaderInNet(String localIP,UInt16 localPort,String readerIP,UInt16 readerPort,TransportType type, RfidReaderRspNotify notify)
+Description
+Create a RfidReader object, the object uses UDP or TCP client transmission.
+Parameter
+LocalIP: IP address where the application is located
+localPort: The application 
+baudRate: The baud rate of serial port, most of reader’s serial port is 115200
+notify: If a response is received, it is reported by the method of the notify.
+Return
+Success: A reader object   
+Fail: null
+
+2.2.4 ReleaseRfidReader
+public void ReleaseRfidReader(RfidReader reader)
+Description
+Remove and release resource from manager
+Parameter
+Reader: release the resource
+Return
+N/A
+
+
+
+2.3 MSerialReader
+Implementation of the abstract class RfidReader. You can send instructions to the device by this class and response is reported by RfidReaderRspNotify.
+
+2.3.1 QueryDeviceInfo
+public void QueryDeviceInfo()
+Description
+Query device information, firmware version number, device type, etc.
+Parameter
+N/A
+Return
+N/A(see RfidReaderRspNotify.OnRecvDeviceInfoRsp)
+
+
+
+2.3.2 StartInventory
+public void StartInventory()
+Description
+Notify the device to continuously inventory tags
+Parameter
+N/A
+Return
+N/A (see RfidReaderRspNotify.)
+
+2.3.3 StopInventory
+public void StopInventory()
+Description
+Notify the device to stop inventorying tags
+Parameter
+N/A
+Return
+N/A (see RfidReaderRspNotify. OnRecvStartInventoryRsp)
+
+2.3.4 QueryWorkingParam
+public void QeryWorkingParam()
+Description
+Query the reader’s working parameters
+Parameter
+N/A
+Return
+N/A (see RfidReaderRspNotify. OnrecvQueryWorkParamRsp)
+
+2.3.5 SetDefaultParam()
+public void SetDefaultParam()
+Description
+Restore factory parameters of the device
+Parameter
+N/A
+Return
+N/A (see RfidReaderRspNotify. OnRecvSetFactorySettingRsp)
+
+2.3.6 InventoryOnce
+public void InventoryOnce()
+Description
+	•	The device stops inventorying
+	•	The device inventory tags one time and stop do it.
+Parameter
+N/A
+Return
+N/A (see RfidReaderRspNotify. OnRecvTagNotify)
+
+2.3.7 SetWorkingParm
+public void SetWorkingParam(RfidWorkParam workParam)
+Description
+Query the reader’s working parameters
+Parameter
+N/A
+Return
+N/A (see RfidReaderRspNotify. OnRecvSetWorkParamRsp)
+
+2.3.8 QueryTransferParam
+public void QeryTransferParam()
+Description
+Query the transmission parameters of the reader
+Parameter
+N/A
+Return
+N/A (see RfidReaderRspNotify. OnrecvQueryWorkParamRsp)
+
+2.3.9 SetAdvanceParam
+public void SetAdvanceParam(RfidAdvanceParam advanceParam)
+Description
+Set the transmission parameters of the reader
+Parameter
+N/A
+Return
+N/A (see RfidReaderRspNotify. OnRecvSetAdvanceParamRsp)
+
+2.3.10 QueryAdvanceParam
+public void QeryAdvanceParam()
+Description
+Set the transmission parameters of the reader
+Parameter
+N/A
+Return
+N/A (see RfidReaderRspNotify.)
+
+
+2.4 RfidReaderRspNotify
+Interface for notification received a response or received tag data, passed as a parameter when creating a RfidReader object by RfidReaderManager.
+
+
+
+2.4.1 OnRecvTagNotify
+void OnRecvTagNotify(RfidReader reader, TlvValueItem[] tlvItems, byte tlvCount)
+Description
+Notify the application that it has received a tag data
+Parameter
+reader: Reader receiving the response
+tlvItems: The tag and other parameter like RSSI. The tag data or the RSSI is one TLV item. For details please reference protocol document.
+tlvCount: The TLV counts.s
+Return
+N/A
+
+2.4.2 OnRecvSetFactorySettingRsp
+void OnRecvSetFactorySettingRsp(RfidReader reader, byte result);
+Description
+Notify the result of setting default parameters.
+Parameter
+reader: Reader receiving the response
+result: success: 0    fail: others
+Return
+N/A
+
+2.4.3 OnRecvStartInventoryRsp
+void OnRecvStartInventoryRsp(RfidReader reader, byte result);
+Description
+Received a response to start the inventorying
+Parameter
+reader: Reader receiving the response
+result: success: 0    fail: others
+Return
+N/A
+
+2.4.4 OnRecvStopInventoryRsp
+void OnRecvStopInventoryRsp(RfidReader reader, byte result);
+Description
+Notify the application that reader has been stop inventory
+Parameter
+reader: Reader receiving the response
+result: success: 0     fail: others
+Return
+N/A
+
+
+2.4.5 OnRecvDeviceInfoRsp
+void OnRecvDeviceInfoRsp(RfidReader reader, byte[] firmwareVersion,byte deviceType);
+Description
+Notify the application the result query device information 
+Parameter
+reader: Reader receiving the response
+firmwareVersion: the firmware version of reader
+deviceType: the type of reader
+Return
+N/A
+
+
+2.4.6 OnRecvSetWorkParamRsp
+void OnRecvSetWorkParamRsp(RfidReader reader, byte result);
+Description
+Notify the application to set the result of the working parameters
+Parameter
+reader: Reader receiving the response
+result:  success:0 fail: others
+Return
+N/A
+
+
+2.4.6 OnRecvQueryWorkParamRsp
+void OnRecvQueryWorkParamRsp(RfidReader reader, byte result, RfidWorkParam workParam);
+Description
+Notify the application that it has received a tag data
+Parameter
+reader: Reader receiving the response
+workParam: the reader’s working parameters.
+Return
+N/A
+
+
+2.4.7 OnRecvSetTransmissionParamRsp
+void OnRecvSetTransmissionParamRsp(RfidReader reader, byte result);
+Description
+Report the result of setting the transmission parameters
+Parameter
+reader: Reader receiving the response
+result: success:0    fail: others
+Return
+N/A
+
+
+
+2.4.8 OnRecvQueryTransmissionParamRsp
+void OnRecvQueryTransmissionParamRsp(RfidReader reader, byte result,
+ RfidTransmissionParam transmissiomParam);
+Description
+Notify the application that it has received a tag data
+Parameter
+reader: Reader receiving the response
+transmissionParam: the reader’s transmission parameters
+Return
+N/A
+
+2.4.9 OnRecvSetAdvanceParamRsp
+void OnRecvSetAdvanceParamRsp(RfidReader reader, byte result);
+Description
+Notify the application that it has received a tag data
+Parameter
+reader: Reader receiving the response
+result: the result of setting advance parameters.
+      Success:0  Fail:others
+Return
+N/A
+
+
+
+2.4.10 OnRecvQueryTransmissionParamRsp
+void OnRecvQueryTransmissionParamRsp(RfidReader reader, byte result,
+ RfidTransmissionParam transmissiomParam);
+Description
+Notify the application that it has received a tag data
+Parameter
+reader: Reader receiving the response
+transmissionParam: the reader’s transmission parameters
+Return
+N/A
+
