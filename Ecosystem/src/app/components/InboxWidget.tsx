@@ -47,7 +47,7 @@ export default function InboxWidget({ variant = 'header' }: { variant?: 'header'
             )}
           </div>
           <span className="font-extrabold text-xs tracking-tight hidden md:inline">
-            Dispatch Inbox
+            Dispatch Memo
           </span>
         </button>
       ) : (
@@ -71,7 +71,7 @@ export default function InboxWidget({ variant = 'header' }: { variant?: 'header'
           <div className="text-left hidden sm:block">
             <span className="block text-[10px] text-indigo-300 font-bold uppercase tracking-widest leading-none">Enterprise ERP</span>
             <span className="block text-sm text-white font-extrabold tracking-tight mt-0.5 group-hover:text-indigo-200 transition-colors">
-              Dispatch Inbox
+              Dispatch Memo
             </span>
           </div>
         </button>
