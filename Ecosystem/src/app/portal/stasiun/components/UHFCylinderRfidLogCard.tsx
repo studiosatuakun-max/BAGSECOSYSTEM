@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Scan, CheckCircle2, AlertCircle, Clock, Package, ChevronRight, Tag, Wifi, Cpu, BookOpen, WifiOff } from 'lucide-react';
+import { Scan, CheckCircle2, AlertCircle, Clock, Package, ChevronRight, Tag, Wifi, Cpu, BookOpen, WifiOff, X, FileText, Calendar, Activity, Database } from 'lucide-react';
 import Icon from '@/components/ui/AppIcon';
 import { useSocket } from '@/hooks/useSocket';
 import { toast } from 'sonner';
@@ -63,21 +63,24 @@ function FillStatusBadge({ status }: { status: CylinderScan['fillStatus'] }) {
 
 export default function UHFCylinderRfidLogCard() {
   const [hoveredRow, setHoveredRow] = useState<string | null>(null);
+  const [selectedScan, setSelectedScan] = useState<CylinderScan | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [scans, setScans] = useState<CylinderScan[]>([]);
   const [isScanning, setIsScanning] = useState(false);
-  const { socket, isAntennaConnected } = useSocket();
   const [deviceInfo, setDeviceInfo] = useState<string | null>(null);
   const [isQueryingDevice, setIsQueryingDevice] = useState(false);
   const [isReadingTag, setIsReadingTag] = useState(false);
   const [readResult, setReadResult] = useState<string | null>(null);
   const [lastReadEpc, setLastReadEpc] = useState<string | null>(null);
+  const [isSimulatorActive, setIsSimulatorActive] = useState(false);
 
   // Write Tag Modal States
   const [isWriteModalOpen, setIsWriteModalOpen] = useState(false);
   const [writeBank, setWriteBank] = useState<number>(1);
   const [writeHex, setWriteHex] = useState<string>('E20000170217019923902999');
   const [isWriting, setIsWriting] = useState(false);
+
+  const { socket, isAntennaConnected } = useSocket();
 
   const handleExecuteWriteTag = () => {
     if (!socket) {
@@ -222,7 +225,7 @@ export default function UHFCylinderRfidLogCard() {
       socket.off('simulator_status');
       socket.off('disconnect');
     };
-  }, [socket, setDeviceInfo, setLastReadEpc, setIsQueryingDevice, setIsReadingTag]);
+  }, [socket]);
 
   const filteredScans = scans.filter(
     (c) =>
@@ -232,8 +235,6 @@ export default function UHFCylinderRfidLogCard() {
 
   const validCount = scans.filter((c) => c.hydrotestStatus === 'valid').length;
   const rejectedCount = scans.filter((c) => c.fillStatus === 'rejected').length;
-
-  const [isSimulatorActive, setIsSimulatorActive] = useState(false);
 
   const handleSimulatorToggle = () => {
     if (!socket) return;
@@ -366,6 +367,7 @@ export default function UHFCylinderRfidLogCard() {
           filteredScans.map((scan) => (
             <div
               key={scan.id}
+              onClick={() => setSelectedScan(scan)}
               className={`rounded-2xl border p-3.5 transition-all duration-200 cursor-pointer ${
                 hoveredRow === scan.id
                   ? 'bg-slate-50 dark:bg-slate-800/80 border-indigo-300 dark:border-indigo-700 shadow-md scale-[1.01]'
@@ -385,10 +387,9 @@ export default function UHFCylinderRfidLogCard() {
                     <Package size={15} />
                   </div>
                   <div className="min-w-0">
-                    <div className="text-xs font-black text-slate-900 dark:text-white font-mono truncate">{scan.cylinderSerial}</div>
-                    <div className="flex items-center gap-1.5 mt-0.5">
-                      <Tag size={11} className="text-indigo-500 shrink-0" />
-                      <span className="text-[11px] text-slate-500 dark:text-slate-400 font-bold font-mono truncate">{scan.rfidEpc}</span>
+                    <div className="flex items-center gap-1.5">
+                      <Tag size={13} className="text-indigo-500 shrink-0" />
+                      <div className="text-sm font-black text-slate-900 dark:text-white font-mono truncate">{scan.cylinderSerial}</div>
                     </div>
                   </div>
                 </div>
@@ -514,6 +515,86 @@ export default function UHFCylinderRfidLogCard() {
                 ) : 'Write To Tag Now'}
               </button>
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* Asset Master (KTP Tabung) Modal */}
+      {selectedScan && (
+        <div className="fixed inset-0 z-[60] bg-slate-950/70 backdrop-blur-md flex items-center justify-center p-4 animate-in fade-in duration-200">
+          <div className="bg-slate-900 border border-slate-800 rounded-3xl p-6 max-w-md w-full shadow-2xl space-y-5 animate-in zoom-in-95 duration-200">
+            {/* Modal Header */}
+            <div className="flex items-center justify-between pb-3 border-b border-slate-800">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-indigo-500/20 flex items-center justify-center">
+                  <FileText className="text-indigo-400" size={20} />
+                </div>
+                <div>
+                  <h3 className="text-lg font-black text-white leading-tight">Asset Master Data</h3>
+                  <p className="text-[11px] font-bold text-slate-400">KTP Tabung CNG 12Kg</p>
+                </div>
+              </div>
+              <button
+                onClick={() => setSelectedScan(null)}
+                className="w-8 h-8 rounded-full bg-slate-800 hover:bg-slate-700 flex items-center justify-center text-slate-400 hover:text-white transition-colors"
+              >
+                <X size={16} />
+              </button>
+            </div>
+
+            {/* Cylinder Identity */}
+            <div className="bg-slate-800/50 rounded-2xl p-4 border border-slate-700/50 text-center relative overflow-hidden">
+              <div className="absolute top-0 right-0 p-3 opacity-10">
+                <Package size={80} />
+              </div>
+              <div className="flex justify-center mb-1 relative z-10"><Tag size={16} className="text-indigo-500" /></div>
+              <div className="text-2xl font-black text-white font-mono tracking-wider relative z-10">{selectedScan.cylinderSerial}</div>
+              <div className="text-[10px] text-slate-400 font-mono mt-1 relative z-10">{selectedScan.rfidEpc}</div>
+            </div>
+
+            {/* Data Grid */}
+            <div className="grid grid-cols-2 gap-3">
+              <div className="bg-slate-800/30 rounded-xl p-3 border border-slate-700/30">
+                <div className="flex items-center gap-1.5 text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">
+                  <Package size={12} /> Merk Pabrik
+                </div>
+                <div className="text-sm font-bold text-white">Sinoma (Seamless)</div>
+              </div>
+              <div className="bg-slate-800/30 rounded-xl p-3 border border-slate-700/30">
+                <div className="flex items-center gap-1.5 text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">
+                  <Calendar size={12} /> Tahun Rilis
+                </div>
+                <div className="text-sm font-bold text-white">2024</div>
+              </div>
+              <div className="bg-slate-800/30 rounded-xl p-3 border border-slate-700/30">
+                <div className="flex items-center gap-1.5 text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">
+                  <Database size={12} /> Kap. Air
+                </div>
+                <div className="text-sm font-bold text-white">50 Liter</div>
+              </div>
+              <div className="bg-slate-800/30 rounded-xl p-3 border border-slate-700/30">
+                <div className="flex items-center gap-1.5 text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">
+                  <Activity size={12} /> WP
+                </div>
+                <div className="text-sm font-bold text-white">250 Bar</div>
+              </div>
+            </div>
+
+            {/* Hydrotest Status */}
+            <div className={`rounded-2xl p-4 border ${
+              selectedScan.hydrotestStatus === 'valid' ? 'bg-emerald-500/10 border-emerald-500/30' :
+              selectedScan.hydrotestStatus === 'expiring-soon' ? 'bg-amber-500/10 border-amber-500/30' :
+              'bg-rose-500/10 border-rose-500/30'
+            }`}>
+              <div className="flex items-start justify-between">
+                <div>
+                  <div className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-0.5">Jadwal Hydrotest</div>
+                  <div className="text-sm font-bold text-white">{new Date(selectedScan.hydrotestExpiry).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })}</div>
+                </div>
+                <HydrotestBadge status={selectedScan.hydrotestStatus} />
+              </div>
+            </div>
+
           </div>
         </div>
       )}
