@@ -1,18 +1,35 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import { usePathname } from 'next/navigation';
 import Icon from '@/components/ui/AppIcon';
 import InboxDrawer from './InboxDrawer';
 
+export function getDivisionFromPath(pathname: string) {
+  if (pathname.includes('/portal/armada')) return 'Fleet & Transport (Armada)';
+  if (pathname.includes('/portal/keuangan')) return 'Finance & Accounting (Keuangan)';
+  if (pathname.includes('/portal/hr')) return 'HR & Workforce (SDM)';
+  if (pathname.includes('/portal/stasiun')) return 'Stasiun CNG (Mother Station)';
+  if (pathname.includes('/portal/pemasaran')) return 'Pemasaran (Marketing)';
+  if (pathname.includes('/portal/legal')) return 'Legal & Compliance';
+  if (pathname.includes('/portal/skid')) return 'Skid Tank Operations';
+  if (pathname.includes('/portal/horeca')) return 'Horeca Gas Logistics';
+  if (pathname.includes('/portal/direksi')) return 'Direksi / Management';
+  return 'Finance & Accounting (Keuangan)'; // Default fallback
+}
+
 export default function InboxWidget({ variant = 'header' }: { variant?: 'header' | 'floating' } = {}) {
+  const pathname = usePathname();
+  const currentDiv = getDivisionFromPath(pathname || '');
   const [showDrawer, setShowDrawer] = useState(false);
-  const [unreadCount, setUnreadCount] = useState(1); // Default 1 unread urgent memo from mock
+  const [unreadCount, setUnreadCount] = useState(0);
 
   // Fetch initial unread count
   useEffect(() => {
     async function checkUnread() {
       try {
-        const res = await fetch('/api/inbox/dispatches?view=inbox&division=Finance & Accounting');
+        const cleanDiv = currentDiv.split(' (')[0];
+        const res = await fetch(`/api/inbox/dispatches?view=inbox&division=${encodeURIComponent(cleanDiv)}`);
         if (res.ok) {
           const data = await res.json();
           const count = data.filter((d: any) => d.status === 'Unread').length;
@@ -82,6 +99,7 @@ export default function InboxWidget({ variant = 'header' }: { variant?: 'header'
         <InboxDrawer
           onClose={() => setShowDrawer(false)}
           onUnreadChange={(count) => setUnreadCount(count)}
+          currentDivision={currentDiv}
         />
       )}
     </>

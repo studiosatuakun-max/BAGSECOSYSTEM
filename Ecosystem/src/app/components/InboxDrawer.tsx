@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
+import { toast } from 'sonner';
 import Icon from '@/components/ui/AppIcon';
 import { DispatchItem } from '@/types/dispatch';
 
@@ -21,11 +22,11 @@ const DIVISIONS = [
 interface InboxDrawerProps {
   onClose: () => void;
   onUnreadChange?: (count: number) => void;
+  currentDivision?: string;
 }
 
-export default function InboxDrawer({ onClose, onUnreadChange }: InboxDrawerProps) {
+export default function InboxDrawer({ onClose, onUnreadChange, currentDivision = 'Finance & Accounting (Keuangan)' }: InboxDrawerProps) {
   const [activeTab, setActiveTab] = useState<'inbox' | 'sent' | 'compose'>('inbox');
-  const [currentDivision, setCurrentDivision] = useState<string>('Finance & Accounting (Keuangan)');
   const [dispatches, setDispatches] = useState<DispatchItem[]>([]);
   const [selectedDispatch, setSelectedDispatch] = useState<DispatchItem | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -72,7 +73,7 @@ export default function InboxDrawer({ onClose, onUnreadChange }: InboxDrawerProp
   // Handle Send Memo
   const handleSendDispatch = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!subject.trim() || !content.trim()) return alert('Mohon isi subjek dan isi memo.');
+    if (!subject.trim() || !content.trim()) return toast.error('Mohon isi subjek dan isi memo.');
     
     setIsSubmitting(true);
     try {
@@ -92,14 +93,16 @@ export default function InboxDrawer({ onClose, onUnreadChange }: InboxDrawerProp
       });
 
       if (res.ok) {
-        alert('✅ Memo berhasil dikirim ke divisi penerima!');
+        toast.success('Memo berhasil dikirim!', {
+          description: `Terkirim ke: ${targetDivision}`,
+        });
         setSubject('');
         setContent('');
         setAttachedFile(null);
         setActiveTab('sent');
       }
     } catch (err) {
-      alert('Gagal mengirim memo.');
+      toast.error('Gagal mengirim memo. Silakan coba lagi.');
     } finally {
       setIsSubmitting(false);
     }
@@ -110,7 +113,7 @@ export default function InboxDrawer({ onClose, onUnreadChange }: InboxDrawerProp
     const file = e.target.files?.[0];
     if (!file) return;
     if (file.size > 25 * 1024 * 1024) {
-      alert('⚠️ Ukuran file melebihi batas maksimal 25 MB.');
+      toast.warning('Ukuran file melebihi batas maksimal 25 MB.');
       return;
     }
 
@@ -124,7 +127,7 @@ export default function InboxDrawer({ onClose, onUnreadChange }: InboxDrawerProp
         setAttachedFile(data);
       }
     } catch (err) {
-      alert('Gagal mengunggah lampiran.');
+      toast.error('Gagal mengunggah lampiran.');
     }
   };
 
@@ -192,16 +195,12 @@ export default function InboxDrawer({ onClose, onUnreadChange }: InboxDrawerProp
               </button>
             </div>
 
-            {/* Division Selector Filter */}
+            {/* Fixed Division Display */}
             <div className="mb-6">
               <label className="block text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1.5">View As Division:</label>
-              <select
-                value={currentDivision}
-                onChange={(e) => setCurrentDivision(e.target.value)}
-                className="w-full bg-white/10 border border-white/20 rounded-xl px-2.5 py-2 text-xs font-semibold text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 shadow-inner"
-              >
-                {DIVISIONS.map(d => <option key={d} value={d} className="bg-slate-900 text-white">{d}</option>)}
-              </select>
+              <div className="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2.5 text-xs font-bold text-slate-300 cursor-not-allowed">
+                {currentDivision}
+              </div>
             </div>
 
             {/* Navigation Tabs */}
