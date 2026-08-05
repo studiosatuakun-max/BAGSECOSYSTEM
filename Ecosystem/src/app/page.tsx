@@ -6,18 +6,18 @@ import Icon from '@/components/ui/AppIcon';
 
 // The 12 Demo Accounts matching the 12 Portals
 const demoAccounts = [
+  { role: 'Director', portal: 'Direksi / Management', email: 'direksi@baskara.id', pwd: 'BaGS@2026!', icon: 'BuildingOfficeIcon', color: 'text-amber-300' },
   { role: 'General Manager', portal: 'Command Center', email: 'admin@baskara.id', pwd: 'BaGS@2026!', icon: 'ShieldCheckIcon', color: 'text-indigo-300' },
-  { role: 'Director', portal: 'Industrial Portal', email: 'industrial@baskara.id', pwd: 'BaGS@2026!', icon: 'BuildingOfficeIcon', color: 'text-amber-300' },
-  { role: 'Customer', portal: 'Customer App', email: 'pelanggan@baskara.id', pwd: 'BaGS@2026!', icon: 'ShoppingBagIcon', color: 'text-yellow-300' },
-  { role: 'Sales', portal: 'Horeca Portal', email: 'horeca@baskara.id', pwd: 'BaGS@2026!', icon: 'FireIcon', color: 'text-orange-300' },
+  { role: 'Horeca', portal: 'Horeca Portal', email: 'horeca@baskara.id', pwd: 'BaGS@2026!', icon: 'FireIcon', color: 'text-orange-300' },
+  { role: 'Industrial', portal: 'Industrial Portal', email: 'industrial@baskara.id', pwd: 'BaGS@2026!', icon: 'BuildingStorefrontIcon', color: 'text-rose-300' },
+  { role: 'Marketing', portal: 'Pemasaran', email: 'pemasaran@baskara.id', pwd: 'BaGS@2026!', icon: 'PresentationChartLineIcon', color: 'text-pink-300' },
+  { role: 'Finance', portal: 'Keuangan', email: 'keuangan@baskara.id', pwd: 'BaGS@2026!', icon: 'BanknotesIcon', color: 'text-green-300' },
+  { role: 'HR', portal: 'HRD', email: 'hr@baskara.id', pwd: 'BaGS@2026!', icon: 'UsersIcon', color: 'text-violet-300' },
+  { role: 'Legal', portal: 'Legal & Compliance', email: 'legal@baskara.id', pwd: 'BaGS@2026!', icon: 'DocumentCheckIcon', color: 'text-slate-200' },
   { role: 'Stasiun', portal: 'Stasiun', email: 'stasiun@baskara.id', pwd: 'BaGS@2026!', icon: 'CpuChipIcon', color: 'text-emerald-300' },
   { role: 'Armada', portal: 'Armada', email: 'armada@baskara.id', pwd: 'BaGS@2026!', icon: 'TruckIcon', color: 'text-blue-300' },
-  { role: 'Finance', portal: 'Keuangan', email: 'keuangan@baskara.id', pwd: 'BaGS@2026!', icon: 'BanknotesIcon', color: 'text-green-300' },
-  { role: 'Marketing', portal: 'Pemasaran', email: 'pemasaran@baskara.id', pwd: 'BaGS@2026!', icon: 'PresentationChartLineIcon', color: 'text-pink-300' },
-  { role: 'HR', portal: 'HRD', email: 'hr@baskara.id', pwd: 'BaGS@2026!', icon: 'UsersIcon', color: 'text-violet-300' },
   { role: 'Driver', portal: 'GasDrive', email: 'driver@baskara.id', pwd: 'BaGS@2026!', icon: 'MapIcon', color: 'text-cyan-300' },
-  { role: 'Skid', portal: 'Skid Portal', email: 'skid@baskara.id', pwd: 'BaGS@2026!', icon: 'ScaleIcon', color: 'text-rose-300' },
-  { role: 'Legal', portal: 'Legal & Compliance', email: 'legal@baskara.id', pwd: 'BaGS@2026!', icon: 'DocumentCheckIcon', color: 'text-slate-200' },
+  { role: 'Customer', portal: 'Customer App', email: 'pelanggan@baskara.id', pwd: 'BaGS@2026!', icon: 'ShoppingBagIcon', color: 'text-yellow-300' },
 ];
 
 function LoginContent() {
