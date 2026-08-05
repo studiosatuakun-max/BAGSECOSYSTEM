@@ -183,7 +183,7 @@ export default function InboxDrawer({ onClose, onUnreadChange }: InboxDrawerProp
                   <Icon name="EnvelopeIcon" size={18} className="text-white" />
                 </div>
                 <div>
-                  <h3 className="font-extrabold text-white text-base tracking-tight leading-none">BaGS Dispatch</h3>
+                  <h3 className="font-extrabold text-white text-base tracking-tight leading-none">Dispatch Memo</h3>
                   <span className="text-[10px] text-indigo-300 font-medium">Inter-Division Memos</span>
                 </div>
               </div>
