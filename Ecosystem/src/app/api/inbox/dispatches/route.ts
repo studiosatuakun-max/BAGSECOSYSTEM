@@ -1,9 +1,15 @@
 import { NextResponse, NextRequest } from 'next/server';
-import { supabase } from '@/lib/supabaseClient';
+import { createClient } from '@supabase/supabase-js';
 import { z } from 'zod';
 import type { DispatchItem } from '@/types/dispatch';
 
 export type { DispatchItem };
+
+// Initialize Supabase Admin Client to bypass RLS for the presentation demo
+const supabaseAdmin = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.SUPABASE_SERVICE_ROLE_KEY!
+);
 
 // 1. Strict Zod Schemas for Payload Validation & Anti-Injection
 const AttachmentSchema = z.object({
@@ -76,7 +82,7 @@ export async function GET(req: NextRequest) {
   const division = searchParams.get('division') || 'All Divisions';
 
   try {
-    let query = supabase.from('dispatches').select('*').order('created_at', { ascending: false });
+    let query = supabaseAdmin.from('dispatches').select('*').order('created_at', { ascending: false });
 
     if (view === 'inbox' && division !== 'All Divisions') {
       const dbDiv = UI_TO_DB_DIV_MAP[division] || 'admin';
@@ -161,8 +167,8 @@ export async function POST(req: NextRequest) {
       }];
     }
 
-    // Insert payload into Supabase
-    const { data, error } = await supabase.from('dispatches').insert(inserts).select();
+    // Insert payload into Supabase using Admin to bypass RLS
+    const { data, error } = await supabaseAdmin.from('dispatches').insert(inserts).select();
 
     if (error) {
       console.error('Supabase Error:', error.message);
@@ -203,7 +209,7 @@ export async function PATCH(req: NextRequest) {
     }
 
     const { id, status } = parseResult.data;
-    const { data, error } = await supabase.from('dispatches').update({ status }).eq('id', id).select().single();
+    const { data, error } = await supabaseAdmin.from('dispatches').update({ status }).eq('id', id).select().single();
 
     if (error) {
       return NextResponse.json({ id, status, updated: true });
