@@ -531,7 +531,7 @@ export default function UHFCylinderRfidLogCard() {
                 </div>
                 <div>
                   <h3 className="text-lg font-black text-white leading-tight">Asset Master Data</h3>
-                  <p className="text-[11px] font-bold text-slate-400">KTP Tabung CNG 12Kg</p>
+                  <p className="text-[11px] font-bold text-slate-400">Tabung CNG 12Kg</p>
                 </div>
               </div>
               <button
@@ -546,6 +546,11 @@ export default function UHFCylinderRfidLogCard() {
             <div className="bg-slate-800/50 rounded-2xl p-4 border border-slate-700/50 text-center relative overflow-hidden">
               <div className="absolute top-0 right-0 p-3 opacity-10">
                 <Package size={80} />
+              </div>
+              <div className="flex justify-center mb-2 relative z-10">
+                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[9px] font-extrabold uppercase tracking-widest bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
+                  Property of BaGS
+                </span>
               </div>
               <div className="flex justify-center mb-1 relative z-10"><Tag size={16} className="text-indigo-500" /></div>
               <div className="text-2xl font-black text-white font-mono tracking-wider relative z-10">{selectedScan.cylinderSerial}</div>
