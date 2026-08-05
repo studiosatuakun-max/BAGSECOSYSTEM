@@ -6,7 +6,7 @@ import Icon from '@/components/ui/AppIcon';
 
 // The 12 Demo Accounts matching the 12 Portals
 const demoAccounts = [
-  { role: 'Admin', portal: 'Command Center', email: 'admin@baskara.id', pwd: 'BaGS@2026!', icon: 'ShieldCheckIcon', color: 'text-indigo-300' },
+  { role: 'General Manager', portal: 'Command Center', email: 'admin@baskara.id', pwd: 'BaGS@2026!', icon: 'ShieldCheckIcon', color: 'text-indigo-300' },
   { role: 'Director', portal: 'Industrial Portal', email: 'industrial@baskara.id', pwd: 'BaGS@2026!', icon: 'BuildingOfficeIcon', color: 'text-amber-300' },
   { role: 'Customer', portal: 'Customer App', email: 'pelanggan@baskara.id', pwd: 'BaGS@2026!', icon: 'ShoppingBagIcon', color: 'text-yellow-300' },
   { role: 'Sales', portal: 'Horeca Portal', email: 'horeca@baskara.id', pwd: 'BaGS@2026!', icon: 'FireIcon', color: 'text-orange-300' },
