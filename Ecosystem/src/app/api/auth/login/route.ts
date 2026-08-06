@@ -41,7 +41,6 @@ const ROLE_DEFAULT_PORTAL: Record<string, string> = {
   horeca_sales: '/portal/horeca',
   customer: '/portal/pelanggan',
   industrial_director: '/portal/industrial',
-  board_director: '/portal/direksi',
 };
 
 export async function POST(request: NextRequest) {
@@ -98,21 +97,18 @@ export async function POST(request: NextRequest) {
     if (error || !data.session) {
       // ── Bypas Dummy Mode untuk Testing (Jika user belum dibuat di Supabase) ──
       if (password === 'BaGS@2026!') {
-        // Cari role berdasarkan email dari ROLE_DEFAULT_PORTAL atau daftar akun
         let matchedRole = 'fleet_driver';
         if (email.includes('admin')) matchedRole = 'super_admin';
-        else if (email.includes('direksi')) matchedRole = 'board_director';
+        else if (email.includes('direksi')) matchedRole = 'industrial_director';
         else if (email.includes('stasiun')) matchedRole = 'station_operator';
         else if (email.includes('armada')) matchedRole = 'fleet_manager';
         else if (email.includes('keuangan')) matchedRole = 'finance_controller';
         else if (email.includes('hr')) matchedRole = 'hr_manager';
         else if (email.includes('legal')) matchedRole = 'legal_officer';
         else if (email.includes('pemasaran')) matchedRole = 'marketing_ae';
-        else if (email.includes('skid')) matchedRole = 'skid_operator';
+        else if (email.includes('skid') || email.includes('industrial')) matchedRole = 'skid_operator';
         else if (email.includes('horeca')) matchedRole = 'horeca_sales';
         else if (email.includes('pelanggan') || email.includes('customer')) matchedRole = 'customer';
-        else if (email.includes('industrial')) matchedRole = 'industrial_director';
-        else if (email.includes('industrial')) matchedRole = 'industrial_director';
 
         response.cookies.set({
           name: 'dummy_role',
