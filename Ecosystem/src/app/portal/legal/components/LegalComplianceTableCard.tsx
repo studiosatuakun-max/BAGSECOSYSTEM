@@ -1,6 +1,7 @@
 'use client';
 
-import React, { useState, useTransition } from 'react';
+import React, { useState, useTransition, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import Icon from '@/components/ui/AppIcon';
 import { Search, Plus, Scale, ShieldAlert, CheckCircle2, AlertTriangle, FileSignature, Eye, X } from 'lucide-react';
 import { updateContractStatus } from '../_integration/actions';
@@ -42,6 +43,11 @@ export default function LegalComplianceTableCard({ contracts: initialContracts }
   const [isPending, startTransition] = useTransition();
   const [localContracts, setLocalContracts] = useState(initialContracts);
   const [previewContract, setPreviewContract] = useState<RawContract | null>(null);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const filteredContracts = localContracts.filter(ctr =>
     ctr.contract_number.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -152,9 +158,9 @@ export default function LegalComplianceTableCard({ contracts: initialContracts }
         </table>
       </div>
 
-      {/* Preview Modal */}
-      {previewContract && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm animate-in fade-in duration-200">
+      {/* Preview Modal via Portal */}
+      {previewContract && mounted && createPortal(
+        <div className="fixed inset-0 z-[99999] flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm animate-in fade-in duration-200">
           <div className="bg-slate-900 border border-slate-700 rounded-2xl w-full max-w-3xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
             <div className="flex items-center justify-between p-4 border-b border-slate-800 bg-slate-900/50">
               <div className="flex items-center gap-2 text-indigo-400 font-semibold">
@@ -218,7 +224,8 @@ export default function LegalComplianceTableCard({ contracts: initialContracts }
               <span>CONFIDENTIAL DOCUMENT</span>
             </div>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
     </div>
   );
