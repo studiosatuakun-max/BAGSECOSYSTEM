@@ -22,7 +22,55 @@ export default async function ArmadaDashboardPage() {
     // graceful fallback
   }
 
-  const cnfData = (cnfResult.data ?? []) as {
+  const dummyCNF = [
+    {
+      id: 'cnf-001', no_pengiriman: 'SJ-CNG-2026-0801', customer_id: 'PT Indofood CBP', customer_address: 'Kawasan Industri Cikarang',
+      no_gtm: 'GTM-05', no_head: 'B 9021 TX', driver_id: 'DRV-11', driver_name: 'Budi Santoso',
+      depart_time: '2026-08-06T01:15:00Z', depart_pressure_bar: 248,
+      status: 'Dispatched', signed_by_ppc: true, signed_by_driver: true,
+      signed_by_security: true, signed_by_customer: false
+    },
+    {
+      id: 'cnf-002', no_pengiriman: 'SJ-CNG-2026-0802', customer_id: 'PT Mayora Indah', customer_address: 'Tangerang',
+      no_gtm: 'GTM-02', no_head: 'B 9102 BZ', driver_id: 'DRV-08', driver_name: 'Ahmad Mulyadi',
+      depart_time: '2026-08-05T22:30:00Z', prs_start_time: '2026-08-06T00:45:00Z', depart_pressure_bar: 250,
+      status: 'Discharging', signed_by_ppc: true, signed_by_driver: true,
+      signed_by_security: true, signed_by_customer: true
+    },
+    {
+      id: 'cnf-003', no_pengiriman: 'SJ-CNG-2026-0803', customer_id: 'PT Toyota Motor Mfg', customer_address: 'Karawang',
+      no_gtm: 'GTM-12', no_head: 'B 9988 XYZ', driver_id: 'DRV-22', driver_name: 'Wahyu Hidayat',
+      depart_time: '2026-08-05T19:00:00Z', depart_pressure_bar: 250,
+      status: 'Returning', signed_by_ppc: true, signed_by_driver: true,
+      signed_by_security: true, signed_by_customer: true
+    }
+  ];
+
+  const dummyHoreca = [
+    {
+      id: 'hor-001', no_do: 'DO-HOR-2026-001', customer_id: 'CUST-01', customer_name: 'Hotel Mulia Senayan',
+      driver_id: 'DRV-02', driver_name: 'Dadan Ramdan', vehicle_type: 'Truck CDE', vehicle_plate: 'B 8932 UY',
+      qty_delivered_full: 40, qty_returned_empty: 38,
+      depart_time: '2026-08-05T23:00:00Z', status: 'Delivered'
+    },
+    {
+      id: 'hor-002', no_do: 'DO-HOR-2026-002', customer_id: 'CUST-04', customer_name: 'Grand Hyatt Jakarta',
+      driver_id: 'DRV-05', driver_name: 'Surya Lesmana', vehicle_type: 'Truck CDE', vehicle_plate: 'B 9911 XX',
+      qty_delivered_full: 25, qty_returned_empty: 0,
+      depart_time: '2026-08-06T02:15:00Z', status: 'In_Transit'
+    },
+    {
+      id: 'hor-003', no_do: 'DO-HOR-2026-003', customer_id: 'CUST-08', customer_name: 'Mall Kelapa Gading',
+      driver_id: 'DRV-12', driver_name: 'Rian Pratama', vehicle_type: 'Blind Van', vehicle_plate: 'B 1122 ZZ',
+      qty_delivered_full: 15, qty_returned_empty: 10,
+      depart_time: '2026-08-05T21:30:00Z', status: 'Partial'
+    }
+  ];
+
+  const rawCnfData = cnfResult.data && cnfResult.data.length > 0 ? cnfResult.data : dummyCNF;
+  const rawHorecaData = horecaResult.data && horecaResult.data.length > 0 ? horecaResult.data : dummyHoreca;
+
+  const cnfData = rawCnfData as {
     id: string; no_pengiriman: string; customer_id: string; customer_address?: string;
     no_gtm: string; no_head: string; driver_id: string; driver_name?: string;
     depart_time: string; depart_pressure_bar?: number;
@@ -31,7 +79,7 @@ export default async function ArmadaDashboardPage() {
     signed_by_security?: boolean; signed_by_customer?: boolean;
   }[];
 
-  const horecaData = (horecaResult.data ?? []) as {
+  const horecaData = rawHorecaData as {
     id: string; no_do: string; customer_id: string; customer_name?: string;
     driver_id: string; driver_name?: string; vehicle_type?: string; vehicle_plate: string;
     qty_delivered_full?: number; qty_returned_empty?: number;
