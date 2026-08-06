@@ -31,6 +31,7 @@ const ROLE_PERMISSIONS: Record<string, string[]> = {
     '/portal/industrial',
     '/portal/pelanggan',
     '/portal/pwa',
+    '/portal/direksi',
     '/dashboard',
     '/api',
   ],
@@ -45,6 +46,7 @@ const ROLE_PERMISSIONS: Record<string, string[]> = {
   horeca_sales: ['/portal/horeca', '/dashboard'],
   industrial_director: ['/portal/industrial', '/dashboard'],
   customer: ['/portal/pelanggan', '/dashboard'],
+  board_director: ['/portal/direksi', '/dashboard'],
 };
 
 // ─── Routes yang TIDAK perlu auth (public) ───────────────────────────────────
