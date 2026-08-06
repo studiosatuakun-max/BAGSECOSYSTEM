@@ -41,6 +41,7 @@ const ROLE_DEFAULT_PORTAL: Record<string, string> = {
   horeca_sales: '/portal/horeca',
   customer: '/portal/pelanggan',
   industrial_director: '/portal/industrial',
+  board_director: '/portal/direksi',
 };
 
 export async function POST(request: NextRequest) {
@@ -99,7 +100,8 @@ export async function POST(request: NextRequest) {
       if (password === 'BaGS@2026!') {
         // Cari role berdasarkan email dari ROLE_DEFAULT_PORTAL atau daftar akun
         let matchedRole = 'fleet_driver';
-        if (email.includes('admin') || email.includes('direksi')) matchedRole = 'super_admin';
+        if (email.includes('admin')) matchedRole = 'super_admin';
+        else if (email.includes('direksi')) matchedRole = 'board_director';
         else if (email.includes('stasiun')) matchedRole = 'station_operator';
         else if (email.includes('armada')) matchedRole = 'fleet_manager';
         else if (email.includes('keuangan')) matchedRole = 'finance_controller';
