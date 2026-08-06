@@ -106,19 +106,19 @@ export default function AdminCommandCenter() {
           {GM_METRICS.map((metric, idx) => (
             <div 
               key={metric.id} 
-              className="bg-white/5 backdrop-blur-2xl border border-white/10 shadow-[0_8px_32px_0_rgba(0,0,0,0.5)] rounded-3xl p-6 hover:bg-white/10 hover:border-white/20 transition-all duration-300 group animate-in fade-in slide-in-from-bottom-6"
-              style={{ animationDelay: \`\${idx * 100}ms\`, animationFillMode: 'both' }}
+              className={`bg-white/5 backdrop-blur-2xl border border-white/10 shadow-[0_8px_32px_0_rgba(0,0,0,0.5)] rounded-3xl p-6 hover:bg-white/10 hover:border-white/20 transition-all duration-300 group animate-in fade-in slide-in-from-bottom-6`}
+              style={{ animationDelay: `${idx * 100}ms`, animationFillMode: 'both' }}
             >
               <div className="flex justify-between items-start">
                 <div>
                   <p className="text-white/70 text-xs font-bold uppercase tracking-wider">{metric.title}</p>
                   {metric.subtitle && <p className="text-white/50 text-[10px] mt-0.5">{metric.subtitle}</p>}
                 </div>
-                <div className={\`p-2.5 rounded-xl bg-white/5 border border-white/10 group-hover:bg-white/10 transition-colors \${metric.color}\`}>
+                <div className={`p-2.5 rounded-xl bg-white/5 border border-white/10 group-hover:bg-white/10 transition-colors ${metric.color}`}>
                   <metric.icon className="w-5 h-5" />
                 </div>
               </div>
-              <h2 className={\`text-3xl font-black mt-4 text-white drop-shadow-[0_0_15px_rgba(255,255,255,0.3)] group-hover:scale-105 transform origin-left transition-transform duration-300 \${metric.color}\`}>
+              <h2 className={`text-3xl font-black mt-4 text-white drop-shadow-[0_0_15px_rgba(255,255,255,0.3)] group-hover:scale-105 transform origin-left transition-transform duration-300 ${metric.color}`}>
                 {metric.value}
               </h2>
               <div className="mt-4 pt-3 border-t border-white/10 flex items-center justify-between">
@@ -166,11 +166,11 @@ export default function AdminCommandCenter() {
                         <p className="text-xs text-white/70 font-medium leading-relaxed">{item.impact}</p>
                       </td>
                       <td className="py-4 px-3 text-center">
-                        <span className={\`inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-black uppercase tracking-wider border \${
+                        <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-black uppercase tracking-wider border ${
                           item.severity === 'Critical' ? 'bg-rose-500/20 border-rose-500/30 text-rose-400 shadow-[0_0_10px_rgba(244,63,94,0.3)]' :
                           item.severity === 'High' ? 'bg-amber-500/20 border-amber-500/30 text-amber-400' :
                           'bg-blue-500/20 border-blue-500/30 text-blue-400'
-                        }\`}>
+                        }`}>
                           {item.severity}
                         </span>
                       </td>
