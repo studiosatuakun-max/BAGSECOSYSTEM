@@ -2,7 +2,7 @@
 
 import React, { useState, useTransition } from 'react';
 import Icon from '@/components/ui/AppIcon';
-import { Search, Plus, Scale, ShieldAlert, CheckCircle2, AlertTriangle, FileSignature } from 'lucide-react';
+import { Search, Plus, Scale, ShieldAlert, CheckCircle2, AlertTriangle, FileSignature, Eye, X } from 'lucide-react';
 import { updateContractStatus } from '../_integration/actions';
 
 type RawContract = {
@@ -41,6 +41,7 @@ export default function LegalComplianceTableCard({ contracts: initialContracts }
   const [searchTerm, setSearchTerm] = useState('');
   const [isPending, startTransition] = useTransition();
   const [localContracts, setLocalContracts] = useState(initialContracts);
+  const [previewContract, setPreviewContract] = useState<RawContract | null>(null);
 
   const filteredContracts = localContracts.filter(ctr =>
     ctr.contract_number.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -99,7 +100,8 @@ export default function LegalComplianceTableCard({ contracts: initialContracts }
               <th className="p-4 font-medium whitespace-nowrap">Delivery Terms</th>
               <th className="p-4 font-medium whitespace-nowrap">Liability & Asset</th>
               <th className="p-4 font-medium whitespace-nowrap">Validity Period</th>
-              <th className="p-4 font-medium text-right whitespace-nowrap">Status</th>
+              <th className="p-4 font-medium text-center whitespace-nowrap">Status</th>
+              <th className="p-4 font-medium text-right whitespace-nowrap">Action</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-800/50">
@@ -129,17 +131,95 @@ export default function LegalComplianceTableCard({ contracts: initialContracts }
                 <td className="p-4 whitespace-nowrap text-sm text-slate-400">
                   {ctr.start_date} <br/><span className="text-[10px]">to</span> {ctr.end_date}
                 </td>
-                <td className="p-4 text-right whitespace-nowrap">
+                <td className="p-4 text-center whitespace-nowrap">
                   <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium border ${STATUS_CLASSES[ctr.status] ?? 'bg-slate-500/10 text-slate-400 border-slate-500/20'}`}>
                     {ctr.status === 'Active' ? <CheckCircle2 size={12} /> : <AlertTriangle size={12} />}
                     {statusLabel(ctr.status)}
                   </span>
+                </td>
+                <td className="p-4 text-right whitespace-nowrap">
+                  <button 
+                    onClick={() => setPreviewContract(ctr)}
+                    className="p-2 bg-slate-800 hover:bg-indigo-500/20 text-slate-400 hover:text-indigo-400 rounded-lg transition-colors border border-slate-700"
+                    title="Preview Contract"
+                  >
+                    <Eye size={16} />
+                  </button>
                 </td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
+
+      {/* Preview Modal */}
+      {previewContract && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm animate-in fade-in duration-200">
+          <div className="bg-slate-900 border border-slate-700 rounded-2xl w-full max-w-3xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
+            <div className="flex items-center justify-between p-4 border-b border-slate-800 bg-slate-900/50">
+              <div className="flex items-center gap-2 text-indigo-400 font-semibold">
+                <FileSignature size={20} />
+                <span>Document Preview</span>
+              </div>
+              <button 
+                onClick={() => setPreviewContract(null)}
+                className="p-1.5 text-slate-400 hover:text-white bg-slate-800 hover:bg-rose-500/20 hover:border-rose-500/50 rounded-lg border border-transparent transition-colors"
+              >
+                <X size={18} />
+              </button>
+            </div>
+            
+            <div className="p-6 overflow-y-auto flex-1 custom-scrollbar">
+              <div className="bg-slate-50 text-slate-900 rounded-lg p-8 sm:p-12 shadow-inner min-h-[600px] font-serif relative">
+                <div className="absolute top-8 right-12 opacity-10">
+                  <Scale size={120} />
+                </div>
+                <div className="text-center border-b-2 border-slate-300 pb-6 mb-8">
+                  <h1 className="text-2xl font-black uppercase tracking-widest text-slate-800">Perjanjian Jual Beli Gas Bumi</h1>
+                  <p className="text-sm font-bold text-slate-500 mt-2">Nomor: {previewContract.contract_number}</p>
+                </div>
+                
+                <div className="space-y-6 text-sm leading-relaxed text-slate-700">
+                  <p>Pada hari ini, disepakati Perjanjian Jual Beli Gas (PJBG) antara:</p>
+                  <div className="pl-4 border-l-2 border-indigo-500 space-y-2">
+                    <p><strong>PIHAK PERTAMA:</strong> PT Baskara Asri Ghas (BaGS)</p>
+                    <p><strong>PIHAK KEDUA:</strong> {previewContract.customer_name}</p>
+                  </div>
+                  
+                  <h3 className="font-bold text-lg text-slate-900 pt-4">Pasal 1: Skema Pengiriman</h3>
+                  <p>Pihak Pertama sepakat untuk menyuplai Gas Bumi Terkompresi (CNG) menggunakan skema pengiriman <strong>{previewContract.contract_type?.replace(/_/g, ' ')}</strong>. Status kepemilikan tabung/skid disepakati sebagai <strong>{previewContract.tube_ownership?.replace(/_/g, ' ')}</strong>.</p>
+                  
+                  {previewContract.has_liability_clause && (
+                    <div className="bg-red-50 text-red-900 p-4 border border-red-200 rounded-md">
+                      <h4 className="font-bold flex items-center gap-2"><ShieldAlert size={16} /> Klausul Liabilitas Aktif</h4>
+                      <p className="mt-1">{previewContract.liability_notes}</p>
+                    </div>
+                  )}
+
+                  <h3 className="font-bold text-lg text-slate-900 pt-4">Pasal 2: Masa Berlaku</h3>
+                  <p>Perjanjian ini sah dan mengikat secara hukum terhitung sejak tanggal <strong>{previewContract.start_date}</strong> sampai dengan <strong>{previewContract.end_date}</strong> (Status saat ini: <span className="font-bold uppercase text-indigo-700">{statusLabel(previewContract.status)}</span>).</p>
+                  
+                  <div className="mt-16 pt-8 flex justify-between">
+                    <div className="text-center">
+                      <p className="mb-16">Pihak Pertama (BaGS)</p>
+                      <p className="font-bold underline">Direktur Utama</p>
+                    </div>
+                    <div className="text-center">
+                      <p className="mb-16">Pihak Kedua (Klien)</p>
+                      <p className="font-bold underline">Authorized Signatory</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div className="p-4 border-t border-slate-800 bg-slate-900/80 flex justify-between items-center text-xs text-slate-500 font-mono">
+              <span>Reviewed by: {previewContract.counsel_name || 'Legal Counsel'}</span>
+              <span>CONFIDENTIAL DOCUMENT</span>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

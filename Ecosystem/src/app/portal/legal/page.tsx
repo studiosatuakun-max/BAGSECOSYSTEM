@@ -27,6 +27,26 @@ export default async function LegalDashboardPage() {
     // Supabase not configured
   }
 
+  const dummyContracts = [
+    {
+      id: 'ctr-001', contract_number: 'PJBG-2026/08-01', customer_id: 'CUST-IND-01', customer_name: 'PT Indofood CBP Sukses Makmur',
+      contract_type: 'CNF_Delivered', tube_ownership: 'BaGS_Owned', has_liability_clause: false, liability_notes: null,
+      start_date: '2025-01-01', end_date: '2030-12-31', status: 'Active', counsel_name: 'Sarah Wijaya, SH'
+    },
+    {
+      id: 'ctr-002', contract_number: 'PJBG-2026/08-02', customer_id: 'CUST-IND-02', customer_name: 'PT Mayora Indah Tbk',
+      contract_type: 'FOB_Plant', tube_ownership: 'Customer_Owned', has_liability_clause: true, liability_notes: 'Klien bertanggung jawab atas kerusakan Tube-Skid selama transportasi mandiri.',
+      start_date: '2024-06-01', end_date: '2026-08-31', status: 'Expiring_Soon', counsel_name: 'Budi Pratama, SH'
+    },
+    {
+      id: 'ctr-003', contract_number: 'PJBG-2026/08-03', customer_id: 'CUST-IND-03', customer_name: 'PT Unilever Indonesia',
+      contract_type: 'CNF_Delivered', tube_ownership: 'BaGS_Owned', has_liability_clause: false, liability_notes: null,
+      start_date: '2026-09-01', end_date: '2031-09-01', status: 'Draft', counsel_name: 'Sarah Wijaya, SH'
+    }
+  ];
+
+  const finalContracts = contracts.length > 0 ? contracts : dummyContracts;
+
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-slate-950 font-sans text-slate-900 dark:text-slate-100 transition-colors duration-300 flex flex-col">
       {/* Top Header */}
@@ -194,7 +214,7 @@ export default async function LegalDashboardPage() {
         {/* ROW 4: LEGAL COMPLIANCE TABLE (Supabase Data) */}
         <div className="animate-in fade-in slide-in-from-bottom-6 duration-700 delay-300 fill-mode-both">
           <LegalComplianceTableCard
-            contracts={contracts as Parameters<typeof LegalComplianceTableCard>[0]['contracts']}
+            contracts={finalContracts as Parameters<typeof LegalComplianceTableCard>[0]['contracts']}
           />
         </div>
       </main>
