@@ -7,8 +7,8 @@ import PortalHeader from '@/components/PortalHeader';
 import Footer from '@/components/Footer';
 import BentoGrid from './components/BentoGrid';
 import { getKeuanganSummary } from './_integration/actions';
+import { CheckCircle2 } from 'lucide-react';
 import { 
-  CheckCircle2, 
   DocumentTextIcon, 
   BanknotesIcon, 
   BuildingOffice2Icon, 
