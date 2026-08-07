@@ -1,21 +1,86 @@
 import React from 'react';
+import Link from 'next/link';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
 import PortalHeader from '@/components/PortalHeader';
 import Footer from '@/components/Footer';
 import BentoGrid from './components/BentoGrid';
-import InvoiceTableCard from './components/InvoiceTableCard';
-import DocumentVaultCard from './components/DocumentVaultCard';
-import CashbookCard from './components/CashbookCard';
-import GenerateReportCard from './components/GenerateReportCard';
-import ZahirModuleSwitcher from './components/ZahirModuleSwitcher';
-import { getInvoicesIndustri, getInvoicesHoreca, getKeuanganSummary, getDocumentVault, getCashbook } from './_integration/actions';
-import { RefreshCw, CheckCircle2 } from 'lucide-react';
+import { getKeuanganSummary } from './_integration/actions';
+import { 
+  CheckCircle2, 
+  DocumentTextIcon, 
+  BanknotesIcon, 
+  BuildingOffice2Icon, 
+  ShoppingCartIcon, 
+  CreditCardIcon, 
+  ArchiveBoxIcon 
+} from '@heroicons/react/24/outline';
+
+const ZAHIR_MODULES = [
+  {
+    id: 'hutang-piutang',
+    title: 'Hutang Piutang',
+    subtitle: 'AR/AP & Aging Schedule',
+    icon: DocumentTextIcon,
+    color: 'text-indigo-400',
+    bg: 'bg-indigo-500/10',
+    border: 'border-indigo-500/20',
+    href: '/portal/keuangan/hutang-piutang'
+  },
+  {
+    id: 'asset',
+    title: 'Asset',
+    subtitle: 'Fixed Assets & Penyusutan',
+    icon: BuildingOffice2Icon,
+    color: 'text-emerald-400',
+    bg: 'bg-emerald-500/10',
+    border: 'border-emerald-500/20',
+    href: '/portal/keuangan/asset'
+  },
+  {
+    id: 'penjualan',
+    title: 'Penjualan',
+    subtitle: 'Invoicing & Piutang Klien',
+    icon: BanknotesIcon,
+    color: 'text-amber-400',
+    bg: 'bg-amber-500/10',
+    border: 'border-amber-500/20',
+    href: '/portal/keuangan/penjualan'
+  },
+  {
+    id: 'pembelian',
+    title: 'Pembelian',
+    subtitle: 'Purchase Orders & Vendor',
+    icon: ShoppingCartIcon,
+    color: 'text-rose-400',
+    bg: 'bg-rose-500/10',
+    border: 'border-rose-500/20',
+    href: '/portal/keuangan/pembelian'
+  },
+  {
+    id: 'kas-bank',
+    title: 'Kas & Bank',
+    subtitle: 'Mutasi, Opex, & Rekonsiliasi',
+    icon: CreditCardIcon,
+    color: 'text-blue-400',
+    bg: 'bg-blue-500/10',
+    border: 'border-blue-500/20',
+    href: '/portal/keuangan/kas-bank'
+  },
+  {
+    id: 'persediaan',
+    title: 'Persediaan',
+    subtitle: 'Inventory & Stok Gas',
+    icon: ArchiveBoxIcon,
+    color: 'text-purple-400',
+    bg: 'bg-purple-500/10',
+    border: 'border-purple-500/20',
+    href: '/portal/keuangan/persediaan'
+  }
+];
 
 export default async function FinanceDashboardPage() {
-  let industriInvoices: Record<string, unknown>[] = [];
-  let horecaInvoices: Record<string, unknown>[] = [];
   let summary = {
     totalRevenueIdr: 0,
     totalArOutstanding: 0,
@@ -25,22 +90,10 @@ export default async function FinanceDashboardPage() {
     overdueCount: 0,
     totalOpex: 0,
   };
-  let vaultDocuments: any[] = [];
-  let cashbookTransactions: any[] = [];
 
   try {
-    const [industriResult, horecaResult, summaryResult, vaultData, cashbookData] = await Promise.all([
-      getInvoicesIndustri(),
-      getInvoicesHoreca(),
-      getKeuanganSummary(),
-      getDocumentVault(),
-      getCashbook(),
-    ]);
-    industriInvoices = industriResult.data ?? [];
-    horecaInvoices = horecaResult.data ?? [];
+    const summaryResult = await getKeuanganSummary();
     summary = summaryResult;
-    vaultDocuments = vaultData;
-    cashbookTransactions = cashbookData;
   } catch {
     // Supabase not configured — show fallback data
   }
@@ -78,42 +131,49 @@ export default async function FinanceDashboardPage() {
             <div className="space-y-2 max-w-3xl z-10">
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/20 backdrop-blur-md border border-amber-500/30 text-xs font-bold text-amber-300 whitespace-nowrap shrink-0 align-middle shadow-2xs">
                 <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse" />
-                <span>MIGAS Treasury Indexing v2.0 &middot; DGT E-Faktur Connected</span>
+                <span>MIGAS Treasury Indexing v2.0 &middot; ERP Modular</span>
               </div>
               <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-white">
-                Corporate Treasury &amp; B2B Custody Transfer Portal
+                Finance &amp; Accounting ERP
               </h1>
               <p className="text-xs sm:text-sm text-slate-300 leading-relaxed font-medium">
-                Pusat kontrol kas perusahaan, penagihan volume gas CNG (MMBTU/Sm&sup3;) berbasis meteran Mother Station, dan rekonsiliasi pajak PPN 11% &amp; PPh 22 MIGAS secara real-time.
+                Pilih modul di bawah ini untuk mengelola lembar kerja (worksheet).
               </p>
             </div>
             <div className="flex items-center gap-2 px-5 py-3 bg-gradient-to-r from-amber-500 to-orange-600 text-white rounded-2xl text-xs sm:text-sm font-extrabold shadow-amber-500/30 shrink-0">
               <CheckCircle2 size={18} className="text-white" />
-              <span>Live ERP Synchronized</span>
+              <span>Live Synced</span>
             </div>
           </div>
 
-          {/* Zahir Modular Interface */}
-          <ZahirModuleSwitcher 
-            dashboardComponent={<BentoGrid summary={summary} />}
-            salesComponent={
-              <InvoiceTableCard
-                industriInvoices={industriInvoices as unknown as Parameters<typeof InvoiceTableCard>[0]['industriInvoices']}
-                horecaInvoices={horecaInvoices as unknown as Parameters<typeof InvoiceTableCard>[0]['horecaInvoices']}
-              />
-            }
-            cashBankComponent={<CashbookCard transactions={cashbookTransactions} />}
-            dataMasterComponent={<DocumentVaultCard documents={vaultDocuments} />}
-            reportComponent={
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <GenerateReportCard />
-                <div className="bg-white/5 border border-white/10 rounded-3xl p-6 flex flex-col items-center justify-center text-center">
-                  <p className="text-white/50 text-sm font-medium mb-2">Pusat Unduhan Laporan Lainnya</p>
-                  <p className="text-white/30 text-xs">Akan tersedia pada rilis modul ERP berikutnya.</p>
+          {/* Module Grid (Zahir Home Screen Style) */}
+          <section className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-4 sm:gap-6 animate-in fade-in slide-in-from-bottom-4 duration-700">
+            {ZAHIR_MODULES.map((mod, idx) => (
+              <Link key={mod.id} href={mod.href}>
+                <div 
+                  className={`flex flex-col items-center justify-center text-center h-48 sm:h-56 bg-white/5 dark:bg-slate-900/50 backdrop-blur-xl border border-slate-200/50 dark:border-white/10 shadow-lg rounded-3xl p-6 cursor-pointer hover:-translate-y-2 hover:shadow-2xl transition-all duration-300 group ${mod.bg} hover:${mod.border}`}
+                  style={{ animationDelay: `${idx * 100}ms`, animationFillMode: 'both' }}
+                >
+                  <div className={`p-4 rounded-2xl bg-white/10 dark:bg-black/20 group-hover:scale-110 transition-transform duration-300 ${mod.color}`}>
+                    <mod.icon className="w-10 h-10 sm:w-12 sm:h-12" />
+                  </div>
+                  <h3 className="mt-4 font-bold text-slate-900 dark:text-white text-sm sm:text-base leading-tight group-hover:text-amber-500 transition-colors">
+                    {mod.title}
+                  </h3>
+                  <p className="mt-2 text-[10px] sm:text-xs text-slate-500 dark:text-slate-400 font-medium px-2">
+                    {mod.subtitle}
+                  </p>
                 </div>
-              </div>
-            }
-          />
+              </Link>
+            ))}
+          </section>
+
+          {/* KPI Metrics Dashboard Overview */}
+          <div className="pt-8 border-t border-slate-200/50 dark:border-white/10">
+            <h2 className="text-xl font-bold text-slate-900 dark:text-white mb-6">Ringkasan Eksekutif (YTD)</h2>
+            <BentoGrid summary={summary} />
+          </div>
+
         </main>
       </div>
 
