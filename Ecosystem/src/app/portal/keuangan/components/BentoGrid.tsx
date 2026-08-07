@@ -2,7 +2,6 @@ import React from 'react';
 import CashFlowChartCard from './CashFlowChartCard';
 import TaxComplianceCard from './TaxComplianceCard';
 import MetricCard from './MetricCard';
-import GenerateReportCard from './GenerateReportCard';
 
 interface BentoGridProps {
   summary: {
@@ -25,8 +24,8 @@ export default function BentoGrid({ summary }: BentoGridProps) {
 
   return (
     <div className="space-y-6 lg:space-y-8">
-      {/* Row 1: Executive KPI Hero Cards + Treasury AI Generator */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 lg:gap-6">
+      {/* Row 1: Executive KPI Hero Cards */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 lg:gap-6">
         <MetricCard
           id="metric-revenue"
           label="Total Revenue CNG (YTD)"
@@ -64,7 +63,6 @@ export default function BentoGrid({ summary }: BentoGridProps) {
           detail="96% Lunas tepat waktu (DGT Online)"
           isAlert={false}
         />
-        <GenerateReportCard />
       </div>
 
       {/* Row 2: Cash Flow Chart (3 cols) + MIGAS Tax Compliance (1 col) */}

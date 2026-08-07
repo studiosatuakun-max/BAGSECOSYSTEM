@@ -8,6 +8,8 @@ import BentoGrid from './components/BentoGrid';
 import InvoiceTableCard from './components/InvoiceTableCard';
 import DocumentVaultCard from './components/DocumentVaultCard';
 import CashbookCard from './components/CashbookCard';
+import GenerateReportCard from './components/GenerateReportCard';
+import ZahirModuleSwitcher from './components/ZahirModuleSwitcher';
 import { getInvoicesIndustri, getInvoicesHoreca, getKeuanganSummary, getDocumentVault, getCashbook } from './_integration/actions';
 import { RefreshCw, CheckCircle2 } from 'lucide-react';
 
@@ -91,18 +93,26 @@ export default async function FinanceDashboardPage() {
             </div>
           </div>
 
-          {/* Bento Grid (KPI Metrics + Charts) */}
-          <BentoGrid summary={summary} />
-
-          {/* Secondary Grid: Cashbook & Document Vault */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            <CashbookCard transactions={cashbookTransactions} />
-            <DocumentVaultCard documents={vaultDocuments} />
-          </div>
-
-          <InvoiceTableCard
-            industriInvoices={industriInvoices as unknown as Parameters<typeof InvoiceTableCard>[0]['industriInvoices']}
-            horecaInvoices={horecaInvoices as unknown as Parameters<typeof InvoiceTableCard>[0]['horecaInvoices']}
+          {/* Zahir Modular Interface */}
+          <ZahirModuleSwitcher 
+            dashboardComponent={<BentoGrid summary={summary} />}
+            salesComponent={
+              <InvoiceTableCard
+                industriInvoices={industriInvoices as unknown as Parameters<typeof InvoiceTableCard>[0]['industriInvoices']}
+                horecaInvoices={horecaInvoices as unknown as Parameters<typeof InvoiceTableCard>[0]['horecaInvoices']}
+              />
+            }
+            cashBankComponent={<CashbookCard transactions={cashbookTransactions} />}
+            dataMasterComponent={<DocumentVaultCard documents={vaultDocuments} />}
+            reportComponent={
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <GenerateReportCard />
+                <div className="bg-white/5 border border-white/10 rounded-3xl p-6 flex flex-col items-center justify-center text-center">
+                  <p className="text-white/50 text-sm font-medium mb-2">Pusat Unduhan Laporan Lainnya</p>
+                  <p className="text-white/30 text-xs">Akan tersedia pada rilis modul ERP berikutnya.</p>
+                </div>
+              </div>
+            }
           />
         </main>
       </div>

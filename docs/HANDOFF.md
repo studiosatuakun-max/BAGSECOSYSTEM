@@ -167,6 +167,68 @@ Local SQL migration files for Row-Level Security policies not yet version-contro
 
 ---
 
+## Bugs Fixed Today (2026-08-04) — CT-i607 Integration
+
+### BUG #7 — CRITICAL: `isSimulatorActive` declared AFTER useEffect that uses it
+- **File:** `UHFCylinderRfidLogCard.tsx`
+- **Bug:** `useState('isSimulatorActive')` declared at line 238, but the `useEffect` at line 211 called `setIsSimulatorActive()` — causing `ReferenceError` at runtime. React hoists `useState` declarations but the closure captured an undefined setter.
+- **Fix:** Moved `isSimulatorActive` declaration to top of function alongside other state declarations (line 74). Removed duplicate declaration at line 238.
+
+### BUG #8 — MEDIUM: Simulator debounce timeout too short
+- **File:** `bags-edge-gateway/server.js`
+- **Bug:** `DEBOUNCE_TIME = 2000` (2s) but simulator emits every 6000ms — tags were being filtered by debounce before they could be re-processed on next interval.
+- **Fix:** Changed `DEBOUNCE_TIME` to 8000ms (longer than simulator interval of 6000ms).
+
+### BUG #9 — MEDIUM: `simulator_status` not synced on Socket.io connect
+- **File:** `SocketProvider.tsx`
+- **Bug:** When UI connects to gateway, it received `antenna_status` but NOT `simulator_status`. If simulator was already running on server, UI button state would be wrong.
+- **Fix:** Added `simulator_status` listener in `SocketProvider.tsx` + exposed `isSimulatorActive` in `SocketContextType`.
+
+### BUG #10 — MEDIUM: RLS policy role names mismatch
+- **File:** `16_rfid_tags.sql`
+- **Bug:** RLS policies used `auth.jwt() ->> 'role' IN ('Station Operator', 'Skid Lead', 'Super Admin')` — but actual roles from Supabase app_metadata are `'station_operator'`, `'skid_operator'`, `'super_admin'` (underscore, lowercase).
+- **Fix:** Updated policy roles to match: `'station_operator'`, `'skid_operator'`, `'super_admin'`, `'admin'`.
+
+### BUG #11 — LOW: useEffect deps pollution
+- **File:** `UHFCylinderRfidLogCard.tsx`
+- **Bug:** useEffect deps included `setDeviceInfo`, `setLastReadEpc`, `setIsQueryingDevice`, `setIsReadingTag` — React lint warnings (setters from useState are stable, don't need in deps).
+- **Fix:** Simplified deps to `[socket]` only.
+
+---
+
+## Antenna Physical Layout (CT-i607 CPHG90124WM)
+```
+┌─────────────────────────────────────────────┐
+│  IP: 192.168.0.7 / Port: 12345             │
+│  Model: CPHG90124WM                        │
+├──────────┬──────────┬──────────┬───────────┤
+│  WIEGAND │  RS485   │  RELAY   │  TRIGGER  │
+│  D0 GND  │  D0 GND  │  D0 GND  │  +        │
+│  D1      │  D1      │  D1      │  T+       │
+│          │  A+ B-   │  NO COM  │  -        │
+│          │          │  NC      │           │
+└──────────┴──────────┴──────────┴───────────┘
+           DB9 RS232 | RJ45 | DC Power
+```
+**No USB port visible** — must use direct Ethernet or RS485-to-USB adapter.
+
+---
+
+## Direct Ethernet Solution (Bypass Carrier NAT)
+```
+MacBook (static IP 192.168.0.52/24)
+    ↓ Ethernet
+Antenna (192.168.0.7:12345)
+```
+Steps:
+1. Set MacBook Ethernet to static IP: `192.168.0.52`, subnet `255.255.255.0`
+2. Disconnect WiFi (avoid routing conflicts)
+3. Connect Ethernet cable directly to antenna
+4. Run: `ANTENNA_IP=192.168.0.7 ANTENNA_PORT=12345 node server.js`
+5. Antenna and MacBook same subnet → TCP responses return directly (no NAT)
+
+---
+
 ## Edge Gateway Commands
 ```bash
 cd ~/Documents/BagsEcosystem/bags-edge-gateway

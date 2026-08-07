@@ -7,10 +7,25 @@ const cors = require('cors');
 
 // ===== CONFIG =====
 const UDP_MODE = process.env.UDP_MODE === 'true';
+const TCP_SERVER_MODE = process.env.TCP_SERVER === 'true';
 const WS_PORT = process.env.WS_PORT || 4001;
 const UDP_PORT = process.env.UDP_PORT || 4002;
 const ANTENNA_IP = process.env.ANTENNA_IP || '192.168.1.200';
 const ANTENNA_PORT = parseInt(process.env.ANTENNA_PORT || '4000', 10);
+const TCP_SERVER_PORT = parseInt(process.env.TCP_SERVER_PORT || '9000', 10);
+
+// ===== UTILITY =====
+function getLocalIP() {
+  const nets = require('os').networkInterfaces();
+  for (const name of Object.keys(nets)) {
+    for (const net of nets[name]) {
+      if (net.family === 'IPv4' && !net.internal) {
+        return net.address;
+      }
+    }
+  }
+  return '127.0.0.1';
+}
 
 // ===== WEBSOCKET SERVER SETUP =====
 const app = express();
@@ -123,7 +138,7 @@ let tcpClient = null;
 let sendFn = null;
 
 const debounceCache = new Map();
-const DEBOUNCE_TIME = 2000;
+const DEBOUNCE_TIME = 8000;
 
 // Periodic cleanup of stale debounce entries to prevent memory leak
 setInterval(() => {
@@ -557,6 +572,66 @@ function connectTCP() {
   });
 }
 
+// ===== TCP SERVER MODE (Antenna connects to us) =====
+function startTCPServer() {
+  const tcpServer = net.createServer((socket) => {
+    console.log(`[TCP SERVER] Antenna connected from ${socket.remoteAddress}:${socket.remotePort}`);
+    let serverBuffer = Buffer.alloc(0);
+
+    // Use socket as sendFn
+    sendFn = (data) => {
+      if (!socket || !socket.writable) {
+        console.error('[TCP SERVER TX] Socket not writable!');
+        return;
+      }
+      console.log(`[TCP SERVER TX] Hex: ${data.toString('hex').toUpperCase()}`);
+      socket.write(data);
+    };
+
+    socket.on('data', (data) => {
+      lastDataReceivedAt = Date.now();
+      console.log(`[TCP SERVER RX] Hex: ${data.toString('hex').toUpperCase()}`);
+      serverBuffer = Buffer.concat([serverBuffer, data]);
+      parseBuffer();
+    });
+
+    socket.on('close', () => {
+      console.log('[TCP SERVER] Antenna disconnected.');
+      sendFn = null;
+      onAntennaDisconnect();
+    });
+
+    socket.on('error', (err) => {
+      console.error(`[TCP SERVER] Socket error: ${err.message}`);
+    });
+
+    // Antenna connected — mark as connected and start
+    isAntennaConnected = true;
+    lastDataReceivedAt = Date.now();
+    io.emit('antenna_status', { connected: true });
+
+    // Send Stop Inventory first
+    sendFn(buildSimpleCommandFrame(0x23));
+    console.log('[TCP SERVER] Sent Stop Inventory (0x23). Starting polling in 500ms...');
+
+    setTimeout(() => {
+      scheduleNextPoll();
+    }, 500);
+
+    startWatchdog();
+  });
+
+  tcpServer.on('error', (err) => {
+    console.error(`[TCP SERVER] Server error: ${err.message}`);
+  });
+
+  tcpServer.listen(ANTENNA_PORT, '0.0.0.0', () => {
+    console.log(`[TCP SERVER] Listening on port ${ANTENNA_PORT}`);
+    console.log(`[TCP SERVER] Waiting for USR-IOT bridge to connect...`);
+    console.log(`[TCP SERVER] Make sure USR-IOT remote IP = ${getLocalIP()}, port = ${ANTENNA_PORT}`);
+  });
+}
+
 // ===== WEBSOCKET EVENT HANDLERS =====
 io.on('connection', (socket) => {
   console.log(`[WS] Client connected: ${socket.id}`);
@@ -703,16 +778,24 @@ server.listen(WS_PORT, () => {
 
 if (UDP_MODE) {
   console.log('===========================================================');
-  console.log('🚀 [UDP MODE ACTIVE] Listening for antenna broadcasts...');
+  console.log('🚀 [UDP MODE] Listening for antenna UDP broadcasts...');
   console.log(`   UDP Port: ${UDP_PORT} | Antenna: ${ANTENNA_IP}:${ANTENNA_PORT}`);
-  console.log('   Set UDP_MODE=false + ANTENNA_IP to use TCP instead.');
+  console.log('   Set UDP_MODE=false to use TCP instead.');
   console.log('===========================================================');
   startUDP();
+} else if (TCP_SERVER_MODE) {
+  console.log('===========================================================');
+  console.log('🚀 [TCP SERVER MODE] Waiting for USR-IOT bridge to connect...');
+  console.log(`   Listen port: ${ANTENNA_PORT}`);
+  console.log(`   Make sure USR-IOT remote IP = ${getLocalIP()}, port = ${ANTENNA_PORT}`);
+  console.log(`   Run configure-antenna-udp.js to set USR-IOT remote IP first!`);
+  console.log('===========================================================');
+  startTCPServer();
 } else {
   console.log('===========================================================');
-  console.log('🚀 [TCP MODE ACTIVE] Connecting to antenna...');
+  console.log('🚀 [TCP CLIENT MODE] Connecting to antenna...');
   console.log(`   Antenna: ${ANTENNA_IP}:${ANTENNA_PORT}`);
-  console.log('   Set UDP_MODE=true to switch to UDP broadcast mode.');
+  console.log('   Set UDP_MODE=true for UDP mode, TCP_SERVER=true for TCP Server mode.');
   console.log('===========================================================');
   connectTCP();
 }

@@ -29,14 +29,14 @@ BEGIN
   IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE policyname = 'rfid_tags_read') THEN
     CREATE POLICY "rfid_tags_read" ON public.rfid_tags
       FOR SELECT USING (
-        auth.jwt() ->> 'role' IN ('Station Operator', 'Skid Lead', 'Super Admin')
+        auth.jwt() ->> 'role' IN ('station_operator', 'skid_operator', 'super_admin', 'admin')
       );
   END IF;
-  
+
   IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE policyname = 'rfid_tags_manage') THEN
     CREATE POLICY "rfid_tags_manage" ON public.rfid_tags
       FOR ALL USING (
-        auth.jwt() ->> 'role' IN ('Super Admin')
+        auth.jwt() ->> 'role' IN ('super_admin', 'admin')
       );
   END IF;
 END $$;
